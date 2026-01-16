@@ -82,7 +82,7 @@ class RaymanRichPresence(RichPresence):
         self.add_display(
             (
                 (Memory.STATE_INGAME == 1) &
-                (Memory.BONUS_LEVEL_TIMER != 0xfffe)
+                (Memory.BONUS_LEVEL_TIME_LEFT != 0xfffe)
             ),
             f"{self.paused()}Rayman is playing a Magician level in @Level({Memory.LEVEL_SELECT_CURRENT_LEVEL_ID}) | {self.bonus_timer()} {self.bonus_tings()}"
         )
@@ -107,7 +107,7 @@ class RaymanRichPresence(RichPresence):
         return f"🔵x@Unsigned({Memory.BONUS_LEVEL_TINGS})/@Unsigned({total_tings})"
 
     def bonus_timer(self):
-        return f"🕑@Unsigned({(Memory.BONUS_LEVEL_TIMER / 60)})"
+        return f"🕑@Unsigned({(Memory.BONUS_LEVEL_TIME_LEFT / 60)})"
 
     def total_cages(self):
         cages = ConditionList([
@@ -122,7 +122,7 @@ class RaymanRichPresence(RichPresence):
     def level_cages(self):
         cages = ConditionList([
             add_address(Memory.LEVEL_SELECT_CURRENT_LEVEL_ID * LevelInfo.SIZE),
-            measured(byte(Memory.LEVEL_INFO_PINK_PLANT_WOODS))
+            measured(byte(Memory.LEVEL_INFO_PINK_PLANT_WOODS + 0x8))
         ])
         return f"😊x@Unsigned({render(cages)})/6"
 

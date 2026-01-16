@@ -72,10 +72,18 @@ class EntityData(GameObject):
     def __init__(self, id: int, world_id: int = 1) -> None:
         super().__init__(self.get_array_address(world_id))
         self.id = id
-        self.animation_state = byte(0x57)
-        self.animation_substate = byte(0x59)
-        self.health = byte(0x61)
-        self.active_state = byte(0x64)
+        self.pos_x = word(0x2c)
+        self.pos_y = word(0x2e)
+        self.camera_delta_x = word(0x32)
+        self.camera_delta_y = word(0x34)
+        self.initial_pos_x = word(0x38)
+        self.initial_pos_y = word(0x3a)
+        self.velocity_x = word(0x3c)
+        self.velocity_y = word(0x3e)
+        self.animation_state = byte(0x67)
+        self.animation_substate = byte(0x69)
+        self.health = byte(0x71)
+        self.active_state = byte(0x74)
 
     def on_livingstone_grimace(self):
         return ConditionList([
@@ -118,13 +126,35 @@ class LevelInfo(GameObject):
         16: "Mr Skops' Stalactites",
         17: "Mr Dark's Dare",
     }
+    MAGICIAN_LEVELS = {
+        # (world, map)
+        0: (1, 21),
+        1: (1, 20),
+        2: (1, 18),
+        3: (1, 19),
+        4: (2, 17),
+        5: (2, 18),
+        6: (3, 12),
+        7: (3, 13),
+        8: (4, 12),
+        9: (4, 13),
+        10: (5, 12)
+    }
 
     def __init__(self, id: int) -> None:
         super().__init__(Memory.LEVEL_INFO_PINK_PLANT_WOODS + self.SIZE * id)
-        self.cages = self.offset(0x0)
-        self.state = self.offset(0x1)
-        self.starting_map_id = self.offset(0x2)
-        self.world_id = self.offset(0x3)
+        self.pos_x = self.offset(0x00, word)
+        self.pos_y = self.offset(0x02, word)
+        self.index_up = self.offset(0x04, byte)
+        self.index_left = self.offset(0x05, byte)
+        self.index_down = self.offset(0x06, byte)
+        self.index_right = self.offset(0x07, byte)
+        self.cages = self.offset(0x08, byte)
+        self.state = self.offset(0x09, byte)
+        self.starting_map_id = self.offset(0x0a, byte)
+        self.world_id = self.offset(0x0b, byte)
+        self.name_ptr = self.offset(0x10,  dword)
+        self.text_color = self.offset(0x15, byte)
         self.name = LevelInfo.NAMES[id]
 
 
@@ -141,3 +171,6 @@ def delta_sources(sources: list[MemoryValue], delta_val: int, actual_val: int):
         ),
         sources[-1] == actual_val
     ])
+
+def delta_check(value: MemoryValue, prev: int, actual: int):
+    return (delta(value) == prev) & (value == actual)

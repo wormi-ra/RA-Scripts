@@ -1,145 +1,224 @@
 from pycheevos.core.helpers import *
 
 class Memory:
-    ENTITY_DATA_ARRAY_COUNT = byte(0x04b005)
+    SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000000)
     """
-    [8-bit] Entity Data | Array Count
+    [Notes] Set created with the help of PyCheevos scripts
+    See github below for source code and further information
+    https://github.com/wormi-ra/RA-Scripts/tree/main/Rayman%20(Saturn)
+
+    Helpful resources:
+
+    - RayMap
+    https://raym.app/maps_r1/index.html?mode=RaymanSaturnUS&folder=r1/saturn_us
+    raym.app is a map viewer for every rayman games and versions, it is a great tool to identify level IDs, entity IDs and state IDs in a level
+
+    - Ray1 BinarySerializer
+    https://github.com/BinarySerializer/BinarySerializer.Ray1/tree/main/src/BinarySerializer.Ray1/DataTypes
+    Definition of most data types used in Rayman 1, this repository mostly contains types for the PS1 and PC versions, so not guaranteed to be exact, but most types can be applied to the Saturn version
+
+    Memory layout:
+    Most static game variables and useful adresses are found in the high work RAM region (0x100000-0x1fffff)
+    The low work RAM region contains entity data at adresses 0x54000 for the first world (Dream forest) and 0x4b000 for the other worlds
     """
 
-    ENTITY_DATA = (0x04b010)
+    ENTITY_DATA = (0x04b000)
     """
     [28672 bytes] [Array] Entity Data
     | [112 bytes] Entity Data Structure
-    | +0x00 = [32-bit] Graphics related data
-    | +0x04 = [32-bit] Graphics related data
-    | +0x1c = [16-bit] Position X
-    | +0x1e = [16-bit] Position Y
-    | +0x22 = [16-bit] Camera relative pos X
-    | +0x24 = [16-bit] Camera relative pos Y
-    | +0x57 = [8-bit] Entity state
-    | +0x59 = [8-bit] Entity substate
-    | +0x61 = [8-bit] Health
-    | +0x6c = [8-bit] [Bitfield] Pickup state
-    | -- bit4 = Not Collected
+    | +0x10 = [32-bit Pointer] Sprite data
+    | +0x14 = [32-bit Pointer] Animation data
+    | +0x18 = [32-bit Pointer] Image buffer data
+    | +0x1c = [32-bit Pointer] Script related data
+    | +0x20 = [32-bit Pointer] Script related data
+    | +0x24 = [32-bit Pointer] Script related data
+    | +0x28 = [32-bit Pointer] Script related data
+    | +0x2c = [16-bit] Position X
+    | +0x2e = [16-bit] Position Y
+    | +0x30 = [16-bit] Entity ID
+    | +0x32 = [16-bit] Camera relative pos X
+    | +0x34 = [16-bit] Camera relative pos Y
+    | +0x38 = [16-bit] Initial position X
+    | +0x3a = [16-bit] Initial position Y
+    | +0x3c = [16-bit] Velocity X
+    | +0x3e = [16-bit] Velocity Y
+    | +0x48 = [16-bit] Follow Y
+    | +0x4a = [16-bit] Follow X
+    | +0x67 = [8-bit] Animation State
+    | | Always use in combination with substate
+    | | Check possible values in raym.app
+    | +0x69 = [8-bit] Animation Substate
+    | +0x71 = [8-bit] Health
+    | +0x7c = [8-bit] [Bitfield] Pickup state
+    | | bit4 = Not Collected
     """
 
-    ENTITY_DATA_DREAM_FOREST_ARRAY_COUNT = byte(0x054005)
-    """
-    [8-bit] Entity Data | Dream Forest | Array Count
-    """
-
-    ENTITY_DATA_DREAM_FOREST = (0x054010)
+    ENTITY_DATA_DREAM_FOREST = (0x054000)
     """
     [28672 bytes] [Array] Entity Data | Dream Forest
     Memory range specific to world 1 (Dream Forest)
     | [112 bytes] Entity Data Structure
-    | +0x00 = [32-bit] Graphics related data
-    | +0x04 = [32-bit] Graphics related data
-    | +0x1c = [16-bit] Position X
-    | +0x1e = [16-bit] Position Y
-    | +0x22 = [16-bit] Camera relative pos X
-    | +0x24 = [16-bit] Camera relative pos Y
-    | +0x57 = [8-bit] Entity state
-    | +0x59 = [8-bit] Entity substate
-    | +0x61 = [8-bit] Health
-    | +0x6c = [8-bit] [Bitfield] Pickup state
-    | -- bit4 = Not Collected
+    | +0x10 = [32-bit Pointer] Sprite data
+    | +0x14 = [32-bit Pointer] Animation data
+    | +0x18 = [32-bit Pointer] Image buffer data
+    | +0x1c = [32-bit Pointer] Script related data
+    | +0x20 = [32-bit Pointer] Script related data
+    | +0x24 = [32-bit Pointer] Script related data
+    | +0x28 = [32-bit Pointer] Script related data
+    | +0x2c = [16-bit] Position X
+    | +0x2e = [16-bit] Position Y
+    | +0x30 = [16-bit] Entity ID
+    | +0x32 = [16-bit] Camera relative pos X
+    | +0x34 = [16-bit] Camera relative pos Y
+    | +0x38 = [16-bit] Initial position X
+    | +0x3a = [16-bit] Initial position Y
+    | +0x3c = [16-bit] Velocity X
+    | +0x3e = [16-bit] Velocity Y
+    | +0x48 = [16-bit] Follow Y
+    | +0x4a = [16-bit] Follow X
+    | +0x67 = [8-bit] Animation State
+    | | Always use in combination with substate
+    | | Check possible values in raym.app
+    | +0x69 = [8-bit] Animation Substate
+    | +0x71 = [8-bit] Health
+    | +0x7c = [8-bit] [Bitfield] Pickup state
+    | | bit4 = Not Collected
     """
 
-    LEVEL_INFO_PINK_PLANT_WOODS = (0x18f908)
+    LEVEL_INFO_PINK_PLANT_WOODS = (0x18f900)
     """
     [20 bytes] [Array] Level Info | Pink Plant Woods
-    |0x00 = [8-Bit] Cages unlocked count
-    |0x01 = [8-Bit] [Bitfield] Level state
-    -- bit7 = Unlocked
-    -- bit6 = Visible
-    |0x02 = [8-Bit] Starting map ID
-    |0x03 = [8-Bit] World ID
+    | [20 bytes] Level Info Structure
+    | +0x00 = [16-bit] Map position X
+    | +0x02 = [16-bit] Map position Y
+    | +0x04 = [8-bit] Map index up
+    | +0x05 = [8-bit] Map index left
+    | +0x06 = [8-bit] Map index down
+    | +0x07 = [8-bit] Map index right
+    | +0x08 = [8-bit] Cages unlocked count
+    | +0x09 = [8-bit] [Bitfield] Level state
+    | | bit7 = Unlocked
+    | | bit6 = Visible
+    | | bit5 = Unlock animation
+    | +0x0a = [8-bit] Starting map ID
+    | +0x0b = [8-bit] World ID
+    | +0x10 = [32-bit Pointer] Level name
+    | +0x15 = [8-bit] Level text color
     """
 
-    LEVEL_INFO_ANGUISH_LAGOON = (0x18f91c)
+    LEVEL_INFO_ANGUISH_LAGOON = (0x18f914)
     """
     [20 bytes] Level Info | Anguish Lagoon
     """
 
-    LEVEL_INFO_THE_SWAMPS_OF_FORGETFULNESS = (0x18f930)
+    LEVEL_INFO_THE_SWAMPS_OF_FORGETFULNESS = (0x18f928)
     """
     [20 bytes] Level Info | The Swamps of Forgetfulness
     """
 
-    LEVEL_INFO_MOSKITOS_NEST = (0x18f944)
+    LEVEL_INFO_MOSKITOS_NEST = (0x18f93c)
     """
     [20 bytes] Level Info | Moskito's Nest
     """
 
-    LEVEL_INFO_BONGO_HILLS = (0x18f958)
+    LEVEL_INFO_BONGO_HILLS = (0x18f950)
     """
     [20 bytes] Level Info | Bongo Hills
     """
 
-    LEVEL_INFO_ALLEGRO_PRESTO = (0x18f96c)
+    LEVEL_INFO_ALLEGRO_PRESTO = (0x18f964)
     """
     [20 bytes] Level Info | Allegro Presto
     """
 
-    LEVEL_INFO_GONG_HEIGHTS = (0x18f980)
+    LEVEL_INFO_GONG_HEIGHTS = (0x18f978)
     """
     [20 bytes] Level Info | Gong Heights
     """
 
-    LEVEL_INFO_MR_SAXS_HULLABALLO = (0x18f994)
+    LEVEL_INFO_MR_SAXS_HULLABALLO = (0x18f98c)
     """
     [20 bytes] Level Info | Mr Sax's Hullaballo
     """
 
-    LEVEL_INFO_TWILIGHT_GULCH = (0x18f9a8)
+    LEVEL_INFO_TWILIGHT_GULCH = (0x18f9a0)
     """
     [20 bytes] Level Info | Twilight Gulch
     """
 
-    LEVEL_INFO_THE_HARD_ROCKS = (0x18f9bc)
+    LEVEL_INFO_THE_HARD_ROCKS = (0x18f9b4)
     """
     [20 bytes] Level Info | The Hard Rocks
     """
 
-    LEVEL_INFO_MR_STONES_PEAKS = (0x18f9d0)
+    LEVEL_INFO_MR_STONES_PEAKS = (0x18f9c8)
     """
     [20 bytes] Level Info | Mr Stone's Peaks
     """
 
-    LEVEL_INFO_ERASER_PLAINS = (0x18f9e4)
+    LEVEL_INFO_ERASER_PLAINS = (0x18f9dc)
     """
     [20 bytes] Level Info | Eraser Plains
     """
 
-    LEVEL_INFO_PENCIL_PENTATHLON = (0x18f9f8)
+    LEVEL_INFO_PENCIL_PENTATHLON = (0x18f9f0)
     """
     [20 bytes] Level Info | Pencil Pentathlon
     """
 
-    LEVEL_INFO_SPACE_MAMAS_CRATER = (0x18fa0c)
+    LEVEL_INFO_SPACE_MAMAS_CRATER = (0x18fa04)
     """
     [20 bytes] Level Info | Space Mama's Crater
     """
 
-    LEVEL_INFO_CRYSTAL_PALACE = (0x18fa20)
+    LEVEL_INFO_CRYSTAL_PALACE = (0x18fa18)
     """
     [20 bytes] Level Info | Crystal Palace
     """
 
-    LEVEL_INFO_EAT_AT_JOES = (0x18fa34)
+    LEVEL_INFO_EAT_AT_JOES = (0x18fa2c)
     """
     [20 bytes] Level Info | Eat at Joe's
     """
 
-    LEVEL_INFO_MR_SKOPS_STALACTITES = (0x18fa48)
+    LEVEL_INFO_MR_SKOPS_STALACTITES = (0x18fa40)
     """
     [20 bytes] Level Info | Mr Skops' Stalactites
     """
 
-    LEVEL_INFO_MR_DARKS_DARE = (0x18fa5c)
+    LEVEL_INFO_MR_DARKS_DARE = (0x18fa54)
     """
     [20 bytes] Level Info | Mr Dark's Dare
+    """
+
+    LEVEL_INFO_SAVE_1 = (0x18fa68)
+    """
+    [20 bytes] Level Info | Save 1
+    """
+
+    LEVEL_INFO_SAVE_2 = (0x18fa7c)
+    """
+    [20 bytes] Level Info | Save 2
+    """
+
+    LEVEL_INFO_SAVE_3 = (0x18fa90)
+    """
+    [20 bytes] Level Info | Save 3
+    """
+
+    LEVEL_INFO_SAVE_4 = (0x18faa4)
+    """
+    [20 bytes] Level Info | Save 4
+    """
+
+    LEVEL_INFO_SAVE_5 = (0x18fab8)
+    """
+    [20 bytes] Level Info | Save 5
+    """
+
+    LEVEL_INFO_SAVE_6 = (0x18facc)
+    """
+    [20 bytes] Level Info | Save 6
     """
 
     INGAME_PAUSED = byte(0x1a4ba7)
@@ -149,9 +228,9 @@ class Memory:
     0x1 = True
     """
 
-    BONUS_LEVEL_TIMER = word(0x1a4ca2)
+    BONUS_LEVEL_TIME_LEFT = word(0x1a4ca2)
     """
-    [16-bit] Bonus Level | Timer
+    [16-bit] Bonus Level | Time Left
     0xfffe = disabled
     Any other value = Frames left before end of the timer
     """
@@ -178,6 +257,11 @@ class Memory:
     0x10 = Mr Skops' Stalactites
     0x11 = Mr Dark's Dare
     0x12 = Save 1
+    0x13 = Save 2
+    0x14 = Save 3
+    0x15 = Save 4
+    0x16 = Save 5
+    0x17 = Save 6
     """
 
     STATE_IN_LEVEL_SELECT = byte(0x1a50c7)
@@ -220,6 +304,38 @@ class Memory:
     NUMBER_OF_TINGS = byte(0x1a6d27)
     """
     Number of Tings (8-bit)
+    """
+
+    RAYMAN_POSITION_X = word(0x1a6d4c)
+    """
+    [16-bit] Rayman | Position X
+    """
+
+    RAYMAN_POSITION_Y = word(0x1a6d4e)
+    """
+    [16-bit] Rayman | Position Y
+    """
+
+    RAYMAN_VELOCITY_X = word(0x1a6d5c)
+    """
+    [16-bit] Rayman | Velocity X
+    """
+
+    RAYMAN_VELOCITY_Y = word(0x1a6d5e)
+    """
+    [16-bit] Rayman | Velocity Y
+    """
+
+    RAYMAN_ANIMATION_STATE = byte(0x1a6d87)
+    """
+    [8-bit] Rayman | Animation State
+    Always use in combination with substate
+    Check possible values in raym.app
+    """
+
+    RAYMAN_ANIMATION_SUBSTATE = byte(0x1a6d89)
+    """
+    [8-bit] Rayman | Animation Substate
     """
 
     RAYMAN_HITPOINTS = byte(0x1a6d91)
@@ -288,6 +404,22 @@ class Memory:
     0x3 = Save 3
     """
 
+    INGAME_MAP_TIMER_HIGH = word(0x1ab630)
+    """
+    [16-bit] Ingame | Map Timer High
+    Frames spent playing on the current map
+    Add the high value with the low value together to obtain the total time as a 32-bit using the following formula:
+    High * 0x10000 + Low
+    """
+
+    INGAME_MAP_TIMER_LOW = word(0x1ab632)
+    """
+    [16-bit] Ingame | Map Timer Low
+    Frames spent playing on the current map
+    Add the high value with the low value together to obtain the total time as a 32-bit using the following formula:
+    High * 0x10000 + Low
+    """
+
     LOADING_MAP_ID = byte(0x1ab662)
     """
     [8-bit] Loading | Map ID (alt)
@@ -343,6 +475,10 @@ class Memory:
     bit6 = Moskito
     bit5 = Mr Sax
     bit4 = Mr Stone
+    bit3 = Pirate Mama
+    bit2 = Space Mama
+    bit1 = Mr Skops
+    bit0 = Mr Dark
     """
 
     RAYMAN_MODIFIERS = byte(0x1acfc4)
