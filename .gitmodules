@@ -1,0 +1,3 @@
+[submodule "PyCheevos"]
+	path = PyCheevos
+	url = git@github.com:wormi-ra/PyCheevos.git

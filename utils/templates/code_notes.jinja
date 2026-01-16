@@ -1,0 +1,10 @@
+from pycheevos.core.helpers import *
+
+class Memory:
+{% for note in notes%}
+    {{ note.slug }} = {{ note.type }}({{ note.address}})
+    """
+    {{ note.note|indent }}
+    """
+
+{% endfor %}
