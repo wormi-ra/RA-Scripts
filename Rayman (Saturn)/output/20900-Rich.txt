@@ -26,5 +26,5 @@ Display:
 ?O:0xH1ab0a2=0_N:0xH1bfb6c!=1_0xH1a50c7!=1?Rayman is in the title screen
 ?0xH1a50c7=1?Rayman is selecting a level | 😊x@Unsigned(A:0xH18f908_A:0xH18f91c_A:0xH18f930_A:0xH18f944_A:0xH18f958_A:0xH18f96c_A:0xH18f980_A:0xH18f994_A:0xH18f9a8_A:0xH18f9bc_A:0xH18f9d0_A:0xH18f9e4_A:0xH18f9f8_A:0xH18fa0c_A:0xH18fa20_A:0xH18fa34_A:0xH18fa48_M:0xH18fa5c)/102 ❤️x@Unsigned(0x1a6d20) ⏰x@Unsigned(0xH1a8593)
 ?N:0xH1bfb6c=1_0x1a4ca2!=65534?@Paused(0xH1a4ba7)Rayman is playing a Magician level in @Level(0xH1a509e) | 🕑@Unsigned(0x1a4ca2/60) 🔵x@Unsigned(0xH1a5c2f)/@Unsigned(0xH1ab013+0xH1a5c2f)
-?0xH1bfb6c=1?@Paused(0xH1a4ba7)Rayman is in @Level(0xH1a509e) | 😊x@Unsigned(I:0xH1a509e*20_M:0xH18f900)/6 ❤️x@Unsigned(0x1a6d20) 🔵x@Unsigned(0xH1a6d27) ⏰x@Unsigned(0xH1a8593)
+?0xH1bfb6c=1?@Paused(0xH1a4ba7)Rayman is in @Level(0xH1a509e) | 😊x@Unsigned(I:0xH1a509e*20_M:0xH18f908)/6 ❤️x@Unsigned(0x1a6d20) 🔵x@Unsigned(0xH1a6d27) ⏰x@Unsigned(0xH1a8593)
 Playing Rayman

@@ -1,1 +1,3 @@
 ./PyCheevos
+requests
+jinja2

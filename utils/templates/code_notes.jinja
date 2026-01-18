@@ -1,7 +1,9 @@
 from pycheevos.core.helpers import *
+from dataclasses import dataclass
 
+@dataclass(frozen=True)
 class Memory:
-{% for note in notes%}
+{% for note in notes %}
     {{ note.slug }} = {{ note.type }}({{ note.address}})
     """
     {{ note.note|indent }}

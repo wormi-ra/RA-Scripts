@@ -1,0 +1,33 @@
+from pycheevos.models.achievement import Achievement
+from pycheevos.models.leaderboard import Leaderboard
+from pycheevos.core.constants import AchievementType, LeaderboardFormat
+from collections import OrderedDict
+
+achievements = OrderedDict({
+{% for achievement in achievements %}
+    {{ achievement.id }}: Achievement(
+        id={{ achievement.id }},
+        title="""{{ achievement.title }}""",
+        description="""{{ achievement.desc }}""",
+        points={{ achievement.points }},
+    {% if achievement.badge %}
+        badge={{ achievement.badge }},
+    {% endif %}
+    {% if achievement.type %}
+        type=AchievementType.{{ achievement.type|upper }},
+    {% endif %}
+    ),
+{% endfor %}
+})
+
+leaderboards = OrderedDict({
+{% for leaderboard in leaderboards %}
+    {{ leaderboard.id }}: Leaderboard(
+        id={{ leaderboard.id }},
+        title="""{{ leaderboard.title }}""",
+        description="""{{ leaderboard.description }}""",
+        format=LeaderboardFormat.{{ leaderboard.format }},
+        lower_is_better={{ leaderboard.lower_is_better }},
+    ),
+{% endfor %}
+})

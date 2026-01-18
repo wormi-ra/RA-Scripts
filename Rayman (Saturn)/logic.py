@@ -54,12 +54,21 @@ class Rayman:
         return Memory.RAYMAN_CONTINUES
 
 
+class World:
+    JUNGLE = 0x1
+    MUSIC = 0x2
+    MOUNTAIN = 0x3
+    IMAGE = 0x4
+    CAVE = 0x5
+    CAKE = 0x6
+
+
 class EntityData(GameObject):
     SIZE = 112
 
     @staticmethod
     def get_array_address(world_id: int):
-        if (world_id == 1):
+        if (world_id == World.JUNGLE):
             return Memory.ENTITY_DATA_DREAM_FOREST
         return Memory.ENTITY_DATA
 
@@ -69,7 +78,7 @@ class EntityData(GameObject):
             cond
         ])
 
-    def __init__(self, id: int, world_id: int = 1) -> None:
+    def __init__(self, id: int, world_id: int = World.JUNGLE) -> None:
         super().__init__(self.get_array_address(world_id))
         self.id = id
         self.pos_x = word(0x2c)
@@ -85,23 +94,43 @@ class EntityData(GameObject):
         self.health = byte(0x71)
         self.active_state = byte(0x74)
 
-    def on_livingstone_grimace(self):
-        return ConditionList([
-            # animation state changes from 0-2 to 1-b
-            (and_next(self.add_offset(delta(self.animation_state) == 0x0))),
-            (and_next(self.add_offset(self.animation_state == 0x1))),
-            (and_next(self.add_offset(delta(self.animation_substate) == 0x2))),
-            (self.add_offset(self.animation_substate == 0xb)),
-        ])
+    def on_animation_change(self, prev: tuple[int, int], actual: tuple[int, int]):
+        return (
+            self.add_offset(delta(self.animation_state) == prev[0]) &
+            self.add_offset(self.animation_state == actual[0]) &
+            self.add_offset(delta(self.animation_substate) == prev[1]) &
+            self.add_offset(self.animation_substate == actual[1])
+        )
 
-    def on_tentacle_defeat(self):
-        return ConditionList([
-            # animation state changes from 0-15 to 0-3
-            (and_next(self.add_offset(delta(self.animation_state) == 0x0))),
-            (and_next(self.add_offset(self.animation_state == 0x0))),
-            (and_next(self.add_offset(delta(self.animation_substate) == 0x15))),
-            (self.add_offset(self.animation_substate == 0x3)),
-        ])
+
+class MagicianLevel:
+    LEVELS = {
+        # (world, map)
+        0: (1, 21),
+        1: (1, 20),
+        2: (1, 18),
+        3: (1, 19),
+        4: (2, 17),
+        5: (2, 18),
+        6: (3, 12),
+        7: (3, 13),
+        8: (4, 12),
+        9: (4, 13),
+        10: (5, 12)
+    }
+
+    def __init__(self, id) -> None:
+        self.id = id
+
+    def on_win(self):
+        return (
+            Rayman.is_ingame() &
+            Rayman.is_in_level(*self.get_level()) &
+            delta_check(Memory.BONUS_LEVEL_WIN_CUTSCENE_TIMER, 0xfffe, 0x0000)
+        )
+
+    def get_level(self):
+        return self.LEVELS[self.id]
 
 
 class LevelInfo(GameObject):
@@ -126,20 +155,6 @@ class LevelInfo(GameObject):
         16: "Mr Skops' Stalactites",
         17: "Mr Dark's Dare",
     }
-    MAGICIAN_LEVELS = {
-        # (world, map)
-        0: (1, 21),
-        1: (1, 20),
-        2: (1, 18),
-        3: (1, 19),
-        4: (2, 17),
-        5: (2, 18),
-        6: (3, 12),
-        7: (3, 13),
-        8: (4, 12),
-        9: (4, 13),
-        10: (5, 12)
-    }
 
     def __init__(self, id: int) -> None:
         super().__init__(Memory.LEVEL_INFO_PINK_PLANT_WOODS + self.SIZE * id)
@@ -156,6 +171,13 @@ class LevelInfo(GameObject):
         self.name_ptr = self.offset(0x10,  dword)
         self.text_color = self.offset(0x15, byte)
         self.name = LevelInfo.NAMES[id]
+
+    def on_cages_unlocked(self):
+        return (
+            Rayman.is_ingame() &
+            (delta(self.cages) == 5) &
+            (self.cages == 6)
+        )
 
 
 def delta_sources(sources: list[MemoryValue], delta_val: int, actual_val: int):
