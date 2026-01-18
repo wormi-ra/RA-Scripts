@@ -6,49 +6,6 @@ from pycheevos.models.rich_presence import *
 from logic import LevelInfo
 from memory import Memory
 
-BONUS_LEVEL = "a Bonus Level"
-
-FOREST_LOOKUP = {
-    (1,2,3,4,20,21): 0,
-    (5,6,7,8): 1,
-    (9,10,11,18): 2,
-    (12,13,14,15,16,17,19): 3
-}
-
-BAND_LOOKUP = {
-    (1,2,3,4,5,6,17): 4,
-    (7,8,9,10,11,18): 5,
-    (12,13): 6,
-    (14,15,16): 7
-}
-
-MOUNTAIN_LOOKUP = {
-    (1,2): 8,
-    (3,4,5,12): 9,
-    (6,7,8,9,10,11,13): 10,
-}
-
-PICTURE_LOOKUP = {
-    (1,2,3,4,12): 11,
-    (5,6,7): 12,
-    (8,9,10,11,13): 13,
-}
-
-CAVES_LOOKUP = {
-    (1,2): 14,
-    (5,6,7): 15,
-    (8,9,10,11,13): 16,
-}
-
-WORLD_DICT = {
-    1: "Forest",
-    2: "Band",
-    3: "Mountains",
-    4: "Picture",
-    5: "Caves",
-    6: "Candy",
-}
-
 def render(conditions: ConditionList):
     return "_".join([cond.render() for cond in conditions])
 
@@ -121,7 +78,7 @@ class RaymanRichPresence(RichPresence):
 
     def level_cages(self):
         cages = ConditionList([
-            add_address(Memory.LEVEL_SELECT_CURRENT_LEVEL_ID * LevelInfo.SIZE),
+            add_address(Memory.LEVEL_SELECT_CURRENT_LEVEL_ID * LevelInfo.MEMSIZE),
             measured(byte(Memory.LEVEL_INFO_PINK_PLANT_WOODS + 0x8))
         ])
         return f"😊x@Unsigned({render(cages)})/6"

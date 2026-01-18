@@ -1,13 +1,19 @@
 from pycheevos.models.generic import GameObject
-from pycheevos.models.set import AchievementSet
-from pycheevos.models.achievement import Achievement
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 from pycheevos.core.condition import Condition, ConditionList
-from pycheevos.core.value import MemoryExpression, MemoryValue
-from typing import Any, Callable
+from pycheevos.core.value import MemoryValue
 
 from memory import Memory
+
+class World:
+    JUNGLE = 0x1
+    MUSIC = 0x2
+    MOUNTAIN = 0x3
+    IMAGE = 0x4
+    CAVE = 0x5
+    CAKE = 0x6
+
 
 class Rayman:
     @staticmethod
@@ -54,17 +60,8 @@ class Rayman:
         return Memory.RAYMAN_CONTINUES
 
 
-class World:
-    JUNGLE = 0x1
-    MUSIC = 0x2
-    MOUNTAIN = 0x3
-    IMAGE = 0x4
-    CAVE = 0x5
-    CAKE = 0x6
-
-
 class EntityData(GameObject):
-    SIZE = 112
+    MEMSIZE = 112
 
     @staticmethod
     def get_array_address(world_id: int):
@@ -74,7 +71,7 @@ class EntityData(GameObject):
 
     def add_offset(self, cond: Condition):
         return ConditionList([
-            add_address(Condition(value(self.base_address), "+", value(self.SIZE * self.id))),
+            add_address(Condition(value(self.base_address), "+", value(self.MEMSIZE * self.id))),
             cond
         ])
 
@@ -134,7 +131,7 @@ class MagicianLevel:
 
 
 class LevelInfo(GameObject):
-    SIZE = 20
+    MEMSIZE = 20
     NAMES = {
         0: "Pink Plant Woods",
         1: "Anguish Lagoon",
@@ -157,7 +154,7 @@ class LevelInfo(GameObject):
     }
 
     def __init__(self, id: int) -> None:
-        super().__init__(Memory.LEVEL_INFO_PINK_PLANT_WOODS + self.SIZE * id)
+        super().__init__(Memory.LEVEL_INFO_PINK_PLANT_WOODS + self.MEMSIZE * id)
         self.pos_x = self.offset(0x00, word)
         self.pos_y = self.offset(0x02, word)
         self.index_up = self.offset(0x04, byte)
