@@ -520,3 +520,5 @@ class Memory:
     0x1 = True
     """
 
+    LIFE_COUNTER_SCREEN_ANIMATION = word(0x1a97c2)
+    STATE_LEVEL_CLEAR = byte(0x1a4ba3)

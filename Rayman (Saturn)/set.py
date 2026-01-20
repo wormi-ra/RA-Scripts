@@ -1,4 +1,4 @@
-from pycheevos.models.set import AchievementSet
+from pycheevos.models.set import AchievementSet, Leaderboard
 from pycheevos.models.achievement import Achievement
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
@@ -20,6 +20,8 @@ class RaymanSet(AchievementSet):
             game_id=20900,
             title="Rayman (Saturn)"
         )
+        self.leaderboard_pink_plant_woods(assets.leaderboards[152558])
+        self.add_leaderboard(assets.leaderboards[152558])
 
     ##########################
     # Progression: Abilities #
@@ -314,6 +316,34 @@ class RaymanSet(AchievementSet):
             Rayman.is_ingame() &
             (Rayman.is_in_level(World.JUNGLE, 12)) &
             entity.on_animation_change((0x0, 0x15), (0x0, 0x3))
+        )
+
+    @achievement(573032)
+    def extra_life(self, ach: Achievement):
+        ach.add_core(
+            Rayman.is_ingame() &
+            (Rayman.tings() < delta(Rayman.tings())) &
+            (delta(Memory.LIFE_COUNTER_SCREEN_ANIMATION) == 0xffff) &
+            (Memory.LIFE_COUNTER_SCREEN_ANIMATION != 0xffff)
+        )
+
+    def leaderboard_pink_plant_woods(self, lb: Leaderboard):
+        lb.set_start(
+            (Memory.STATE_DEMO_PLAY == 0) &
+            (Rayman.is_in_level(World.JUNGLE, 1)) &
+            delta_check(Memory.STATE_INGAME, 0, 1) 
+        )
+        lb.set_cancel(
+            (Memory.STATE_INGAME != 1) |
+            Rayman.has_cheated()
+        )
+        lb.set_value(
+            Rayman.is_in_level(World.JUNGLE, [1, 2, 4]) &
+            measured(Memory.INGAME_MAP_TIMER_LOW != delta(Memory.INGAME_MAP_TIMER_LOW))
+        )
+        lb.set_submit(
+            (Rayman.current_map() == 0x4) &
+            delta_check(Memory.STATE_LEVEL_CLEAR, 0x0, 0x2)
         )
 
 if __name__=="__main__":

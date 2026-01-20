@@ -125,9 +125,9 @@ achievements = OrderedDict({
     ),
     573032: Achievement(
         id=573032,
-        title="""[Void] Mr Dark's Dare Cages""",
-        description="""Break all 6 Electoon cages in Mr Dark's Dare""",
-        points=5,
+        title="""Extra Life""",
+        description="""Obtain an extra life by collecting 100 Tings""",
+        points=1,
     ),
     573033: Achievement(
         id=573033,
@@ -315,4 +315,11 @@ achievements = OrderedDict({
 })
 
 leaderboards = OrderedDict({
+    152558: Leaderboard(
+        "Pink Plant Woods - Time Attack",
+        "",
+        id=152558,
+        format=LeaderboardFormat.FRAMES,
+        lower_is_better=True
+    )
 })
