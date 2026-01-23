@@ -11,7 +11,7 @@ achievements = OrderedDict({
         description="""{{ achievement.desc }}""",
         points={{ achievement.points }},
     {% if achievement.badge %}
-        badge={{ achievement.badge }},
+        badge="{{ achievement.badge }}",
     {% endif %}
     {% if achievement.type %}
         type=AchievementType.{{ achievement.type|upper }},

@@ -1,5 +1,7 @@
 from pycheevos.core.helpers import *
+from dataclasses import dataclass
 
+@dataclass(frozen=True)
 class Memory:
     SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000000)
     """
@@ -25,85 +27,96 @@ class Memory:
     ENTITY_DATA = (0x04b000)
     """
     [28672 bytes] [Array] Entity Data
+    Memory range specific to world 2-6 (All except Dream Forest)
     | [112 bytes] Entity Data Structure
-    | +0x10 = [32-bit Pointer] Sprite data
-    | +0x14 = [32-bit Pointer] Animation data
-    | +0x18 = [32-bit Pointer] Image buffer data
-    | +0x1c = [32-bit Pointer] Script related data
-    | +0x20 = [32-bit Pointer] Script related data
-    | +0x24 = [32-bit Pointer] Script related data
-    | +0x28 = [32-bit Pointer] Script related data
-    | +0x2c = [16-bit] Position X
-    | +0x2e = [16-bit] Position Y
-    | +0x30 = [16-bit] Entity ID
-    | +0x32 = [16-bit] Camera relative pos X
-    | +0x34 = [16-bit] Camera relative pos Y
-    | +0x38 = [16-bit] Initial position X
-    | +0x3a = [16-bit] Initial position Y
-    | +0x3c = [16-bit] Velocity X
-    | +0x3e = [16-bit] Velocity Y
-    | +0x48 = [16-bit] Follow Y
-    | +0x4a = [16-bit] Follow X
-    | +0x67 = [8-bit] Animation State
-    | | Always use in combination with substate
-    | | Check possible values in raym.app
-    | +0x69 = [8-bit] Animation Substate
-    | +0x71 = [8-bit] Health
-    | +0x7c = [8-bit] [Bitfield] Pickup state
-    | | bit4 = Not Collected
+    | 0x10 = [32-bit Pointer] Sprite data
+    | 0x14 = [32-bit Pointer] Animation data
+    | 0x18 = [32-bit Pointer] Image buffer data
+    | 0x1c = [32-bit Pointer] Script related data
+    | 0x20 = [32-bit Pointer] Script related data
+    | 0x24 = [32-bit Pointer] Script related data
+    | 0x28 = [32-bit Pointer] Script related data
+    | 0x2c = [16-bit] Position X
+    | 0x2e = [16-bit] Position Y
+    | 0x30 = [16-bit] Entity ID
+    | 0x32 = [16-bit] Camera relative pos X
+    | 0x34 = [16-bit] Camera relative pos Y
+    | 0x38 = [16-bit] Initial position X
+    | 0x3a = [16-bit] Initial position Y
+    | 0x3c = [16-bit] Velocity X
+    | 0x3e = [16-bit] Velocity Y
+    | 0x48 = [16-bit] Follow Y
+    | 0x4a = [16-bit] Follow X
+    | 0x67 = [8-bit] Animation State
+    | - Always use in combination with substate
+    | - Check possible values in raym.app
+    | 0x69 = [8-bit] Animation Substate
+    | 0x71 = [8-bit] Health
+    | 0x7c = [8-bit] [Bitfield] Pickup state
+    | - bit4 = Not Collected
     """
 
     ENTITY_DATA_DREAM_FOREST = (0x054000)
     """
     [28672 bytes] [Array] Entity Data | Dream Forest
     Memory range specific to world 1 (Dream Forest)
-    | [112 bytes] Entity Data Structure
-    | +0x10 = [32-bit Pointer] Sprite data
-    | +0x14 = [32-bit Pointer] Animation data
-    | +0x18 = [32-bit Pointer] Image buffer data
-    | +0x1c = [32-bit Pointer] Script related data
-    | +0x20 = [32-bit Pointer] Script related data
-    | +0x24 = [32-bit Pointer] Script related data
-    | +0x28 = [32-bit Pointer] Script related data
-    | +0x2c = [16-bit] Position X
-    | +0x2e = [16-bit] Position Y
-    | +0x30 = [16-bit] Entity ID
-    | +0x32 = [16-bit] Camera relative pos X
-    | +0x34 = [16-bit] Camera relative pos Y
-    | +0x38 = [16-bit] Initial position X
-    | +0x3a = [16-bit] Initial position Y
-    | +0x3c = [16-bit] Velocity X
-    | +0x3e = [16-bit] Velocity Y
-    | +0x48 = [16-bit] Follow Y
-    | +0x4a = [16-bit] Follow X
-    | +0x67 = [8-bit] Animation State
-    | | Always use in combination with substate
-    | | Check possible values in raym.app
-    | +0x69 = [8-bit] Animation Substate
-    | +0x71 = [8-bit] Health
-    | +0x7c = [8-bit] [Bitfield] Pickup state
-    | | bit4 = Not Collected
+    [112 bytes] Entity Data Structure
+    | 0x10 = [32-bit Pointer] Sprite data
+    | 0x14 = [32-bit Pointer] Animation data
+    | 0x18 = [32-bit Pointer] Image buffer data
+    | 0x1c = [32-bit Pointer] Script related data
+    | 0x20 = [32-bit Pointer] Script related data
+    | 0x24 = [32-bit Pointer] Script related data
+    | 0x28 = [32-bit Pointer] Script related data
+    | 0x2c = [16-bit] Position X
+    | 0x2e = [16-bit] Position Y
+    | 0x30 = [16-bit] Entity ID
+    | 0x32 = [16-bit] Camera relative pos X
+    | 0x34 = [16-bit] Camera relative pos Y
+    | 0x38 = [16-bit] Initial position X
+    | 0x3a = [16-bit] Initial position Y
+    | 0x3c = [16-bit] Velocity X
+    | 0x3e = [16-bit] Velocity Y
+    | 0x48 = [16-bit] Follow Y
+    | 0x4a = [16-bit] Follow X
+    | 0x67 = [8-bit] Animation State
+    | - Always use in combination with substate
+    | - Check possible values in raym.app
+    | 0x69 = [8-bit] Animation Substate
+    | 0x71 = [8-bit] Health
+    | 0x7c = [8-bit] [Bitfield] Pickup state
+    | - bit4 = Not Collected
+    """
+
+    CUTSCENE_TIMER = word(0x0a28b2)
+    """
+    [16-bit] Cutscene Timer
+    """
+
+    STATE_WATCHING_CUTSCENE = byte(0x0a28e2)
+    """
+    [8-bit] [Boolean] State | Watching Cutscene
     """
 
     LEVEL_INFO_PINK_PLANT_WOODS = (0x18f900)
     """
-    [20 bytes] [Array] Level Info | Pink Plant Woods
+    [480 bytes] [Array] Level Info | Pink Plant Woods
     | [20 bytes] Level Info Structure
-    | +0x00 = [16-bit] Map position X
-    | +0x02 = [16-bit] Map position Y
-    | +0x04 = [8-bit] Map index up
-    | +0x05 = [8-bit] Map index left
-    | +0x06 = [8-bit] Map index down
-    | +0x07 = [8-bit] Map index right
-    | +0x08 = [8-bit] Cages unlocked count
-    | +0x09 = [8-bit] [Bitfield] Level state
-    | | bit7 = Unlocked
-    | | bit6 = Visible
-    | | bit5 = Unlock animation
-    | +0x0a = [8-bit] Starting map ID
-    | +0x0b = [8-bit] World ID
-    | +0x10 = [32-bit Pointer] Level name
-    | +0x15 = [8-bit] Level text color
+    | 0x00 = [16-bit] Map position X
+    | 0x02 = [16-bit] Map position Y
+    | 0x04 = [8-bit] Map index up
+    | 0x05 = [8-bit] Map index left
+    | 0x06 = [8-bit] Map index down
+    | 0x07 = [8-bit] Map index right
+    | 0x08 = [8-bit] Cages unlocked count
+    | 0x09 = [8-bit] [Bitfield] Level state
+    | - bit7 = Unlocked
+    | - bit6 = Visible
+    | - bit5 = Waiting unlock animation
+    | 0x0a = [8-bit] Starting map ID
+    | 0x0b = [8-bit] World ID
+    | 0x1d = [8-bit] Level text color
+    | 0x10 = [32-bit Pointer] Level name
     """
 
     LEVEL_INFO_ANGUISH_LAGOON = (0x18f914)
@@ -219,6 +232,49 @@ class Memory:
     LEVEL_INFO_SAVE_6 = (0x18facc)
     """
     [20 bytes] Level Info | Save 6
+    """
+
+    ENTITY_DATA_POINTER_WORLD_1 = dword(0x191914)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 1
+    Always point to 0x54000
+    """
+
+    ENTITY_DATA_POINTER_WORLD_2 = dword(0x191918)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 2
+    Always point to 0x4b000
+    """
+
+    ENTITY_DATA_POINTER_WORLD_3 = dword(0x19191c)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 3
+    Always point to 0x4b000
+    """
+
+    ENTITY_DATA_POINTER_WORLD_4 = dword(0x191920)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 4
+    Always point to 0x4b000
+    """
+
+    ENTITY_DATA_POINTER_WORLD_5 = dword(0x191924)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 5
+    Always point to 0x4b000
+    """
+
+    ENTITY_DATA_POINTER_WORLD_6 = dword(0x191928)
+    """
+    [32-bit ME Pointer & 0x1fffff] Entity Data Pointer | World 6
+    Always point to 0x4b000
+    """
+
+    INGAME_LEVEL_CLEAR = byte(0x1a4ba3)
+    """
+    [8-bit] Ingame | Level Clear
+    0x0 = Inactive
+    0x2 = Sign touched
     """
 
     INGAME_PAUSED = byte(0x1a4ba7)
@@ -351,6 +407,7 @@ class Memory:
     STATE_GAME_OVER = byte(0x1a6eb1)
     """
     [8-bit] [Boolean] State | Game Over
+    True when on the game over screen, as well as the ending cutscene and credits
     """
 
     GENERAL_FRAME_COUNTER = word(0x1a7046)
@@ -362,6 +419,12 @@ class Memory:
     RAYMAN_CONTINUES = byte(0x1a8593)
     """
     [8-bit] Rayman | Continues
+    """
+
+    LIFE_COUNTER_SCREEN_ANIMATION = word(0x1a97c2)
+    """
+    [16-bit] Life Counter Screen Animation
+    0xffff = Inactive
     """
 
     LOADING_WORLD = byte(0x1a9f40)
@@ -408,6 +471,8 @@ class Memory:
     """
     [16-bit] Ingame | Map Timer High
     Frames spent playing on the current map
+    Resets on death and map changes
+
     Add the high value with the low value together to obtain the total time as a 32-bit using the following formula:
     High * 0x10000 + Low
     """
@@ -416,6 +481,8 @@ class Memory:
     """
     [16-bit] Ingame | Map Timer Low
     Frames spent playing on the current map
+    Resets on death and map changes
+
     Add the high value with the low value together to obtain the total time as a 32-bit using the following formula:
     High * 0x10000 + Low
     """
@@ -520,5 +587,3 @@ class Memory:
     0x1 = True
     """
 
-    LIFE_COUNTER_SCREEN_ANIMATION = word(0x1a97c2)
-    STATE_LEVEL_CLEAR = byte(0x1a4ba3)

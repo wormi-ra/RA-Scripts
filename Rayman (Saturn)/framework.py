@@ -1,4 +1,4 @@
-from pycheevos.models.set import AchievementSet
+from pycheevos.models.set import Achievement, AchievementSet, Leaderboard
 from pycheevos.core.condition import Condition
 from pycheevos.core.helpers import Flag
 from collections import OrderedDict
@@ -8,6 +8,7 @@ class achievement_set:
         self.assets = assets
         self.author = author
         self.logic = OrderedDict()
+        self.leaderboards = OrderedDict()
     
     def clean_logic(self, conditions: list[Condition]) -> list[Condition]:
         """Removes useless AND_NEXT flags when not used in a hitcount or reset context"""
@@ -26,7 +27,7 @@ class achievement_set:
         _save = cls.save
         def save(set: AchievementSet, *args, **kwargs):
             for id, func in self.logic.items():
-                ach = self.assets.achievements[id]
+                ach: Achievement = self.assets.achievements[id]
                 func(set, ach)
                 print(f"{id}: {ach.title}")
                 set.add_achievement(ach)
@@ -34,6 +35,11 @@ class achievement_set:
                     self.clean_logic(group)
                 if ach.author == "PyCheevos":
                     ach.author = self.author
+            for id, func in self.leaderboards.items():
+                lb: Leaderboard = self.assets.leaderboards[id]
+                func(set, lb)
+                print(f"{id}: {lb.title}")
+                set.add_leaderboard(lb)
             print(f"Generated achievements: {len(set.achievements)}")
             print(f"Generated leaderboards: {len(set.leaderboards)}")
             print(f"Total points: {sum((ach.points for ach in set.achievements))}")
@@ -42,6 +48,8 @@ class achievement_set:
         for _, method in cls.__dict__.items():
             if hasattr(method, "_ach_id"):
                 self.logic[method._ach_id] = method
+            if hasattr(method, "_lb_id"):
+                self.leaderboards[method._lb_id] = method
         return cls
 
 
@@ -51,4 +59,12 @@ class achievement:
 
     def __call__(self, func):
         func._ach_id = self.id
+        return func
+
+class leaderboard:
+    def __init__(self, id):
+        self.id = id
+
+    def __call__(self, func):
+        func._lb_id = self.id
         return func
