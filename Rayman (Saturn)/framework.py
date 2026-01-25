@@ -17,10 +17,12 @@ class achievement_set:
             if cond.flag == Flag.AND_NEXT:
                 ands.append(cond)
                 continue
-            if cond.flag in [Flag.RESET_IF, Flag.PAUSE_IF] or cond.hits > 0:
+            if cond.flag in [Flag.RESET_IF, Flag.RESET_NEXT_IF, Flag.PAUSE_IF, Flag.MEASURED_IF] or cond.hits > 0:
                 ands = []
-        for and_cond in ands:
-            and_cond.flag = Flag.NONE
+            if cond.flag in [Flag.NONE, Flag.TRIGGER]:
+                for and_cond in ands:
+                    and_cond.flag = cond.flag
+                ands = []
         return conditions
 
     def __call__(self, cls):

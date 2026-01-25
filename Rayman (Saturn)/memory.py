@@ -47,20 +47,25 @@ class Memory:
     | 0x3e = [16-bit] Velocity Y
     | 0x48 = [16-bit] Follow Y
     | 0x4a = [16-bit] Follow X
-    | 0x67 = [8-bit] Animation State
+    | 0x64 = [8-bit] Animation frame
+    | 0x65 = [8-bit] Animation index
+    | 0x67 = [8-bit] Animation state
     | - Always use in combination with substate
     | - Check possible values in raym.app
-    | 0x69 = [8-bit] Animation Substate
+    | 0x69 = [8-bit] Animation substate
     | 0x71 = [8-bit] Health
-    | 0x7c = [8-bit] [Bitfield] Pickup state
-    | - bit4 = Not Collected
+    | 0x7c = [8-bit] [Bitfield] Flags
+    | - bit5 = Alive
+    | - bit4 = Active
+    | - bit2 = Active (alt)?
+    | - bit1 = Flip X
     """
 
     ENTITY_DATA_DREAM_FOREST = (0x054000)
     """
     [28672 bytes] [Array] Entity Data | Dream Forest
     Memory range specific to world 1 (Dream Forest)
-    [112 bytes] Entity Data Structure
+    | [112 bytes] Entity Data Structure
     | 0x10 = [32-bit Pointer] Sprite data
     | 0x14 = [32-bit Pointer] Animation data
     | 0x18 = [32-bit Pointer] Image buffer data
@@ -79,13 +84,18 @@ class Memory:
     | 0x3e = [16-bit] Velocity Y
     | 0x48 = [16-bit] Follow Y
     | 0x4a = [16-bit] Follow X
-    | 0x67 = [8-bit] Animation State
+    | 0x64 = [8-bit] Animation frame
+    | 0x65 = [8-bit] Animation index
+    | 0x67 = [8-bit] Animation state
     | - Always use in combination with substate
     | - Check possible values in raym.app
-    | 0x69 = [8-bit] Animation Substate
+    | 0x69 = [8-bit] Animation substate
     | 0x71 = [8-bit] Health
-    | 0x7c = [8-bit] [Bitfield] Pickup state
-    | - bit4 = Not Collected
+    | 0x7c = [8-bit] [Bitfield] Flags
+    | - bit5 = Alive
+    | - bit4 = Active
+    | - bit2 = Active (alt)?
+    | - bit1 = Flip X
     """
 
     CUTSCENE_TIMER = word(0x0a28b2)
@@ -270,11 +280,12 @@ class Memory:
     Always point to 0x4b000
     """
 
-    INGAME_LEVEL_CLEAR = byte(0x1a4ba3)
+    INGAME_LEVEL_STATE = byte(0x1a4ba3)
     """
-    [8-bit] Ingame | Level Clear
-    0x0 = Inactive
-    0x2 = Sign touched
+    [8-bit] Ingame | Level State
+    0x0 = Playing
+    0x1 = Cage breaking animation
+    0x2 = Exit sign touched
     """
 
     INGAME_PAUSED = byte(0x1a4ba7)
@@ -334,6 +345,15 @@ class Memory:
     BONUS_LEVEL_TINGS = byte(0x1a5c2f)
     """
     [8-bit] Bonus Level | Tings
+    """
+
+    STATE_MAP_READY = byte(0x1a6c73)
+    """
+    [8-bit] [Boolean] State | Map Ready
+    0x0 = True
+    0x1 = False
+
+    Can be used for resetting achievements, changes from 0x1 to 0x0 on map changes and respawn
     """
 
     LEVEL_SELECT_DESTINATION_LEVEL_ID = word(0x1a6cc4)
@@ -404,10 +424,28 @@ class Memory:
     0x4 = 5 hp
     """
 
+    RAYMAN_FLAGS = byte(0x1a6d9c)
+    """
+    [8-bit] Rayman | Flags
+    - bit5 = Alive
+    - bit4 = Active
+    - bit1 = Flip X
+    """
+
     STATE_GAME_OVER = byte(0x1a6eb1)
     """
     [8-bit] [Boolean] State | Game Over
     True when on the game over screen, as well as the ending cutscene and credits
+    """
+
+    RAYMAN_RESPAWN_POSITION_X = word(0x1a6f0a)
+    """
+    [16-bit] Rayman | Respawn Position X
+    """
+
+    RAYMAN_RESPAWN_POSITION_Y = word(0x1a6f0c)
+    """
+    [16-bit] Rayman | Respawn Position Y
     """
 
     GENERAL_FRAME_COUNTER = word(0x1a7046)

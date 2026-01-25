@@ -135,12 +135,12 @@ class Level:
 
     @staticmethod
     def on_clear(map_id: int = 0, world_id = 0):
-        conds = []
+        conds = ConditionList()
         if world_id != 0:
             conds.append(and_next(Rayman.current_world() == map_id))
         if map_id != 0:
             conds.append(and_next(Rayman.current_map() == map_id))
-        conds.append(delta_check(Memory.INGAME_LEVEL_CLEAR, 0x0, 0x2))
+        conds.append(delta_check(Memory.INGAME_LEVEL_STATE, 0x0, 0x2))
         return conds
 
     def on_enter(self):
@@ -149,6 +149,13 @@ class Level:
             (Rayman.current_map() == self.starting_map()) &
             delta_check(Memory.STATE_INGAME, 0, 1)
         )
+
+    def is_selected(self):
+        return Memory.LEVEL_SELECT_CURRENT_LEVEL_ID == self.id
+
+    @staticmethod
+    def on_map_ready():
+        return delta_check(Memory.STATE_MAP_READY, 1, 0)
 
     def generate_leaderboard(self, lb: Leaderboard, *, replayable_only = False, exclude_maps: list[int] = [], extra_condition = None):
         maps: list[int] = self.base_maps
@@ -257,6 +264,10 @@ class Rayman:
         return (Rayman.lives() < delta(Rayman.lives()))
 
     @staticmethod
+    def took_damage():
+        return (Memory.RAYMAN_HITPOINTS < delta(Memory.RAYMAN_HITPOINTS))
+
+    @staticmethod
     def is_in_level(world_id: int, map_id: int | list[int]):
         if isinstance(map_id, list):
             return (
@@ -267,6 +278,45 @@ class Rayman:
                 ]).with_flag(Flag.NONE)
             )
         return (Rayman.current_world() == world_id) & (Rayman.current_map() == map_id)
+
+    @staticmethod
+    def on_animation_change(prev: tuple[int, int] | None, actual: tuple[int, int]):
+        if prev is None:
+            return (
+                (delta(mem=Memory.RAYMAN_ANIMATION_STATE) != Memory.RAYMAN_ANIMATION_STATE) &
+                (Memory.RAYMAN_ANIMATION_STATE == actual[0]) &
+                (delta(Memory.RAYMAN_ANIMATION_SUBSTATE) != Memory.RAYMAN_ANIMATION_SUBSTATE) &
+                (Memory.RAYMAN_ANIMATION_SUBSTATE == actual[1])
+            )
+        return (
+            (delta(mem=Memory.RAYMAN_ANIMATION_STATE) == prev[0]) &
+            (Memory.RAYMAN_ANIMATION_STATE == actual[0]) &
+            (delta(Memory.RAYMAN_ANIMATION_SUBSTATE) == prev[1]) &
+            (Memory.RAYMAN_ANIMATION_SUBSTATE == actual[1])
+        )
+
+    @staticmethod
+    def on_ting_collected(max_hits: int = 3):
+        if (max_hits <= 1):
+            return delta(Rayman.tings()) != Rayman.tings()
+        hits = []
+        for hit in range(2, max_hits+1):
+            hits += [add_hits(RecallValue() == value(hit)) for _ in range(hit-1)]
+            hits += [add_hits(RecallValue() == value(-100 + hit)) for _ in range(hit-1)]
+        return ConditionList([
+            # remember(Rayman.tings() - delta(Rayman.tings())),
+            remember(Condition(Rayman.tings(), "-", delta(Rayman.tings()))),
+            hits,
+            (delta(Rayman.tings()) != Rayman.tings()),
+        ])
+
+    @staticmethod
+    def position():
+        return (Memory.RAYMAN_POSITION_X, Memory.RAYMAN_POSITION_Y)
+
+    @staticmethod
+    def respawn_position():
+        return (Memory.RAYMAN_RESPAWN_POSITION_X, Memory.RAYMAN_RESPAWN_POSITION_Y)
 
     @staticmethod
     def current_world():
@@ -304,8 +354,8 @@ class EntityData(GameObject):
     #         cond
     #     ])
 
-    def __init__(self, id: int, world_id: int = World.DREAM_FOREST) -> None:
-        super().__init__(self.get_array_address(world_id))
+    def __init__(self, id: int, world_id: int = 0) -> None:
+        super().__init__(self.get_array_address(world_id) + self.MEMSIZE * id)
         self.id = id
         self.pos_x = self.offset(0x2c, word)
         self.pos_y = self.offset(0x2e, word)
@@ -315,10 +365,14 @@ class EntityData(GameObject):
         self.initial_pos_y = self.offset(0x3a, word)
         self.velocity_x = self.offset(0x3c, word)
         self.velocity_y = self.offset(0x3e, word)
+        self.animation_frame = self.offset(0x64, byte)
+        self.animation_index = self.offset(0x65, byte)
         self.animation_state = self.offset(0x67, byte)
         self.animation_substate = self.offset(0x69, byte)
         self.health = self.offset(0x71, byte)
-        self.active_state = self.offset(0x74, byte)
+        self.alive = self.offset(0x7c, bit5)
+        self.active = self.offset(0x7c, bit4)
+        self.flipx = self.offset(0x7c, bit1)
 
     def on_animation_change(self, prev: tuple[int, int], actual: tuple[int, int]):
         return (

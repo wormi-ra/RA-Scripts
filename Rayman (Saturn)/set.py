@@ -1,9 +1,10 @@
+from pycheevos.core.condition import ConditionList
 from pycheevos.models.set import AchievementSet, Leaderboard
 from pycheevos.models.achievement import Achievement
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
-from logic import Bosses, EntityData, LevelInfo, Levels, MagicianLevel, Rayman, World, delta_check, delta_sources
+from logic import Bosses, EntityData, Level, LevelInfo, Levels, MagicianLevel, Rayman, World, delta_check, delta_sources
 from memory import Memory
 from framework import achievement, achievement_set, leaderboard
 
@@ -285,21 +286,202 @@ class RaymanSet(AchievementSet):
             measured(delta_sources(sources, 7, 8))
         ])
 
-    @achievement(1000001)
+    @achievement(577245)
+    def challenge_anguish_lagoon(self, ach: Achievement):
+        fist_powerups = ConditionList([
+            *(
+                sub_source(EntityData(id, world_id=World.DREAM_FOREST).alive)
+                for id in [46, 47, 48, 63, 92, 182]
+            ),
+            value(6) == value(6)
+        ])
+        ach.add_core([
+            reset_if(Level.on_map_ready()),
+            Rayman.is_ingame() &
+            Rayman.is_in_level(World.DREAM_FOREST, 7),
+            trigger(Level.on_clear()),
+        ])
+        ach.add_alt([
+            pause_if(Memory.RAYMAN_HITPOINTS < delta(Memory.RAYMAN_HITPOINTS)).with_hits(1),
+            pause_if(Memory.INGAME_LEVEL_STATE == 0x2).with_hits(1), # stop measuring when the next map is loading
+            measured_if(
+                Rayman.is_ingame() &
+                Rayman.is_in_level(World.DREAM_FOREST, 7)
+            ),
+            measured(fist_powerups),
+        ])
+        ach.add_alt([
+            pause_if(Memory.RAYMAN_HITPOINTS < delta(Memory.RAYMAN_HITPOINTS)).with_hits(1),
+            trigger(value(0) == value(1)) # group never trigger
+        ])
+
+    @achievement(577246)
+    def challenge_swamps_of_forgetfulness(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.DREAM_FOREST, 9),
+            reset_next_if(Level.on_map_ready()),
+            pause_if(Rayman.on_animation_change(None, (0x3, 0x10)).with_hits(7)),
+            trigger(Level.on_clear())
+        ])
+
+    @achievement(577247)
+    def challenge_moskito_nest(self, ach: Achievement):
+        plum = EntityData(13, world_id=World.DREAM_FOREST)
+        ach.add_core([
+            reset_if(Level.on_map_ready()),
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.DREAM_FOREST, 13),
+            (plum.on_animation_change((0x00, 0x0c), (0x02, 0x02))).with_hits(1)
+        ])
+        ach.add_alt([
+            pause_if(Rayman.respawn_position()[0] != 0x008c).with_hits(1),
+            pause_if(Rayman.died()).with_hits(1),
+            trigger(Rayman.position()[0] <= 0x0120)
+        ])
+
+    @achievement(577248)
+    def challenge_bongo_hills(self, ach: Achievement):
+        magician = EntityData(151, world_id=World.BAND_LAND)
+        ach.add_core([
+            reset_if(Levels.BONGO_HILLS.on_enter()),
+            Rayman.is_ingame(),
+            Levels.BONGO_HILLS.is_selected(),
+            trigger(Levels.BONGO_HILLS.on_clear(map_id=6)),
+        ])
+        ach.add_alt([
+            measured_if(Rayman.is_ingame()),
+            measured_if(Levels.BONGO_HILLS.is_selected()),
+            pause_if(Rayman.died()).with_hits(1),
+            pause_if(Rayman.has_cheated()).with_hits(1),
+            pause_if( # rayman is giving tings to the magician
+                (Rayman.current_map() == 4) &
+                (magician.animation_state == 0x8) &
+                (magician.animation_substate == 0x3)
+            ),
+            pause_if(delta(Memory.BONUS_LEVEL_TINGS) > 0),
+            pause_if(Rayman.current_map() == 17), # bonus level
+            measured(Rayman.on_ting_collected()).with_hits(200),
+        ])
+        ach.add_alt([
+            pause_if(Rayman.died()).with_hits(1),
+            pause_if(Rayman.has_cheated()).with_hits(1),
+            trigger(value(0) == value(1)), # never trigger
+        ])
+
+    @achievement(577249)
     def challenge_allegro_presto(self, ach: Achievement):
         ach.add_core([
             (Memory.STATE_DEMO_PLAY == 0) &
-            (Rayman.is_in_level(World.BAND_LAND, 7)) &
             (bit5(Memory.EVENTS_BOSSES_BEATEN.address) == 0) &
             (bit7(Memory.RAYMAN_MODIFIERS.address) == 0) &
-            delta_check(Memory.STATE_INGAME, 0, 1).with_hits(1),
+            Levels.ALLEGRO_PRESTO.on_enter().with_hits(1),
             trigger(Rayman.current_map() == 10),
-            trigger(delta_check(Memory.INGAME_LEVEL_CLEAR, 0x0, 0x2)),
+            trigger(delta_check(Memory.INGAME_LEVEL_STATE, 0x0, 0x2)),
             Rayman.is_in_level(World.BAND_LAND, [7, 8, 9, 10]) &
-            reset_if(Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER)).with_hits((4*60+30*60) * FRAMERATE),
+            reset_if(Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER)).with_hits((4*60+30) * FRAMERATE),
             reset_if(Memory.STATE_INGAME == 0),
             reset_if(Rayman.has_cheated())
         ])
+
+    @achievement(577250)
+    def challenge_gong_heights(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.BAND_LAND, 13),
+            reset_if(Level.on_map_ready()),
+            trigger(Level.on_clear()),
+        ])
+        ach.add_alt(
+            pause_if(Rayman.took_damage()).with_hits(1)
+        )
+
+    ######################
+    # Challenges: Bosses #
+    ######################
+
+    @achievement(577251)
+    def challenge_boss_moskito(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.DREAM_FOREST, 16),
+            reset_if(Level.on_map_ready()),
+            trigger(delta_check(Bosses.MOSKITO, 0, 1)),
+        ])
+        ach.add_alt([
+            pause_if(Rayman.took_damage()).with_hits(1),
+        ])
+
+    @achievement(577252)
+    def challenge_boss_mr_sax(self, ach: Achievement):
+        sax = EntityData(0, world_id=World.BAND_LAND)
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.BAND_LAND, [15, 16]),
+            reset_if(
+                Level.on_map_ready() &
+                (Rayman.current_map() == 15)
+            ),
+            trigger(delta_check(Bosses.MR_SAX, 0, 1)),
+        ])
+        ach.add_alt([
+            pause_if(Rayman.took_damage()).with_hits(1),
+            pause_if(
+                (sax.health > 6) &
+                (Rayman.current_map() == 16)
+            ).with_hits(1),
+        ])
+
+    @achievement(577253)
+    def challenge_boss_mr_stone(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.BLUE_MOUNTAINS, 10),
+            reset_if(Level.on_map_ready()),
+            trigger(delta_check(Bosses.MR_STONE, 0, 1)),
+        ])
+        ach.add_alt(
+            pause_if(Rayman.took_damage()).with_hits(1)
+        )
+
+    @achievement(577254)
+    def challenge_boss_space_mama(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.PICTURE_CITY, 11),
+            reset_if(Level.on_map_ready()),
+            trigger(delta_check(Bosses.SPACE_MAMA, 0, 1)),
+        ])
+        ach.add_alt(
+            pause_if(Rayman.took_damage()).with_hits(1)
+        )
+
+    @achievement(577255)
+    def challenge_boss_mr_skops(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.CAVES_OF_SKOPS, [10, 11]),
+            reset_if(
+                Level.on_map_ready() &
+                (Rayman.current_map() == 10)
+            ),
+            trigger(delta_check(Bosses.MR_SKOPS, 0, 1)),
+        ])
+        ach.add_alt(
+            pause_if(Rayman.took_damage()).with_hits(1)
+        )
+
+    @achievement(577256)
+    def challenge_boss_mr_dark(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.CANDY_CHATEAU, 4),
+            reset_if(Level.on_map_ready()),
+            trigger(delta_check(Bosses.MR_DARK, 0, 1)),
+        ])
+        ach.add_alt(
+            pause_if(Rayman.took_damage()).with_hits(1)
+        )
 
     #################
     # Miscellaneous #
@@ -308,11 +490,7 @@ class RaymanSet(AchievementSet):
     @achievement(573033)
     def livingstone_grimace(self, ach: Achievement):
         ach.add_core([
-            reset_if(
-                (delta(Memory.STATE_INGAME) == 0) &
-                (Memory.STATE_INGAME == 1)
-            ),
-            reset_if(delta(Rayman.current_map()) != Rayman.current_map()),
+            reset_if(Level.on_map_ready()),
             Rayman.is_ingame(),
             Rayman.current_world() == World.DREAM_FOREST
         ])
@@ -387,7 +565,7 @@ class RaymanSet(AchievementSet):
 
     @leaderboard(152781)
     def leaderboard_gong_heights(self, lb: Leaderboard):
-        Levels.BONGO_HILLS.generate_leaderboard(lb, replayable_only=True)
+        Levels.GONG_HEIGHTS.generate_leaderboard(lb, replayable_only=True)
 
     @leaderboard(152782)
     def leaderboard_mr_saxs_hullaballoo(self, lb: Leaderboard):
