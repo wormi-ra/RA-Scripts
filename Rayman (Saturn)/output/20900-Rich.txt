@@ -6,7 +6,7 @@ Lookup:Level
 4=Bongo Hills
 5=Allegro Presto
 6=Gong Heights
-7=Mr. Sax's Hullaballoo
+7=Mr. Sax's Hullaballo
 8=Twilight Gulch
 9=The Hard Rocks
 10=Mr. Stone's Peaks

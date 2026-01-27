@@ -573,6 +573,42 @@ class Memory:
     bit2 = Life
     """
 
+    COLLECTIBLE_THE_HARD_ROCKS_1_1 = byte(0x1ac7e2)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 1-1
+    bit5 = Life
+    """
+
+    COLLECTIBLE_THE_HARD_ROCKS_1_2 = byte(0x1ac7e4)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 1-2
+    bit1 = Life
+    """
+
+    COLLECTIBLE_THE_HARD_ROCKS_2 = byte(0x1ac806)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 2
+    bit1 = Life
+    """
+
+    COLLECTIBLE_THE_HARD_ROCKS_3_2 = byte(0x1ac823)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 3-2
+    bit0 = Life
+    """
+
+    COLLECTIBLE_THE_HARD_ROCKS_3_3 = byte(0x1ac825)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 3-3
+    bit7 = Life
+    """
+
+    COLLECTIBLE_THE_HARD_ROCKS_3_1 = byte(0x1ac827)
+    """
+    [8-bit] [Bitfield] Collectible | The Hard Rocks 3-1
+    bit1 = Life
+    """
+
     EVENTS_BOSSES_BEATEN = byte(0x1acf2b)
     """
     [8-bit] [Bitfield] Events | Bosses beaten

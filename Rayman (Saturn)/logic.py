@@ -45,13 +45,6 @@ class LevelInfo(GameObject):
         self.name_ptr = self.offset(0x10,  dword)
         self.text_color = self.offset(0x15, byte)
 
-    def on_cages_unlocked(self):
-        return (
-            Rayman.is_ingame() &
-            (delta(self.cages) == 5) &
-            (self.cages == 6)
-        )
-
 
 class Level:
     NAMES = {
@@ -62,7 +55,7 @@ class Level:
         4: "Bongo Hills",
         5: "Allegro Presto",
         6: "Gong Heights",
-        7: "Mr. Sax's Hullaballoo",
+        7: "Mr. Sax's Hullaballo",
         8: "Twilight Gulch",
         9: "The Hard Rocks",
         10: "Mr. Stone's Peaks",
@@ -125,7 +118,6 @@ class Level:
 
     def on_cages_unlocked(self):
         return (
-            Rayman.is_ingame() &
             (delta(self.info.cages) == 5) &
             (self.info.cages == 6)
         )
@@ -154,6 +146,13 @@ class Level:
         return Memory.LEVEL_SELECT_CURRENT_LEVEL_ID == self.id
 
     @staticmethod
+    def on_leave():
+        return (
+            (delta(Memory.STATE_INGAME) == 1) &
+            (Memory.STATE_INGAME != 1)
+        )
+
+    @staticmethod
     def on_map_ready():
         return delta_check(Memory.STATE_MAP_READY, 1, 0)
 
@@ -172,8 +171,9 @@ class Level:
             start = start & extra_condition
         lb.set_start(start)
         lb.set_cancel(
-            Rayman.has_cheated() |
-            (Memory.STATE_INGAME != 1)
+            value(1) == value(1), # core
+            (Memory.STATE_INGAME != 1), # alt 1
+            *Rayman.has_cheated(), # alt 2-4
         )
         lb.set_submit(
             self.on_clear(goal_map)
@@ -192,7 +192,7 @@ class Levels:
     BONGO_HILLS = Level(4)
     ALLEGRO_PRESTO = Level(5)
     GONG_HEIGHTS = Level(6)
-    MR_SAXS_HULLABALLOO = Level(7)
+    MR_SAXS_HULLABALLO = Level(7)
     TWILIGHT_GULCH = Level(8)
     THE_HARD_ROCKS = Level(9)
     MR_STONES_PEAKS = Level(10)
@@ -252,11 +252,20 @@ class Rayman:
     @staticmethod
     def has_cheated():
         return (
+            # hitpoints cheat
+            Rayman.has_cheated_hp(),
+            # lives cheat
             (Memory.INGAME_PAUSED == 1) &
-            (Memory.RAYMAN_HITPOINTS > delta(Memory.RAYMAN_HITPOINTS)) |
-            # (Memory.INGAME_PAUSED == 1) &
-            # (Rayman.lives() > delta(Rayman.lives())) |
+            (Rayman.lives() > delta(Rayman.lives())),
+            # continues cheat
             (Rayman.continues() > delta(Rayman.continues()))
+        )
+
+    @staticmethod
+    def has_cheated_hp():
+        return (
+            (Memory.INGAME_PAUSED == 1) &
+            (Memory.RAYMAN_HITPOINTS > delta(Memory.RAYMAN_HITPOINTS))
         )
 
     @staticmethod
@@ -304,8 +313,8 @@ class Rayman:
             hits += [add_hits(RecallValue() == value(hit)) for _ in range(hit-1)]
             hits += [add_hits(RecallValue() == value(-100 + hit)) for _ in range(hit-1)]
         return ConditionList([
-            # remember(Rayman.tings() - delta(Rayman.tings())),
-            remember(Condition(Rayman.tings(), "-", delta(Rayman.tings()))),
+            remember(Rayman.tings() - delta(Rayman.tings())),
+            # remember(Condition(Rayman.tings(), "-", delta(Rayman.tings()))),
             hits,
             (delta(Rayman.tings()) != Rayman.tings()),
         ])
@@ -337,6 +346,38 @@ class Rayman:
     @staticmethod
     def continues():
         return Memory.RAYMAN_CONTINUES
+
+    @staticmethod
+    def can_run():
+        return bit7(Memory.RAYMAN_MODIFIERS.address)
+
+    @staticmethod
+    def can_punch():
+        return bit7(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def can_hang():
+        return bit6(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def can_helicopter():
+        return bit5(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def can_super_helicopter():
+        return bit4(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def has_seed():
+        return bit1(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def can_grapple():
+        return bit0(Memory.RAYMAN_ABILITIES.address)
+
+    @staticmethod
+    def is_tiny():
+        return bit6(Memory.RAYMAN_MODIFIERS.address)
 
 
 class EntityData(GameObject):

@@ -232,8 +232,8 @@ achievements = OrderedDict({
     ),
     573022: Achievement(
         id=573022,
-        title="""Mr. Sax's Hullaballoo Cages""",
-        description="""Break all 6 Electoon cages in Mr. Sax's Hullaballoo""",
+        title="""Mr. Sax's Hullaballo Cages""",
+        description="""Break all 6 Electoon cages in Mr. Sax's Hullaballo""",
         points=5,
         badge="00000",
         type=AchievementType.PROGRESSION,
@@ -241,14 +241,14 @@ achievements = OrderedDict({
     574643: Achievement(
         id=574643,
         title="""Mr. Sax Boss""",
-        description="""Defeat Mr. Sax in Mr. Sax's Hullaballoo""",
+        description="""Defeat Mr. Sax in Mr. Sax's Hullaballo""",
         points=10,
         badge="00000",
     ),
     577252: Achievement(
         id=577252,
         title="""Mr Sax Boss Challenge""",
-        description="""Defeat Mr. Sax in Mr. Sax's Hullaballoo without taking damage and having dealt at least 6 hits during the chase""",
+        description="""Defeat Mr. Sax in Mr. Sax's Hullaballo without taking damage and having dealt at least 6 hits during the chase""",
         points=10,
         badge="00000",
         type=AchievementType.MISSABLE,
@@ -502,7 +502,7 @@ leaderboards = OrderedDict({
     ),
     152782: Leaderboard(
         id=152782,
-        title="""Time Attack - Mr. Sax's Hullaballoo""",
+        title="""Time Attack - Mr. Sax's Hullaballo""",
         description="""""",
         format=LeaderboardFormat.TIME,
         lower_is_better=True,

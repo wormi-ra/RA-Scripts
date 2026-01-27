@@ -28,35 +28,59 @@ class achievement_set:
     def __call__(self, cls):
         _save = cls.save
         def save(set: AchievementSet, *args, **kwargs):
+            i = 0
+            for _, method in cls.__dict__.items():
+                if hasattr(method, "_ach_id"):
+                    if method._ach_id is None:
+                        method._ach_id = 1000000 + i
+                    self.logic[method._ach_id] = method
+                if hasattr(method, "_lb_id"):
+                    if method._lb_id is None:
+                        method._lb_id = 1000000 + i
+                    self.leaderboards[method._lb_id] = method
+                i += 1
+
             for id, func in self.logic.items():
-                ach: Achievement = self.assets.achievements[id]
+                if id in self.assets.achievements:
+                    ach: Achievement = self.assets.achievements[id]
+                else:
+                    ach = Achievement(
+                        id=id,
+                        title=func.__name__,
+                        description=func.__doc__,
+                        points=0,
+                    )
                 func(set, ach)
-                print(f"{id}: {ach.title}")
+                print(f"{ach.id}: {ach.title}")
                 set.add_achievement(ach)
                 for group in [ach.core, ach.conditions] + ach.alts:
                     self.clean_logic(group)
                 if ach.author == "PyCheevos":
                     ach.author = self.author
             for id, func in self.leaderboards.items():
-                lb: Leaderboard = self.assets.leaderboards[id]
+                if id in self.assets.leaderboards:
+                    lb: Leaderboard = self.assets.leaderboards[id]
+                else:
+                    lb = Leaderboard(
+                        id=id,
+                        title=func.__name__,
+                        description=func.__doc__,
+                    )
                 func(set, lb)
-                print(f"{id}: {lb.title}")
+                print(f"{lb.id}: {lb.title}")
                 set.add_leaderboard(lb)
+                for group in [*lb.start, *lb.cancel, *lb.submit, *lb.value]:
+                    self.clean_logic(group)
             print(f"Generated achievements: {len(set.achievements)}")
             print(f"Generated leaderboards: {len(set.leaderboards)}")
             print(f"Total points: {sum((ach.points for ach in set.achievements))}")
             return _save(set, *args, **kwargs)
         cls.save = save
-        for _, method in cls.__dict__.items():
-            if hasattr(method, "_ach_id"):
-                self.logic[method._ach_id] = method
-            if hasattr(method, "_lb_id"):
-                self.leaderboards[method._lb_id] = method
         return cls
 
 
 class achievement:
-    def __init__(self, id):
+    def __init__(self, id: int | None = None):
         self.id = id
 
     def __call__(self, func):
@@ -64,7 +88,7 @@ class achievement:
         return func
 
 class leaderboard:
-    def __init__(self, id):
+    def __init__(self, id: int | None = None):
         self.id = id
 
     def __call__(self, func):

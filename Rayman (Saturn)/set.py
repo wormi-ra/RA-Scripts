@@ -32,40 +32,40 @@ class RaymanSet(AchievementSet):
     def betilla_punch(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
-            Rayman.is_in_level(1, 3) &
-            delta_check(bit7(Memory.RAYMAN_ABILITIES.address), 0, 1)
+            Rayman.is_in_level(World.DREAM_FOREST, 3) &
+            delta_check(Rayman.can_punch(), 0, 1)
         )
 
     @achievement(574637)
     def betilla_hang(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
-            Rayman.is_in_level(1, 8) &
-            delta_check(bit6(Memory.RAYMAN_ABILITIES.address), 0, 1)
+            Rayman.is_in_level(World.DREAM_FOREST, 8) &
+            delta_check(Rayman.can_hang(), 0, 1)
         )
     
     @achievement(574638)
     def betilla_rings(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
-            Rayman.is_in_level(1, 17) &
-            delta_check(bit0(Memory.RAYMAN_ABILITIES.address), 0, 1)
+            Rayman.is_in_level(World.DREAM_FOREST, 17) &
+            delta_check(Rayman.can_grapple(), 0, 1)
         )
 
     @achievement(574639)
     def betilla_helicopter(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
-            Rayman.is_in_level(2, 11) &
-            delta_check(bit5(Memory.RAYMAN_ABILITIES.address), 0, 1)
+            Rayman.is_in_level(World.BAND_LAND, 11) &
+            delta_check(Rayman.can_helicopter(), 0, 1)
         )
 
     @achievement(574640)
     def betilla_run(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
-            Rayman.is_in_level(3, 11) &
-            delta_check(bit7(Memory.RAYMAN_MODIFIERS.address), 0, 1)
+            Rayman.is_in_level(World.BLUE_MOUNTAINS, 11) &
+            delta_check(Rayman.can_run(), 0, 1)
         )
 
     #######################
@@ -134,71 +134,122 @@ class RaymanSet(AchievementSet):
 
     @achievement(573015)
     def cages_pink_plant_woods(self, ach: Achievement):
-        ach.add_core(LevelInfo(0).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.PINK_PLANT_WOODS.on_cages_unlocked()
+        )
 
     @achievement(573016)
     def cages_anguish_lagoon(self, ach: Achievement):
-        ach.add_core(LevelInfo(1).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.ANGUISH_LAGOON.on_cages_unlocked()
+        )
 
     @achievement(573017)
     def cages_swamps_of_forgetfulness(self, ach: Achievement):
-        ach.add_core(LevelInfo(2).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.THE_SWAMPS_OF_FORGETFULNESS.on_cages_unlocked()
+        )
 
     @achievement(573018)
     def cages_moskitos_nest(self, ach: Achievement):
-        ach.add_core(LevelInfo(3).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.MOSKITOS_NEST.on_cages_unlocked()
+        )
 
     @achievement(573019)
     def cages_bongo_hills(self, ach: Achievement):
-        ach.add_core(LevelInfo(4).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.BONGO_HILLS.on_cages_unlocked()
+        )
 
     @achievement(573020)
     def cages_allegro_presto(self, ach: Achievement):
-        ach.add_core(LevelInfo(5).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.ALLEGRO_PRESTO.on_cages_unlocked()
+        )
 
     @achievement(573021)
     def cages_gong_heights(self, ach: Achievement):
-        ach.add_core(LevelInfo(6).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.GONG_HEIGHTS.on_cages_unlocked()
+        )
 
     @achievement(573022)
-    def cages_mr_sax_hullaballoo(self, ach: Achievement):
-        ach.add_core(LevelInfo(7).on_cages_unlocked())
+    def cages_mr_sax_hullaballo(self, ach: Achievement):
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.MR_SAXS_HULLABALLO.on_cages_unlocked()
+        )
 
     @achievement(573023)
     def cages_twilight_gulch(self, ach: Achievement):
-        ach.add_core(LevelInfo(8).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.TWILIGHT_GULCH.on_cages_unlocked()
+        )
 
     @achievement(573024)
     def cages_hard_rocks(self, ach: Achievement):
-        ach.add_core(LevelInfo(9).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.THE_HARD_ROCKS.on_cages_unlocked()
+        )
 
     @achievement(573025)
     def cages_mr_stone_peaks(self, ach: Achievement):
-        ach.add_core(LevelInfo(10).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.MR_STONES_PEAKS.on_cages_unlocked()
+        )
 
     @achievement(573026)
     def cages_eraser_plains(self, ach: Achievement):
-        ach.add_core(LevelInfo(11).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.ERASER_PLAINS.on_cages_unlocked()
+        )
 
     @achievement(573027)
     def cages_pencil_pentathlon(self, ach: Achievement):
-        ach.add_core(LevelInfo(12).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.PENCIL_PENTATHLON.on_cages_unlocked()
+        )
 
     @achievement(573028)
     def cages_space_mama_crater(self, ach: Achievement):
-        ach.add_core(LevelInfo(13).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.SPACE_MAMAS_CRATER.on_cages_unlocked()
+        )
 
     @achievement(573029)
     def cages_crystal_palace(self, ach: Achievement):
-        ach.add_core(LevelInfo(14).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.CRYSTAL_PALACE.on_cages_unlocked()
+        )
 
     @achievement(573030)
     def cages_eat_at_joes(self, ach: Achievement):
-        ach.add_core(LevelInfo(15).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.EAT_AT_JOES.on_cages_unlocked()
+        )
 
     @achievement(573031)
     def cages_mr_skops_stalactites(self, ach: Achievement):
-        ach.add_core(LevelInfo(16).on_cages_unlocked())
+        ach.add_core(
+            Rayman.is_ingame() & 
+            Levels.MR_SKOPS_STALACTITES.on_cages_unlocked()
+        )
 
     @achievement(574661)
     def all_cages(self, ach: Achievement):
@@ -275,20 +326,15 @@ class RaymanSet(AchievementSet):
             bit5(Memory.COLLECTIBLE_PINK_PLANT_WOODS_4_2.address),
             bit2(Memory.COLLECTIBLE_PINK_PLANT_WOODS_4_2.address),
         ]
-        ach.add_core(
-            reset_if(
-                (delta(Memory.STATE_INGAME) == 0) &
-                (Memory.STATE_INGAME == 1) &
-                (Rayman.is_in_level(1, [1, 2, 4]))
-            )
-        ).add_alt([
-            pause_if(~(Rayman.is_ingame())).with_hits(1),
+        ach.add_core([
+            measured_if(Rayman.is_ingame()),
+            measured_if(Rayman.is_in_level(World.DREAM_FOREST, [1, 2, 4])),
             measured(delta_sources(sources, 7, 8))
         ])
 
     @achievement(577245)
     def challenge_anguish_lagoon(self, ach: Achievement):
-        fist_powerups = ConditionList([
+        powerups = ConditionList([
             *(
                 sub_source(EntityData(id, world_id=World.DREAM_FOREST).alive)
                 for id in [46, 47, 48, 63, 92, 182]
@@ -303,12 +349,16 @@ class RaymanSet(AchievementSet):
         ])
         ach.add_alt([
             pause_if(Memory.RAYMAN_HITPOINTS < delta(Memory.RAYMAN_HITPOINTS)).with_hits(1),
-            pause_if(Memory.INGAME_LEVEL_STATE == 0x2).with_hits(1), # stop measuring when the next map is loading
+            # stop measuring when the next map is loading due to an issue with entities unloading and messing with the counter
+            pause_if(
+                (delta(Memory.INGAME_LEVEL_STATE) == 0x2) &
+                (Memory.INGAME_LEVEL_STATE == 0x2)
+            ).with_hits(1),
             measured_if(
                 Rayman.is_ingame() &
                 Rayman.is_in_level(World.DREAM_FOREST, 7)
             ),
-            measured(fist_powerups),
+            measured(powerups),
         ])
         ach.add_alt([
             pause_if(Memory.RAYMAN_HITPOINTS < delta(Memory.RAYMAN_HITPOINTS)).with_hits(1),
@@ -353,7 +403,7 @@ class RaymanSet(AchievementSet):
             measured_if(Rayman.is_ingame()),
             measured_if(Levels.BONGO_HILLS.is_selected()),
             pause_if(Rayman.died()).with_hits(1),
-            pause_if(Rayman.has_cheated()).with_hits(1),
+            pause_if(Rayman.has_cheated_hp()).with_hits(1),
             pause_if( # rayman is giving tings to the magician
                 (Rayman.current_map() == 4) &
                 (magician.animation_state == 0x8) &
@@ -365,23 +415,25 @@ class RaymanSet(AchievementSet):
         ])
         ach.add_alt([
             pause_if(Rayman.died()).with_hits(1),
-            pause_if(Rayman.has_cheated()).with_hits(1),
+            pause_if(Rayman.has_cheated_hp()).with_hits(1),
             trigger(value(0) == value(1)), # never trigger
         ])
 
     @achievement(577249)
     def challenge_allegro_presto(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0) &
-            (bit5(Memory.EVENTS_BOSSES_BEATEN.address) == 0) &
-            (bit7(Memory.RAYMAN_MODIFIERS.address) == 0) &
+            (Memory.STATE_DEMO_PLAY == 0),
+            (Bosses.MR_SAX == 0) &
+            (Rayman.can_run() == 0) &
             Levels.ALLEGRO_PRESTO.on_enter().with_hits(1),
             trigger(Rayman.current_map() == 10),
-            trigger(delta_check(Memory.INGAME_LEVEL_STATE, 0x0, 0x2)),
-            Rayman.is_in_level(World.BAND_LAND, [7, 8, 9, 10]) &
-            reset_if(Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER)).with_hits((4*60+30) * FRAMERATE),
-            reset_if(Memory.STATE_INGAME == 0),
-            reset_if(Rayman.has_cheated())
+            trigger(Level.on_clear()),
+            reset_if(
+                Rayman.is_in_level(World.BAND_LAND, [7, 8, 9, 10]) &
+                (Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
+            ).with_hits((4*60+30) * FRAMERATE),
+            reset_if(Level.on_leave()),
+            reset_if(Rayman.has_cheated_hp())
         ])
 
     @achievement(577250)
@@ -395,6 +447,106 @@ class RaymanSet(AchievementSet):
         ach.add_alt(
             pause_if(Rayman.took_damage()).with_hits(1)
         )
+
+    @achievement()
+    def challenge_mr_sax_hullaballo(self, ach: Achievement):
+        ach.add_core([
+            (Memory.STATE_DEMO_PLAY == 0),
+            Levels.MR_SAXS_HULLABALLO.on_enter().with_hits(1),
+            Rayman.current_map() == 14,
+            trigger(Level.on_clear()),
+            reset_if(
+                (Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
+            ).with_hits((2*60+40) * FRAMERATE),
+            reset_if(Level.on_leave()),
+            reset_if(Rayman.has_cheated_hp())
+        ])
+
+    @achievement()
+    def challenge_twilight_gulch(self, ach: Achievement):
+        ach.add_core([
+            (Memory.STATE_DEMO_PLAY == 0),
+            ((Levels.TWILIGHT_GULCH.info.cages == 0) &
+            Levels.TWILIGHT_GULCH.on_enter()).with_hits(1),
+            Rayman.current_map() == 1,
+            trigger(Levels.TWILIGHT_GULCH.on_cages_unlocked()),
+            reset_if(Level.on_leave()),
+        ])
+
+    @achievement()
+    def challenge_hard_rocks(self, ach: Achievement):
+        sources = [
+            bit5(Memory.COLLECTIBLE_THE_HARD_ROCKS_1_1.address),
+            bit1(Memory.COLLECTIBLE_THE_HARD_ROCKS_1_2.address),
+            bit1(Memory.COLLECTIBLE_THE_HARD_ROCKS_2.address),
+            bit1(Memory.COLLECTIBLE_THE_HARD_ROCKS_3_1.address),
+            bit0(Memory.COLLECTIBLE_THE_HARD_ROCKS_3_2.address),
+            bit7(Memory.COLLECTIBLE_THE_HARD_ROCKS_3_3.address),
+        ]
+        ach.add_core([
+            measured_if(Rayman.is_ingame()),
+            measured_if(Rayman.is_in_level(World.BLUE_MOUNTAINS, [3, 4, 5])),
+            measured(delta_sources(sources, 5, 6))
+        ])
+
+    @achievement()
+    def challenge_mr_skops_stalactites(self, ach: Achievement):
+        ach.add_core([
+            (Memory.STATE_DEMO_PLAY == 0),
+            ((Levels.MR_SKOPS_STALACTITES.info.cages == 0) &
+            Levels.MR_SKOPS_STALACTITES.on_enter()).with_hits(1),
+            Rayman.current_map() == 9,
+            trigger(Levels.MR_SKOPS_STALACTITES.on_cages_unlocked()),
+            reset_if(Level.on_leave()),
+        ])
+
+    @achievement()
+    def challenge_mr_stones_peaks(self, ach: Achievement):
+        ach.add_core([
+            (
+                Rayman.is_ingame() &
+                Rayman.is_in_level(World.BLUE_MOUNTAINS, 6) &
+                (delta(Rayman.can_super_helicopter()) == 0) &
+                (Rayman.can_super_helicopter() == 1)
+            ).with_hits(1),
+            trigger(Level.on_clear()),
+            reset_if(
+                (Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
+            ).with_hits((1*60+45) * FRAMERATE),
+            reset_if(Level.on_map_ready()),
+            reset_if(Level.on_leave()),
+            reset_if(Rayman.took_damage())
+        ])
+
+    @achievement()
+    def challenge_eraser_plains(self, ach: Achievement):
+        magician = EntityData(94, world_id=World.PICTURE_CITY)
+        ach.add_core([
+            reset_if(Levels.ERASER_PLAINS.on_enter()),
+            Rayman.is_ingame(),
+            Levels.ERASER_PLAINS.is_selected(),
+            (Rayman.current_map() != 4), # pirate mama fight
+            trigger(Levels.ERASER_PLAINS.on_clear(map_id=3)),
+        ])
+        ach.add_alt([
+            measured_if(Rayman.is_ingame()),
+            measured_if(Levels.ERASER_PLAINS.is_selected()),
+            pause_if(Rayman.died()).with_hits(1),
+            pause_if(Rayman.has_cheated_hp()).with_hits(1),
+            pause_if( # rayman is giving tings to the magician
+                (Rayman.current_map() == 3) &
+                (magician.animation_state == 0x8) &
+                (magician.animation_substate == 0x3)
+            ),
+            pause_if(delta(Memory.BONUS_LEVEL_TINGS) > 0),
+            pause_if(Rayman.current_map() == 12), # bonus level
+            measured(Rayman.on_ting_collected()).with_hits(75),
+        ])
+        ach.add_alt([
+            pause_if(Rayman.died()).with_hits(1),
+            pause_if(Rayman.has_cheated_hp()).with_hits(1),
+            trigger(value(0) == value(1)), # never trigger
+        ])
 
     ######################
     # Challenges: Bosses #
@@ -521,6 +673,63 @@ class RaymanSet(AchievementSet):
             (Memory.LIFE_COUNTER_SCREEN_ANIMATION != 0xffff)
         )
 
+    @achievement()
+    def mad_drummer(self, ach: Achievement):
+        ach.add_core([
+            Rayman.is_ingame(),
+            Rayman.is_in_level(World.BAND_LAND, 6),
+        ])
+        for id in [114, 115]:
+            entity = EntityData(id, world_id=World.BAND_LAND)
+            ach.add_alt([
+                entity.health < delta(entity.health)
+            ])
+
+    @achievement()
+    def hard_rocks_exit(self, ach: Achievement):
+        ach.add_core(
+            Rayman.is_ingame() &
+            (Rayman.is_in_level(World.BLUE_MOUNTAINS, 3)) &
+            (Rayman.position()[0] < 0x0700) &
+            Level.on_clear()
+        )
+
+    @achievement()
+    def space_mama_low_exit(self, ach: Achievement):
+        ach.add_core(
+            Rayman.is_ingame() &
+            (Rayman.is_in_level(World.PICTURE_CITY, 8)) &
+            (Rayman.position()[1] > 0x0300) &
+            Level.on_clear()
+        )
+
+    @achievement()
+    def space_mama_high_exit(self, ach: Achievement):
+        ach.add_core(
+            Rayman.is_ingame() &
+            (Rayman.is_in_level(World.PICTURE_CITY, 8)) &
+            (Rayman.position()[1] < 0x0300) &
+            Level.on_clear()
+        )
+
+    @achievement()
+    def space_pirate(self, ach: Achievement):
+        ach.add_core([
+            reset_if(Level.on_map_ready()),
+            Rayman.is_ingame(),
+            Rayman.current_world() == World.PICTURE_CITY,
+            Rayman.is_tiny() == 1,
+        ])
+        with open('data/space_pirates.csv', newline='') as csvfile:
+            for row in csv.DictReader(csvfile):
+                entity = EntityData(int(row['Entity ID']), world_id=World.PICTURE_CITY)
+                map_id = int(row['Map ID'])
+                ach.add_alt([
+                    pause_if(Rayman.current_map() != map_id).with_hits(1),
+                    (delta(entity.health) > 0) &
+                    (entity.health == 0)
+                ])
+
     #############################
     # Leaderboards: Time Attack #
     #############################
@@ -542,13 +751,22 @@ class RaymanSet(AchievementSet):
     @leaderboard(152777)
     def leaderboard_the_swamps_of_forgetfulness(self, lb: Leaderboard):
         Levels.THE_SWAMPS_OF_FORGETFULNESS.generate_leaderboard(lb, replayable_only=True)
+        lb.set_start(
+            Rayman.is_ingame() &
+            Rayman.is_in_level(World.DREAM_FOREST, 9) &
+            (delta(Rayman.has_seed()) == 0) &
+            (Rayman.has_seed() == 1)
+        )
 
     @leaderboard(152778)
     def leaderboard_moskitos_nest(self, lb: Leaderboard):
         Levels.MOSKITOS_NEST.generate_leaderboard(lb,
             replayable_only=False,
             exclude_maps=[17], # exclude betilla
-            extra_condition=(Bosses.MOSKITO == 0),
+            # extra_condition=(Bosses.MOSKITO == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.MOSKITO) == 0) & (Bosses.MOSKITO == 1)
         )
 
     @leaderboard(152779)
@@ -560,7 +778,7 @@ class RaymanSet(AchievementSet):
         Levels.ALLEGRO_PRESTO.generate_leaderboard(lb,
             replayable_only=False,
             exclude_maps=[11], # exclude betilla
-            extra_condition=(Bosses.MR_SAX == 0),
+            # extra_condition=(Bosses.MR_SAX == 0),
         )
 
     @leaderboard(152781)
@@ -568,17 +786,19 @@ class RaymanSet(AchievementSet):
         Levels.GONG_HEIGHTS.generate_leaderboard(lb, replayable_only=True)
 
     @leaderboard(152782)
-    def leaderboard_mr_saxs_hullaballoo(self, lb: Leaderboard):
-        Levels.MR_SAXS_HULLABALLOO.generate_leaderboard(lb,
+    def leaderboard_mr_saxs_hullaballo(self, lb: Leaderboard):
+        Levels.MR_SAXS_HULLABALLO.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.MR_SAX == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.MR_SAX) == 0) & (Bosses.MR_SAX == 1)
         )
 
     @leaderboard(152783)
     def leaderboard_twilight_gulch(self, lb: Leaderboard):
         Levels.TWILIGHT_GULCH.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.MR_STONE == 0),
+            # extra_condition=(Bosses.MR_STONE == 0),
         )
 
     @leaderboard(152784)
@@ -590,14 +810,24 @@ class RaymanSet(AchievementSet):
         Levels.MR_STONES_PEAKS.generate_leaderboard(lb,
             replayable_only=False,
             exclude_maps=[11], # exclude betilla
-            extra_condition=(Bosses.MR_STONE == 0),
+        )
+        lb.set_start(
+            Rayman.is_ingame() &
+            Rayman.is_in_level(World.BLUE_MOUNTAINS, 6) &
+            (delta(Rayman.can_super_helicopter()) == 0) &
+            (Rayman.can_super_helicopter() == 1)
+        )
+        lb.set_submit(
+            (delta(Bosses.MR_STONE) == 0) & (Bosses.MR_STONE == 1)
         )
 
     @leaderboard(152786)
     def leaderboard_eraser_plains(self, lb: Leaderboard):
         Levels.ERASER_PLAINS.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.PIRATE_MAMA == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.PIRATE_MAMA) == 0) & (Bosses.PIRATE_MAMA == 1)
         )
 
     @leaderboard(152787)
@@ -608,7 +838,9 @@ class RaymanSet(AchievementSet):
     def leaderboard_space_mamas_crater(self, lb: Leaderboard):
         Levels.SPACE_MAMAS_CRATER.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.SPACE_MAMA == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.SPACE_MAMA) == 0) & (Bosses.SPACE_MAMA == 1)
         )
 
     @leaderboard(152789)
@@ -623,14 +855,18 @@ class RaymanSet(AchievementSet):
     def leaderboard_mr_skops_stalactites(self, lb: Leaderboard):
         Levels.MR_SKOPS_STALACTITES.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.MR_SKOPS == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.MR_SKOPS) == 0) & (Bosses.MR_SKOPS == 1)
         )
 
     @leaderboard(152792)
     def leaderboard_mr_darks_dare(self, lb: Leaderboard):
         Levels.MR_DARKS_DARE.generate_leaderboard(lb,
             replayable_only=False,
-            extra_condition=(Bosses.MR_DARK == 0),
+        )
+        lb.set_submit(
+            (delta(Bosses.MR_DARK) == 0) & (Bosses.MR_DARK == 1)
         )
 
     ##########################
