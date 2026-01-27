@@ -1,0 +1,3 @@
+id,name,background,foreground,border,icon
+1,test,bg_df1,cage,border_default,
+2,test_gold,bg_df2,cage,border_gold,
