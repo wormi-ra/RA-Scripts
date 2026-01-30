@@ -172,7 +172,7 @@ class Level:
         lb.set_start(start)
         lb.set_cancel(
             value(1) == value(1), # core
-            (Memory.STATE_INGAME != 1), # alt 1
+            ~Rayman.is_ingame(), # alt 1
             *Rayman.has_cheated(), # alt 2-4
         )
         lb.set_submit(
@@ -250,6 +250,17 @@ class Rayman:
         return (Memory.STATE_INGAME == 1) & (Memory.STATE_DEMO_PLAY == 0)
 
     @staticmethod
+    def is_fresh_save():
+        return (
+            (Memory.RAYMAN_ABILITIES == 0) &
+            (Memory.RAYMAN_MODIFIERS == 0) &
+            (Memory.EVENTS_BOSSES_BEATEN == 0) &
+            (bit7(Levels.ANGUISH_LAGOON.info.state.address) == 0) &
+            (Rayman.continues() == 5) &
+            (Rayman.lives() == 3)
+        )
+
+    @staticmethod
     def has_cheated():
         return (
             # hitpoints cheat
@@ -292,9 +303,9 @@ class Rayman:
     def on_animation_change(prev: tuple[int, int] | None, actual: tuple[int, int]):
         if prev is None:
             return (
-                (delta(mem=Memory.RAYMAN_ANIMATION_STATE) != Memory.RAYMAN_ANIMATION_STATE) &
-                (Memory.RAYMAN_ANIMATION_STATE == actual[0]) &
+                (delta(Memory.RAYMAN_ANIMATION_STATE) != Memory.RAYMAN_ANIMATION_STATE) |
                 (delta(Memory.RAYMAN_ANIMATION_SUBSTATE) != Memory.RAYMAN_ANIMATION_SUBSTATE) &
+                (Memory.RAYMAN_ANIMATION_STATE == actual[0]) &
                 (Memory.RAYMAN_ANIMATION_SUBSTATE == actual[1])
             )
         return (
@@ -415,7 +426,14 @@ class EntityData(GameObject):
         self.active = self.offset(0x7c, bit4)
         self.flipx = self.offset(0x7c, bit1)
 
-    def on_animation_change(self, prev: tuple[int, int], actual: tuple[int, int]):
+    def on_animation_change(self, prev: tuple[int, int] | None, actual: tuple[int, int]):
+        if prev is None:
+            return (
+                (delta(self.animation_state) != self.animation_state) |
+                (delta(self.animation_substate) != self.animation_substate) &
+                (self.animation_state == actual[0]) &
+                (self.animation_substate == actual[1])
+            )
         return (
             (delta(self.animation_state) == prev[0]) &
             (self.animation_state == actual[0]) &

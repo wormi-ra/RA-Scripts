@@ -488,6 +488,11 @@ class Memory:
     [8-bit] Bonus Level | Tings left
     """
 
+    RAYMAN_IS_PUNCHING = byte(0x1ab07f)
+    """
+    [8-bit] [Boolean] Rayman | Is Punching
+    """
+
     BONUS_LEVEL_WIN_CUTSCENE_TIMER = word(0x1ab090)
     """
     [16-bit] Bonus Level | Win cutscene timer
@@ -660,4 +665,3 @@ class Memory:
     0x0 = False
     0x1 = True
     """
-
