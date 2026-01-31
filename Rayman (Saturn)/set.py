@@ -678,23 +678,25 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.BAND_LAND, [15, 16]),
-            reset_if(Level.on_map_ready()),
+            # chase section checkpoint
             reset_next_if(
                 (Rayman.current_map() == 15) &
                 Level.on_map_ready()
             ),
             pause_if(
-                 (Rayman.current_map() == 15) &
+                (Rayman.current_map() == 15) &
                 Rayman.took_damage()
             ).with_hits(1),
-            trigger(delta_check(Bosses.MR_SAX, 0, 1)),
-        ])
-        ach.add_alt([
+            # implied fight checkpoint
+            reset_next_if(Level.on_map_ready()),
             pause_if(Rayman.took_damage()).with_hits(1),
+            # boss should have 6 hp or less at the start of the second part
+            reset_next_if(Level.on_map_ready()),
             pause_if(
-                (sax.health > 6) &
-                (Rayman.current_map() == 16)
+                (Rayman.current_map() == 16) &
+                (sax.health > 6)
             ).with_hits(1),
+            trigger(delta_check(Bosses.MR_SAX, 0, 1)),
         ])
 
     @achievement(577253)
@@ -726,7 +728,7 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.CAVES_OF_SKOPS, [10, 11]),
-            reset_if(Level.on_map_ready()),
+            # chase section checkpoint
             reset_next_if(
                 (Rayman.current_map() == 10) &
                 Level.on_map_ready()
@@ -735,11 +737,11 @@ class RaymanSet(AchievementSet):
                 (Rayman.current_map() == 10) &
                 Rayman.took_damage()
             ).with_hits(1),
+            # implied fight checkpoint
+            reset_next_if(Level.on_map_ready()),
+            pause_if(Rayman.took_damage()).with_hits(1),
             trigger(delta_check(Bosses.MR_SKOPS, 0, 1)),
         ])
-        ach.add_alt(
-            pause_if(Rayman.took_damage()).with_hits(1)
-        )
 
     @achievement(577256)
     def challenge_boss_mr_dark(self, ach: Achievement):
