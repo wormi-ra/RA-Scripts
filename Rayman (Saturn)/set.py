@@ -86,6 +86,7 @@ class RaymanSet(AchievementSet):
     def boss_bzzit(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.DREAM_FOREST, 6) &
             delta_check(Bosses.BZZIT, 0, 1)
         )
 
@@ -93,6 +94,7 @@ class RaymanSet(AchievementSet):
     def boss_moskito(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.DREAM_FOREST, 16) &
             delta_check(Bosses.MOSKITO, 0, 1)
         )
 
@@ -100,6 +102,7 @@ class RaymanSet(AchievementSet):
     def boss_mr_sax(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.BAND_LAND, 16) &
             delta_check(Bosses.MR_SAX, 0, 1)
         )
 
@@ -107,6 +110,7 @@ class RaymanSet(AchievementSet):
     def boss_mr_stone(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.BLUE_MOUNTAINS, 10) &
             delta_check(Bosses.MR_STONE, 0, 1)
         )
 
@@ -114,6 +118,7 @@ class RaymanSet(AchievementSet):
     def boss_pirate_mama(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.PICTURE_CITY, 4) &
             delta_check(Bosses.PIRATE_MAMA, 0, 1)
         )
 
@@ -121,6 +126,7 @@ class RaymanSet(AchievementSet):
     def boss_space_mama(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.PICTURE_CITY, 11) &
             delta_check(Bosses.SPACE_MAMA, 0, 1)
         )
 
@@ -128,6 +134,7 @@ class RaymanSet(AchievementSet):
     def boss_mr_skops(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.CAVES_OF_SKOPS, 11) &
             delta_check(Bosses.MR_SKOPS, 0, 1)
         )
 
@@ -135,6 +142,7 @@ class RaymanSet(AchievementSet):
     def boss_mr_dark(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.CANDY_CHATEAU, 4) &
             delta_check(Bosses.MR_DARK, 0, 1)
         )
 
@@ -146,6 +154,7 @@ class RaymanSet(AchievementSet):
     def cages_pink_plant_woods(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.PINK_PLANT_WOODS.is_selected() &
             Levels.PINK_PLANT_WOODS.on_cages_unlocked()
         )
 
@@ -153,6 +162,7 @@ class RaymanSet(AchievementSet):
     def cages_anguish_lagoon(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.ANGUISH_LAGOON.is_selected() &
             Levels.ANGUISH_LAGOON.on_cages_unlocked()
         )
 
@@ -160,6 +170,7 @@ class RaymanSet(AchievementSet):
     def cages_swamps_of_forgetfulness(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.THE_SWAMPS_OF_FORGETFULNESS.is_selected() &
             Levels.THE_SWAMPS_OF_FORGETFULNESS.on_cages_unlocked()
         )
 
@@ -167,6 +178,7 @@ class RaymanSet(AchievementSet):
     def cages_moskitos_nest(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.MOSKITOS_NEST.is_selected() &
             Levels.MOSKITOS_NEST.on_cages_unlocked()
         )
 
@@ -174,6 +186,7 @@ class RaymanSet(AchievementSet):
     def cages_bongo_hills(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.BONGO_HILLS.is_selected() &
             Levels.BONGO_HILLS.on_cages_unlocked()
         )
 
@@ -181,6 +194,7 @@ class RaymanSet(AchievementSet):
     def cages_allegro_presto(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.ALLEGRO_PRESTO.is_selected() &
             Levels.ALLEGRO_PRESTO.on_cages_unlocked()
         )
 
@@ -188,6 +202,7 @@ class RaymanSet(AchievementSet):
     def cages_gong_heights(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.GONG_HEIGHTS.is_selected() &
             Levels.GONG_HEIGHTS.on_cages_unlocked()
         )
 
@@ -195,6 +210,7 @@ class RaymanSet(AchievementSet):
     def cages_mr_sax_hullaballo(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.MR_SAXS_HULLABALLO.is_selected() &
             Levels.MR_SAXS_HULLABALLO.on_cages_unlocked()
         )
 
@@ -202,6 +218,7 @@ class RaymanSet(AchievementSet):
     def cages_twilight_gulch(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.TWILIGHT_GULCH.is_selected() &
             Levels.TWILIGHT_GULCH.on_cages_unlocked()
         )
 
@@ -209,6 +226,7 @@ class RaymanSet(AchievementSet):
     def cages_hard_rocks(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.THE_HARD_ROCKS.is_selected() &
             Levels.THE_HARD_ROCKS.on_cages_unlocked()
         )
 
@@ -216,6 +234,7 @@ class RaymanSet(AchievementSet):
     def cages_mr_stone_peaks(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.MR_STONES_PEAKS.is_selected() &
             Levels.MR_STONES_PEAKS.on_cages_unlocked()
         )
 
@@ -223,6 +242,7 @@ class RaymanSet(AchievementSet):
     def cages_eraser_plains(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.ERASER_PLAINS.is_selected() &
             Levels.ERASER_PLAINS.on_cages_unlocked()
         )
 
@@ -230,6 +250,7 @@ class RaymanSet(AchievementSet):
     def cages_pencil_pentathlon(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.PENCIL_PENTATHLON.is_selected() &
             Levels.PENCIL_PENTATHLON.on_cages_unlocked()
         )
 
@@ -237,6 +258,7 @@ class RaymanSet(AchievementSet):
     def cages_space_mama_crater(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.SPACE_MAMAS_CRATER.is_selected() &
             Levels.SPACE_MAMAS_CRATER.on_cages_unlocked()
         )
 
@@ -244,6 +266,7 @@ class RaymanSet(AchievementSet):
     def cages_crystal_palace(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.CRYSTAL_PALACE.is_selected() &
             Levels.CRYSTAL_PALACE.on_cages_unlocked()
         )
 
@@ -251,6 +274,7 @@ class RaymanSet(AchievementSet):
     def cages_eat_at_joes(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.EAT_AT_JOES.is_selected() &
             Levels.EAT_AT_JOES.on_cages_unlocked()
         )
 
@@ -258,6 +282,7 @@ class RaymanSet(AchievementSet):
     def cages_mr_skops_stalactites(self, ach: Achievement):
         ach.add_core(
             Rayman.is_ingame() & 
+            Levels.MR_SKOPS_STALACTITES.is_selected() &
             Levels.MR_SKOPS_STALACTITES.on_cages_unlocked()
         )
 
@@ -432,7 +457,7 @@ class RaymanSet(AchievementSet):
     @achievement(577249)
     def challenge_allegro_presto(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
+            Rayman.is_ingame(),
             (Bosses.MR_SAX == 0) &
             (Rayman.can_run() == 0) &
             Levels.ALLEGRO_PRESTO.on_enter().with_hits(1),
@@ -460,7 +485,7 @@ class RaymanSet(AchievementSet):
     @achievement(578882)
     def challenge_mr_sax_hullaballo(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
+            Rayman.is_ingame(),
             Levels.MR_SAXS_HULLABALLO.on_enter().with_hits(1),
             Rayman.current_map() == 14,
             trigger(Level.on_clear()),
@@ -474,9 +499,11 @@ class RaymanSet(AchievementSet):
     @achievement(578883)
     def challenge_twilight_gulch(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
-            ((Levels.TWILIGHT_GULCH.info.cages == 0) &
-            Levels.TWILIGHT_GULCH.on_enter()).with_hits(1),
+            Rayman.is_ingame(),
+            (
+                (Levels.TWILIGHT_GULCH.info.cages == 0) &
+                Levels.TWILIGHT_GULCH.on_enter()
+            ).with_hits(1),
             Rayman.current_map() == 1,
             trigger(Levels.TWILIGHT_GULCH.on_cages_unlocked()),
             reset_if(Level.on_leave()),
@@ -564,7 +591,7 @@ class RaymanSet(AchievementSet):
     @achievement(578888)
     def challenge_space_mamas_crater(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
+            Rayman.is_ingame(),
             Levels.SPACE_MAMAS_CRATER.on_enter().with_hits(1),
             trigger(Level.on_clear(map_id=10)),
             reset_if(
@@ -578,7 +605,7 @@ class RaymanSet(AchievementSet):
     @achievement(578889)
     def challenge_crystal_palace(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
+            Rayman.is_ingame(),
             Levels.CRYSTAL_PALACE.on_enter().with_hits(1),
             trigger(Level.on_clear(map_id=2)),
             reset_if(Memory.RAYMAN_HELICOPTER_TIMER != 0xffff),
@@ -601,7 +628,7 @@ class RaymanSet(AchievementSet):
     @achievement(578891)
     def challenge_mr_skops_stalactites(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0),
+            Rayman.is_ingame(),
             ((Levels.MR_SKOPS_STALACTITES.info.cages == 0) &
             Levels.MR_SKOPS_STALACTITES.on_enter()).with_hits(1),
             Rayman.current_map() == 9,
@@ -615,6 +642,7 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.CANDY_CHATEAU, 2),
+            # check the previous frame because dark rayman despawns as soon as the player touch the end sign
             delta(dark_rayman.alive) == 1,
             # victory dance animation
             # for some reason the level state flag doesn't change in this level
@@ -650,10 +678,15 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.BAND_LAND, [15, 16]),
-            reset_if(
-                Level.on_map_ready() &
-                (Rayman.current_map() == 15)
+            reset_if(Level.on_map_ready()),
+            reset_next_if(
+                (Rayman.current_map() == 15) &
+                Level.on_map_ready()
             ),
+            pause_if(
+                 (Rayman.current_map() == 15) &
+                Rayman.took_damage()
+            ).with_hits(1),
             trigger(delta_check(Bosses.MR_SAX, 0, 1)),
         ])
         ach.add_alt([
@@ -693,10 +726,15 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.CAVES_OF_SKOPS, [10, 11]),
-            reset_if(
-                Level.on_map_ready() &
-                (Rayman.current_map() == 10)
+            reset_if(Level.on_map_ready()),
+            reset_next_if(
+                (Rayman.current_map() == 10) &
+                Level.on_map_ready()
             ),
+            pause_if(
+                (Rayman.current_map() == 10) &
+                Rayman.took_damage()
+            ).with_hits(1),
             trigger(delta_check(Bosses.MR_SKOPS, 0, 1)),
         ])
         ach.add_alt(
@@ -813,15 +851,20 @@ class RaymanSet(AchievementSet):
     @achievement(578898)
     def challenge_sax_speedrun(self, ach: Achievement):
         ach.add_core([
-            (Memory.STATE_DEMO_PLAY == 0) &
-            Rayman.is_fresh_save() &
-            Levels.PINK_PLANT_WOODS.on_enter().with_hits(1),
+            (
+                Rayman.is_ingame() &
+                Rayman.is_fresh_save() &
+                Levels.PINK_PLANT_WOODS.on_enter()
+            ).with_hits(1),
             trigger(
                 Rayman.is_ingame() &
+                Rayman.is_in_level(World.BAND_LAND, 16) &
                 delta_check(Bosses.MR_SAX, 0 ,1)
             ),
             reset_if(Memory.STATE_CURRENT_SAVE_FILE != delta(mem=Memory.STATE_CURRENT_SAVE_FILE)),
-            reset_if(Memory.GENERAL_FRAME_COUNTER != delta(Memory.GENERAL_FRAME_COUNTER)).with_hits(30 * 60 * FRAMERATE),
+            reset_if(
+                Memory.GENERAL_FRAME_COUNTER != delta(Memory.GENERAL_FRAME_COUNTER)
+            ).with_hits(30 * 60 * FRAMERATE),
             *(
                 reset_if(cheat)
                 for cheat in Rayman.has_cheated()
@@ -847,6 +890,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_ingame() &
+            Rayman.is_in_level(World.BAND_LAND, 16) &
             delta_check(Bosses.MR_SAX, 0 ,1)
         )
         lb.set_value(
@@ -885,6 +929,7 @@ class RaymanSet(AchievementSet):
             # extra_condition=(Bosses.MOSKITO == 0),
         )
         lb.set_submit(
+            Rayman.is_in_level(World.DREAM_FOREST, 16) &
             (delta(Bosses.MOSKITO) == 0) & (Bosses.MOSKITO == 1)
         )
 
@@ -910,6 +955,7 @@ class RaymanSet(AchievementSet):
             replayable_only=False,
         )
         lb.set_submit(
+            Rayman.is_in_level(World.BAND_LAND, 16) &
             (delta(Bosses.MR_SAX) == 0) & (Bosses.MR_SAX == 1)
         )
 
@@ -937,6 +983,7 @@ class RaymanSet(AchievementSet):
             (Rayman.can_super_helicopter() == 1)
         )
         lb.set_submit(
+            Rayman.is_in_level(World.BLUE_MOUNTAINS, 10) &
             (delta(Bosses.MR_STONE) == 0) & (Bosses.MR_STONE == 1)
         )
 
@@ -946,6 +993,7 @@ class RaymanSet(AchievementSet):
             replayable_only=False,
         )
         lb.set_submit(
+            Rayman.is_in_level(World.PICTURE_CITY, 4) &
             (delta(Bosses.PIRATE_MAMA) == 0) & (Bosses.PIRATE_MAMA == 1)
         )
 
@@ -959,6 +1007,7 @@ class RaymanSet(AchievementSet):
             replayable_only=False,
         )
         lb.set_submit(
+            Rayman.is_in_level(World.PICTURE_CITY, 11) &
             (delta(Bosses.SPACE_MAMA) == 0) & (Bosses.SPACE_MAMA == 1)
         )
 
@@ -976,6 +1025,7 @@ class RaymanSet(AchievementSet):
             replayable_only=False,
         )
         lb.set_submit(
+            Rayman.is_in_level(World.CAVES_OF_SKOPS, 11) &
             (delta(Bosses.MR_SKOPS) == 0) & (Bosses.MR_SKOPS == 1)
         )
 
@@ -985,6 +1035,7 @@ class RaymanSet(AchievementSet):
             replayable_only=False,
         )
         lb.set_submit(
+            Rayman.is_in_level(World.CANDY_CHATEAU, 4) &
             (delta(Bosses.MR_DARK) == 0) & (Bosses.MR_DARK == 1)
         )
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Memory:
     SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000000)
     """
-    [Notes] Set created with the help of PyCheevos scripts
+    [Notes] [1 byte] Set created with the help of PyCheevos scripts
     See github below for source code and further information
     https://github.com/wormi-ra/RA-Scripts/tree/main/Rayman%20(Saturn)
 
@@ -665,3 +665,4 @@ class Memory:
     0x0 = False
     0x1 = True
     """
+

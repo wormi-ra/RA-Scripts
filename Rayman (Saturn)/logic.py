@@ -247,7 +247,11 @@ class MagicianLevel:
 class Rayman:
     @staticmethod
     def is_ingame():
-        return (Memory.STATE_INGAME == 1) & (Memory.STATE_DEMO_PLAY == 0)
+        return (
+            (Memory.STATE_INGAME == 1) &
+            (Memory.STATE_DEMO_PLAY == 0) &
+            (Memory.STATE_CURRENT_SAVE_FILE != 0)
+        )
 
     @staticmethod
     def is_fresh_save():

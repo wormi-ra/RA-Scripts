@@ -573,9 +573,7 @@ achievements = OrderedDict({
     578898: Achievement(
         id=578898,
         title="""No Time for Mr. Sax""",
-        description="""Starting from a new save file, defeat Mr. Sax under 30:00 in a single session. 
-
-Opt-in to the leaderboard by using the third save file""",
+        description="""Starting from a new save file, defeat Mr. Sax under 30:00 in a single session. Opt-in to the leaderboard by using the third save file""",
         points=50,
         badge="657017",
         type=AchievementType.MISSABLE,
