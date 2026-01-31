@@ -21,7 +21,7 @@ class RaymanSet(AchievementSet):
     def __init__(self):
         super().__init__(
             game_id=20900,
-            title="Rayman (Saturn)"
+            title="Rayman"
         )
 
     @achievement(578904)
@@ -87,7 +87,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.DREAM_FOREST, 6) &
-            delta_check(Bosses.BZZIT, 0, 1)
+            Bosses.on_defeated(Bosses.BZZIT)
         )
 
     @achievement(574642)
@@ -95,7 +95,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.DREAM_FOREST, 16) &
-            delta_check(Bosses.MOSKITO, 0, 1)
+            Bosses.on_defeated(Bosses.MOSKITO)
         )
 
     @achievement(574643)
@@ -103,7 +103,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.BAND_LAND, 16) &
-            delta_check(Bosses.MR_SAX, 0, 1)
+            Bosses.on_defeated(Bosses.MR_SAX)
         )
 
     @achievement(574644)
@@ -111,7 +111,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.BLUE_MOUNTAINS, 10) &
-            delta_check(Bosses.MR_STONE, 0, 1)
+            Bosses.on_defeated(Bosses.MR_STONE)
         )
 
     @achievement(574645)
@@ -119,7 +119,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.PICTURE_CITY, 4) &
-            delta_check(Bosses.PIRATE_MAMA, 0, 1)
+            Bosses.on_defeated(Bosses.PIRATE_MAMA)
         )
 
     @achievement(574646)
@@ -127,7 +127,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.PICTURE_CITY, 11) &
-            delta_check(Bosses.SPACE_MAMA, 0, 1)
+            Bosses.on_defeated(Bosses.SPACE_MAMA)
         )
 
     @achievement(574647)
@@ -135,7 +135,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.CAVES_OF_SKOPS, 11) &
-            delta_check(Bosses.MR_SKOPS, 0, 1)
+            Bosses.on_defeated(Bosses.MR_SKOPS)
         )
 
     @achievement(574648)
@@ -143,7 +143,7 @@ class RaymanSet(AchievementSet):
         ach.add_core(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.CANDY_CHATEAU, 4) &
-            delta_check(Bosses.MR_DARK, 0, 1)
+            Bosses.on_defeated(Bosses.MR_DARK)
         )
 
     ######################
@@ -666,7 +666,7 @@ class RaymanSet(AchievementSet):
             Rayman.is_ingame(),
             Rayman.is_in_level(World.DREAM_FOREST, 16),
             reset_if(Level.on_map_ready()),
-            trigger(delta_check(Bosses.MOSKITO, 0, 1)),
+            trigger(Bosses.on_defeated(Bosses.MOSKITO)),
         ])
         ach.add_alt([
             pause_if(Rayman.took_damage()).with_hits(1),
@@ -696,7 +696,7 @@ class RaymanSet(AchievementSet):
                 (Rayman.current_map() == 16) &
                 (sax.health > 6)
             ).with_hits(1),
-            trigger(delta_check(Bosses.MR_SAX, 0, 1)),
+            trigger(Bosses.on_defeated(Bosses.MR_SAX)),
         ])
 
     @achievement(577253)
@@ -705,7 +705,7 @@ class RaymanSet(AchievementSet):
             Rayman.is_ingame(),
             Rayman.is_in_level(World.BLUE_MOUNTAINS, 10),
             reset_if(Level.on_map_ready()),
-            trigger(delta_check(Bosses.MR_STONE, 0, 1)),
+            trigger(Bosses.on_defeated(Bosses.MR_STONE)),
         ])
         ach.add_alt(
             pause_if(Rayman.took_damage()).with_hits(1)
@@ -717,7 +717,7 @@ class RaymanSet(AchievementSet):
             Rayman.is_ingame(),
             Rayman.is_in_level(World.PICTURE_CITY, 11),
             reset_if(Level.on_map_ready()),
-            trigger(delta_check(Bosses.SPACE_MAMA, 0, 1)),
+            trigger(Bosses.on_defeated(Bosses.SPACE_MAMA)),
         ])
         ach.add_alt(
             pause_if(Rayman.took_damage()).with_hits(1)
@@ -740,7 +740,7 @@ class RaymanSet(AchievementSet):
             # implied fight checkpoint
             reset_next_if(Level.on_map_ready()),
             pause_if(Rayman.took_damage()).with_hits(1),
-            trigger(delta_check(Bosses.MR_SKOPS, 0, 1)),
+            trigger(Bosses.on_defeated(Bosses.MR_SKOPS)),
         ])
 
     @achievement(577256)
@@ -748,12 +748,21 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.CANDY_CHATEAU, 4),
-            reset_if(Level.on_map_ready()),
-            trigger(delta_check(Bosses.MR_DARK, 0, 1)),
+            # checkpoint for phase 1
+            reset_next_if(
+                (Rayman.can_punch() == 0) &
+                Level.on_map_ready()
+            ),
+            pause_if(
+                (Rayman.can_punch() == 0) &
+                Rayman.took_damage()
+            ).with_hits(1),
+            # rest of the fight
+            reset_next_if(Level.on_map_ready()),
+            pause_if(Rayman.took_damage()).with_hits(1),
+            trigger(Bosses.on_defeated(Bosses.MR_DARK)),
         ])
-        ach.add_alt(
-            pause_if(Rayman.took_damage()).with_hits(1)
-        )
+
 
     #################
     # Miscellaneous #
@@ -861,7 +870,7 @@ class RaymanSet(AchievementSet):
             trigger(
                 Rayman.is_ingame() &
                 Rayman.is_in_level(World.BAND_LAND, 16) &
-                delta_check(Bosses.MR_SAX, 0 ,1)
+                Bosses.on_defeated(Bosses.MR_SAX)
             ),
             reset_if(Memory.STATE_CURRENT_SAVE_FILE != delta(mem=Memory.STATE_CURRENT_SAVE_FILE)),
             reset_if(
@@ -893,7 +902,7 @@ class RaymanSet(AchievementSet):
         lb.set_submit(
             Rayman.is_ingame() &
             Rayman.is_in_level(World.BAND_LAND, 16) &
-            delta_check(Bosses.MR_SAX, 0 ,1)
+            Bosses.on_defeated(Bosses.MR_SAX)
         )
         lb.set_value(
             measured(Memory.GENERAL_FRAME_COUNTER != delta(Memory.GENERAL_FRAME_COUNTER))
@@ -932,7 +941,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.DREAM_FOREST, 16) &
-            (delta(Bosses.MOSKITO) == 0) & (Bosses.MOSKITO == 1)
+            Bosses.on_defeated(Bosses.MOSKITO)
         )
 
     @leaderboard(152779)
@@ -958,7 +967,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.BAND_LAND, 16) &
-            (delta(Bosses.MR_SAX) == 0) & (Bosses.MR_SAX == 1)
+            Bosses.on_defeated(Bosses.MR_SAX)
         )
 
     @leaderboard(152783)
@@ -986,7 +995,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.BLUE_MOUNTAINS, 10) &
-            (delta(Bosses.MR_STONE) == 0) & (Bosses.MR_STONE == 1)
+            Bosses.on_defeated(Bosses.MR_STONE)
         )
 
     @leaderboard(152786)
@@ -996,7 +1005,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.PICTURE_CITY, 4) &
-            (delta(Bosses.PIRATE_MAMA) == 0) & (Bosses.PIRATE_MAMA == 1)
+            Bosses.on_defeated(Bosses.PIRATE_MAMA)
         )
 
     @leaderboard(152787)
@@ -1010,7 +1019,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.PICTURE_CITY, 11) &
-            (delta(Bosses.SPACE_MAMA) == 0) & (Bosses.SPACE_MAMA == 1)
+            Bosses.on_defeated(Bosses.SPACE_MAMA)
         )
 
     @leaderboard(152789)
@@ -1028,7 +1037,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.CAVES_OF_SKOPS, 11) &
-            (delta(Bosses.MR_SKOPS) == 0) & (Bosses.MR_SKOPS == 1)
+            Bosses.on_defeated(Bosses.MR_SKOPS)
         )
 
     @leaderboard(152792)
@@ -1038,7 +1047,7 @@ class RaymanSet(AchievementSet):
         )
         lb.set_submit(
             Rayman.is_in_level(World.CANDY_CHATEAU, 4) &
-            (delta(Bosses.MR_DARK) == 0) & (Bosses.MR_DARK == 1)
+            Bosses.on_defeated(Bosses.MR_DARK)
         )
 
     ##########################

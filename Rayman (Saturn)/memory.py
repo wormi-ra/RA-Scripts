@@ -459,6 +459,16 @@ class Memory:
     [8-bit] Rayman | Continues
     """
 
+    BOSS_VICTORY_TRIGGER = byte(0x1a97c1)
+    """
+    [8-bit] [Boolean] Boss Victory Trigger
+    0x0 = False
+    0x1 = True
+
+    Only changes when defeating bosses.
+    Set to 0x1 to instantly win any level
+    """
+
     LIFE_COUNTER_SCREEN_ANIMATION = word(0x1a97c2)
     """
     [16-bit] Life Counter Screen Animation
@@ -624,6 +634,7 @@ class Memory:
     bit3 = Pirate Mama
     bit2 = Space Mama
     bit1 = Mr Skops
+    - Note: this flag gets enabled at the beginning of Skop's fight instead of when he is defeated
     bit0 = Mr Dark
     """
 

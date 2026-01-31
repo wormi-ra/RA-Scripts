@@ -26,6 +26,16 @@ class Bosses:
     MR_SKOPS = bit1(Memory.EVENTS_BOSSES_BEATEN.address)
     MR_DARK = bit0(Memory.EVENTS_BOSSES_BEATEN.address)
 
+    @staticmethod
+    def on_defeated(boss: MemoryValue):
+        # For some reason the flag for Mr Skops gets triggered at beginning of the fight instead
+        if boss is Bosses.MR_SKOPS:
+            return (
+                (Bosses.MR_SKOPS == 1) &
+                delta_check(Memory.BOSS_VICTORY_TRIGGER, 0, 1)
+            )
+        return delta_check(boss, 0, 1)
+
 
 class LevelInfo(GameObject):
     MEMSIZE = 20
