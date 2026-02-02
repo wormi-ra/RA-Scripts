@@ -361,7 +361,7 @@ class RaymanSet(AchievementSet):
         ]
         ach.add_core([
             Rayman.is_ingame(),
-            measured_if(Memory.STATE_TITLE_SCREEN == 0),
+            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
             measured_if(Levels.PINK_PLANT_WOODS.is_selected()),
             measured(delta_sources(sources, 7, 8))
         ])
@@ -417,7 +417,7 @@ class RaymanSet(AchievementSet):
             Rayman.is_ingame(),
             Rayman.is_in_level(World.DREAM_FOREST, 13),
             # has not used checkpoint
-            Rayman.respawn_position()[0] != 0x008c,
+            Rayman.respawn_position()[0] == 0x008c,
             (
                 (plum.active == 1) &
                 plum.on_animation_change((0x00, 0x0c), (0x02, 0x02))
@@ -436,13 +436,13 @@ class RaymanSet(AchievementSet):
     def challenge_bongo_hills(self, ach: Achievement):
         magician = EntityData(151, world_id=World.BAND_LAND)
         ach.add_core([
-            reset_if(Levels.BONGO_HILLS.on_enter()),
             Rayman.is_ingame(),
             Levels.BONGO_HILLS.is_selected(),
+            reset_if(Levels.BONGO_HILLS.on_enter()),
             trigger(Levels.BONGO_HILLS.on_clear(map_id=6)),
         ])
         ach.add_alt([
-            measured_if(Rayman.is_ingame()),
+            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
             measured_if(Levels.BONGO_HILLS.is_selected()),
             pause_if(Rayman.died()).with_hits(1),
             pause_if(Rayman.has_cheated_hp()).with_hits(1),
@@ -527,8 +527,8 @@ class RaymanSet(AchievementSet):
             bit7(Memory.COLLECTIBLE_THE_HARD_ROCKS_3_3.address),
         ]
         ach.add_core([
-            measured_if(Memory.STATE_TITLE_SCREEN == 0),
-            measured_if(Levels.PINK_PLANT_WOODS.is_selected()),
+            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
+            measured_if(Levels.THE_HARD_ROCKS.is_selected()),
             measured(delta_sources(sources, 5, 6))
         ])
 
@@ -555,14 +555,14 @@ class RaymanSet(AchievementSet):
     def challenge_eraser_plains(self, ach: Achievement):
         magician = EntityData(94, world_id=World.PICTURE_CITY)
         ach.add_core([
-            reset_if(Levels.ERASER_PLAINS.on_enter()),
             Rayman.is_ingame(),
             Levels.ERASER_PLAINS.is_selected(),
             (Rayman.current_map() != 4), # pirate mama fight
+            reset_if(Levels.ERASER_PLAINS.on_enter()),
             trigger(Levels.ERASER_PLAINS.on_clear(map_id=3)),
         ])
         ach.add_alt([
-            measured_if(Rayman.is_ingame()),
+            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
             measured_if(Levels.ERASER_PLAINS.is_selected()),
             pause_if(Rayman.died()).with_hits(1),
             pause_if(Rayman.has_cheated_hp()).with_hits(1),

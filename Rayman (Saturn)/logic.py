@@ -324,8 +324,8 @@ class Rayman:
     @staticmethod
     def on_spawn():
         return (
-            (delta(Memory.INGAME_FREEZE_COUNTDOWN) != 0) &
-            (Memory.INGAME_FREEZE_COUNTDOWN == 0)
+            (delta(Memory.INGAME_FREEZE_COUNTDOWN) == 0) &
+            (Memory.INGAME_FREEZE_COUNTDOWN != 0)
         )
 
     @staticmethod
