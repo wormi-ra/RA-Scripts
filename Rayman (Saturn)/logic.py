@@ -192,7 +192,6 @@ class Level:
         lb.set_cancel(
             value(1) == value(1), # core
             Level.on_leave(), # alt 1
-            Rayman.game_over(), # alt 2
             Memory.STATE_DEMO_PLAY != 0, # alt 3
             Memory.STATE_CURRENT_SAVE_FILE != delta(Memory.STATE_CURRENT_SAVE_FILE), # alt 4
             *Rayman.has_cheated(), # alt 5-7
