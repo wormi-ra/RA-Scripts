@@ -55,10 +55,9 @@ class Memory:
     | 0x69 = [8-bit] Animation substate
     | 0x71 = [8-bit] Health
     | 0x7c = [8-bit] [Bitfield] Flags
-    | - bit5 = Alive
-    | - bit4 = Active
-    | - bit2 = Active (alt)?
-    | - bit1 = Flip X
+    | - Bit5 = Alive
+    | - Bit4 = Active
+    | - Bit1 = Flip X
     """
 
     ENTITY_DATA_DREAM_FOREST = (0x054000)
@@ -92,10 +91,9 @@ class Memory:
     | 0x69 = [8-bit] Animation substate
     | 0x71 = [8-bit] Health
     | 0x7c = [8-bit] [Bitfield] Flags
-    | - bit5 = Alive
-    | - bit4 = Active
-    | - bit2 = Active (alt)?
-    | - bit1 = Flip X
+    | - Bit5 = Alive
+    | - Bit4 = Active
+    | - Bit1 = Flip X
     """
 
     CUTSCENE_TIMER = word(0x0a28b2)
@@ -120,9 +118,9 @@ class Memory:
     | 0x07 = [8-bit] Map index right
     | 0x08 = [8-bit] Cages unlocked count
     | 0x09 = [8-bit] [Bitfield] Level state
-    | - bit7 = Unlocked
-    | - bit6 = Visible
-    | - bit5 = Waiting unlock animation
+    | - Bit7 = Unlocked
+    | - Bit6 = Visible
+    | - Bit5 = Waiting unlock animation
     | 0x0a = [8-bit] Starting map ID
     | 0x0b = [8-bit] World ID
     | 0x1d = [8-bit] Level text color
@@ -280,12 +278,20 @@ class Memory:
     Always point to 0x4b000
     """
 
+    INGAME_FREEZE_COUNTDOWN = word(0x1a4ba0)
+    """
+    [16-bit] Ingame | Freeze Countdown
+    Countdown where Rayman cannot move between respawns
+    0x0000 = Unfrozen
+    """
+
     INGAME_LEVEL_STATE = byte(0x1a4ba3)
     """
     [8-bit] Ingame | Level State
     0x0 = Playing
     0x1 = Cage breaking animation
     0x2 = Exit sign touched
+    - Note: Unreliable during Dark Rayman's chase
     """
 
     INGAME_PAUSED = byte(0x1a4ba7)
@@ -334,6 +340,14 @@ class Memory:
     STATE_IN_LEVEL_SELECT = byte(0x1a50c7)
     """
     [8-bit] [Boolean] State | In Level Select
+    0x0 = False
+    0x1 = True
+    """
+
+    TOTAL_CAGES_UNLOCKED = byte(0x1a5b11)
+    """
+    [8-bit] Total Cages Unlocked
+    0x66 = All Unlocked (102)
     """
 
     INGAME_FRAME_COUNTER = word(0x1a5b12)
@@ -353,12 +367,19 @@ class Memory:
     0x0 = True
     0x1 = False
 
-    Can be used for resetting achievements, changes from 0x1 to 0x0 on map changes and respawn
+    Insuring all entities in the map are loaded if value is 0x0
     """
 
     LEVEL_SELECT_DESTINATION_LEVEL_ID = word(0x1a6cc4)
     """
     [16-bit] Level Select | Destination Level ID
+    """
+
+    STATE_TITLE_SCREEN = byte(0x1a6cc8)
+    """
+    [8-bit] [Boolean] State | Title Screen
+    0x0 = False
+    0x1 = True
     """
 
     INGAME_CURRENT_WORLD = byte(0x1a6d18)
@@ -427,9 +448,9 @@ class Memory:
     RAYMAN_FLAGS = byte(0x1a6d9c)
     """
     [8-bit] Rayman | Flags
-    - bit5 = Alive
-    - bit4 = Active
-    - bit1 = Flip X
+    Bit5 = Alive
+    Bit4 = Active
+    Bit1 = Flip X
     """
 
     STATE_GAME_OVER = byte(0x1a6eb1)
@@ -501,6 +522,8 @@ class Memory:
     RAYMAN_IS_PUNCHING = byte(0x1ab07f)
     """
     [8-bit] [Boolean] Rayman | Is Punching
+    0x0 = False
+    0x1 = True
     """
 
     BONUS_LEVEL_WIN_CUTSCENE_TIMER = word(0x1ab090)
@@ -542,7 +565,7 @@ class Memory:
 
     LOADING_MAP_ID = byte(0x1ab662)
     """
-    [8-bit] Loading | Map ID (alt)
+    [8-bit] Loading | Map ID
     Changes when loading map
     can be unreliable?
     """
@@ -563,105 +586,114 @@ class Memory:
     COLLECTIBLE_PINK_PLANT_WOODS_1 = byte(0x1ac2c1)
     """
     [8-bit] [Bitfield] Collectible | Pink Plant Woods 1
-    bit7 = Life
+    Bit7 = Life
     """
 
     COLLECTIBLE_PINK_PLANT_WOODS_2 = byte(0x1ac2e0)
     """
     [8-bit] [Bitfield] Collectible | Pink Plant Woods 2
-    bit7 = Life
-    bit6 = Life
+    Bit7 = Life
+    Bit6 = Life
     """
 
     COLLECTIBLE_PINK_PLANT_WOODS_4_1 = byte(0x1ac321)
     """
     [8-bit] [Bitfield] Collectible | Pink Plant Woods 4-1
-    bit7 = Life
-    bit6 = Life
-    bit4 = Life
+    Bit7 = Life
+    Bit6 = Life
+    Bit4 = Life
     """
 
     COLLECTIBLE_PINK_PLANT_WOODS_4_2 = byte(0x1ac323)
     """
     [8-bit] [Bitfield] Collectible | Pink Plant Woods 4-2
-    bit5 = Life
-    bit2 = Life
+    Bit5 = Life
+    Bit2 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_1_1 = byte(0x1ac7e2)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 1-1
-    bit5 = Life
+    Bit5 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_1_2 = byte(0x1ac7e4)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 1-2
-    bit1 = Life
+    Bit1 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_2 = byte(0x1ac806)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 2
-    bit1 = Life
+    Bit1 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_3_2 = byte(0x1ac823)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 3-2
-    bit0 = Life
+    Bit0 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_3_3 = byte(0x1ac825)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 3-3
-    bit7 = Life
+    Bit7 = Life
     """
 
     COLLECTIBLE_THE_HARD_ROCKS_3_1 = byte(0x1ac827)
     """
     [8-bit] [Bitfield] Collectible | The Hard Rocks 3-1
-    bit1 = Life
+    Bit1 = Life
+    """
+
+    EVENTS_NPCS = byte(0x1acf2a)
+    """
+    [8-bit] [Bitfield] Events | NPCs
+    Bit7 = Unused flag that skips Bongo Hills 6
+    Bit6 = Got firefly from Joe
+    Bit5 = Plugged light switch in Eat at Joe's
+    Bit4 = Helped Musician in Mr Stone's Peaks
     """
 
     EVENTS_BOSSES_BEATEN = byte(0x1acf2b)
     """
     [8-bit] [Bitfield] Events | Bosses beaten
-    bit7 = Bzzit
-    bit6 = Moskito
-    bit5 = Mr Sax
-    bit4 = Mr Stone
-    bit3 = Pirate Mama
-    bit2 = Space Mama
-    bit1 = Mr Skops
+    Bit7 = Bzzit
+    Bit6 = Moskito
+    Bit5 = Mr Sax
+    Bit4 = Mr Stone
+    Bit3 = Pirate Mama
+    Bit2 = Space Mama
+    Bit1 = Mr Skops
     - Note: this flag gets enabled at the beginning of Skop's fight instead of when he is defeated
-    bit0 = Mr Dark
+    Bit0 = Mr Dark
     """
 
     RAYMAN_MODIFIERS = byte(0x1acfc4)
     """
     [8-bit] [Bitfield] Rayman | Modifiers
-    bit0 = Death?
-    bit1 = Reverse controls 1
-    bit2 = Reverse controls 2
-    bit3 = Begin infinite run
-    bit4 = Infinite run
-    bit5 = Firefly light
-    bit6 = Mini Rayman
-    bit7 = Unlocked run ability
+    Bit7 = Unlocked run ability
+    Bit6 = Mini Rayman
+    Bit5 = Firefly light
+    Bit4 = Infinite run
+    Bit3 = Begin infinite run
+    Bit2 = Reverse controls (Unused?)
+    Bit1 = Reverse controls
+    Bit0 = Unused death animation
     """
 
     RAYMAN_ABILITIES = byte(0x1acfc5)
     """
     [8-bit] [Bitfield] Rayman | Abilities
-    bit7 = Punch
-    bit6 = Hang
-    bit5 = Helicopter
-    bit4 = Super helicopter
-    bit3 = ?
-    bit2 = ?
-    bit1 = Seed
-    bit0 = Grappling
+    Bit7 = Punch
+    Bit6 = Hang
+    Bit5 = Helicopter
+    Bit4 = Super helicopter
+    Bit3 = Unused
+    Bit2 = Unused
+    Bit1 = Seed
+    Bit0 = Grappling
     """
 
     RAYMAN_HELICOPTER_TIMER = word(0x1acfcc)
@@ -670,10 +702,18 @@ class Memory:
     0xffff = not in helicopter state
     """
 
-    STATE_INGAME = byte(0x1bfb6c)
+    LEVEL_TRANSITION_TRIGGER = word(0x1ad022)
     """
-    [8-bit] [Boolean] State | Ingame
+    [16-bit] [Boolean] Level Transition Trigger
     0x0 = False
     0x1 = True
+
+    Switches between ingame and level select when set to 0x1
+    """
+
+    INGAME_POINTER = dword(0x1bfb6c)
+    """
+    [32-bit Pointer] Ingame Pointer? (Deprecated)
+    Unreliable for eat at joe's second visit?
     """
 

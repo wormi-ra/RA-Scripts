@@ -28,7 +28,7 @@ class Bosses:
 
     @staticmethod
     def on_defeated(boss: MemoryValue):
-        # For some reason the flag for Mr Skops gets triggered at beginning of the fight instead
+        # For some reason the flag for Mr Skops gets triggered at the beginning of the fight instead
         if boss is Bosses.MR_SKOPS:
             return (
                 (Bosses.MR_SKOPS == 1) &
@@ -99,7 +99,7 @@ class Level:
         13: ([8, 9, 10],            [11],           [13]),
         # Caves of Skops
         14: ([1, 2],                [],             [12]),
-        15: ([3, 4, 5, 6, 7, 8],    [],             []),
+        15: ([4, 5, 6, 7, 8],       [3],             []),
         16: ([9],                   [10, 11],       []),
         # Candy Chateau
         17: ([],                    [1, 2, 3, 4],   []),
@@ -136,20 +136,24 @@ class Level:
         return (self.base_maps + self.event_maps)[0]
 
     @staticmethod
-    def on_clear(map_id: int = 0, world_id = 0):
+    def on_clear(map_id: int = 0, world_id = 0, use_animation: bool = False):
         conds = ConditionList()
         if world_id != 0:
             conds.append(and_next(Rayman.current_world() == map_id))
         if map_id != 0:
             conds.append(and_next(Rayman.current_map() == map_id))
-        conds.append(delta_check(Memory.INGAME_LEVEL_STATE, 0x0, 0x2))
+        if use_animation:
+            # Victory animation (exit sign)
+            conds.append(Rayman.on_animation_change(None, (0x3, 0x17)))
+        else:
+            conds.append(delta_check(Memory.INGAME_LEVEL_STATE, 0, 2))
         return conds
 
     def on_enter(self):
         return (
             (Rayman.current_world() == self.world) &
             (Rayman.current_map() == self.starting_map()) &
-            delta_check(Memory.STATE_INGAME, 0, 1)
+            self.on_map_ready()
         )
 
     def is_selected(self):
@@ -158,13 +162,17 @@ class Level:
     @staticmethod
     def on_leave():
         return (
-            (delta(Memory.STATE_INGAME) == 1) &
-            (Memory.STATE_INGAME != 1)
+            (delta(Memory.STATE_IN_LEVEL_SELECT) == 0) &
+            (Memory.STATE_IN_LEVEL_SELECT != 0)
         )
 
     @staticmethod
     def on_map_ready():
         return delta_check(Memory.STATE_MAP_READY, 1, 0)
+
+    @staticmethod
+    def is_map_ready():
+        return Memory.STATE_MAP_READY == 0
 
     def generate_leaderboard(self, lb: Leaderboard, *, replayable_only = False, exclude_maps: list[int] = [], extra_condition = None):
         maps: list[int] = self.base_maps
@@ -174,6 +182,7 @@ class Level:
             maps.remove(id)
         goal_map = max(maps)
         start = (
+            (Memory.STATE_CURRENT_SAVE_FILE != 0) &
             (Memory.STATE_DEMO_PLAY == 0) &
             self.on_enter()
         )
@@ -182,12 +191,17 @@ class Level:
         lb.set_start(start)
         lb.set_cancel(
             value(1) == value(1), # core
-            ~Rayman.is_ingame(), # alt 1
-            *Rayman.has_cheated(), # alt 2-4
+            Level.on_leave(), # alt 1
+            Rayman.game_over(), # alt 2
+            Memory.STATE_DEMO_PLAY != 0, # alt 3
+            Memory.STATE_CURRENT_SAVE_FILE != delta(Memory.STATE_CURRENT_SAVE_FILE), # alt 4
+            *Rayman.has_cheated(), # alt 5-7
         )
-        lb.set_submit(
-            self.on_clear(goal_map)
-        )
+        lb.set_submit([
+            Level.is_map_ready(),
+            Rayman.is_in_level(self.world, goal_map),
+            self.on_clear()
+        ])
         lb.set_value(
             Rayman.is_in_level(self.world, maps) &
             measured(Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
@@ -258,7 +272,7 @@ class Rayman:
     @staticmethod
     def is_ingame():
         return (
-            (Memory.STATE_INGAME == 1) &
+            (Level.is_map_ready()) &
             (Memory.STATE_DEMO_PLAY == 0) &
             (Memory.STATE_CURRENT_SAVE_FILE != 0)
         )
@@ -275,6 +289,10 @@ class Rayman:
         )
 
     @staticmethod
+    def game_over():
+        return delta_check(Memory.STATE_GAME_OVER, 0, 1)
+
+    @staticmethod
     def has_cheated():
         return (
             # hitpoints cheat
@@ -287,6 +305,10 @@ class Rayman:
         )
 
     @staticmethod
+    def alive():
+        return bit5(Memory.RAYMAN_FLAGS.address)
+
+    @staticmethod
     def has_cheated_hp():
         return (
             (Memory.INGAME_PAUSED == 1) &
@@ -295,7 +317,17 @@ class Rayman:
 
     @staticmethod
     def died():
-        return (Rayman.lives() < delta(Rayman.lives()))
+        return (
+            (delta(Rayman.alive()) == 1) &
+            (Rayman.alive() == 0)
+        )
+
+    @staticmethod
+    def on_spawn():
+        return (
+            (delta(Memory.INGAME_FREEZE_COUNTDOWN) != 0) &
+            (Memory.INGAME_FREEZE_COUNTDOWN == 0)
+        )
 
     @staticmethod
     def took_damage():
@@ -305,11 +337,11 @@ class Rayman:
     def is_in_level(world_id: int, map_id: int | list[int]):
         if isinstance(map_id, list):
             return (
-                (Rayman.current_world() == world_id) &
                 ConditionList([
                     or_next(Rayman.current_map() == id)
                     for id in map_id
-                ]).with_flag(Flag.NONE)
+                ]) &
+                (Rayman.current_world() == world_id)
             )
         return (Rayman.current_world() == world_id) & (Rayman.current_map() == map_id)
 
@@ -339,7 +371,6 @@ class Rayman:
             hits += [add_hits(RecallValue() == value(-100 + hit)) for _ in range(hit-1)]
         return ConditionList([
             remember(Rayman.tings() - delta(Rayman.tings())),
-            # remember(Condition(Rayman.tings(), "-", delta(Rayman.tings()))),
             hits,
             (delta(Rayman.tings()) != Rayman.tings()),
         ])
