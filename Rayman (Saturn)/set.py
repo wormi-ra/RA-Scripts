@@ -473,7 +473,6 @@ class RaymanSet(AchievementSet):
                 Rayman.is_in_level(World.BAND_LAND, [7, 8, 9, 10]) &
                 (Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
             ).with_hits((4*60+30) * FRAMERATE),
-            reset_if(Rayman.game_over()),
             reset_if(Level.on_leave()),
             reset_if(Rayman.has_cheated_hp())
         ])
@@ -607,7 +606,6 @@ class RaymanSet(AchievementSet):
                 (Memory.INGAME_FRAME_COUNTER != delta(Memory.INGAME_FRAME_COUNTER))
             ).with_hits((5*60) * FRAMERATE),
             reset_if(Level.on_leave()),
-            reset_if(Rayman.game_over()),
             reset_if(Rayman.has_cheated_hp())
         ])
 
@@ -619,7 +617,6 @@ class RaymanSet(AchievementSet):
             trigger(Level.on_clear(map_id=2)),
             reset_if(Memory.RAYMAN_HELICOPTER_TIMER != 0xffff),
             reset_if(Level.on_leave()),
-            reset_if(Rayman.game_over()),
             reset_if(Rayman.has_cheated_hp()),
         ])
 
@@ -646,7 +643,6 @@ class RaymanSet(AchievementSet):
             Rayman.is_in_level(World.CAVES_OF_SKOPS, 9),
             trigger(Levels.MR_SKOPS_STALACTITES.on_cages_unlocked()),
             reset_if(Level.on_leave()),
-            reset_if(Rayman.game_over()),
         ])
 
     @achievement(578892)
