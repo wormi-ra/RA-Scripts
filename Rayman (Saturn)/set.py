@@ -613,7 +613,10 @@ class RaymanSet(AchievementSet):
     def challenge_crystal_palace(self, ach: Achievement):
         ach.add_core([
             Rayman.is_ingame(),
-            Levels.CRYSTAL_PALACE.on_enter().with_hits(1),
+            (
+                (Rayman.respawn_position()[0] == 0x00a1) &
+                Levels.CRYSTAL_PALACE.on_enter()
+            ).with_hits(1),
             trigger(Level.on_clear(map_id=2)),
             reset_if(Memory.RAYMAN_HELICOPTER_TIMER != 0xffff),
             reset_if(Level.on_leave()),
