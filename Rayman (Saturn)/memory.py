@@ -361,13 +361,13 @@ class Memory:
     [8-bit] Bonus Level | Tings
     """
 
-    STATE_MAP_READY = byte(0x1a6c73)
+    STATE_MAP_READY_DEPRECATED = byte(0x1a6c73)
     """
-    [8-bit] [Boolean] State | Map Ready
+    [8-bit] [Boolean] State | Map Ready | Deprecated
     0x0 = True
     0x1 = False
 
-    Insuring all entities in the map are loaded if value is 0x0
+    Not reliable
     """
 
     LEVEL_SELECT_DESTINATION_LEVEL_ID = word(0x1a6cc4)
@@ -378,6 +378,13 @@ class Memory:
     STATE_TITLE_SCREEN = byte(0x1a6cc8)
     """
     [8-bit] [Boolean] State | Title Screen
+    0x0 = False
+    0x1 = True
+    """
+
+    STATE_LOADING = byte(0x1a6cf0)
+    """
+    [8-bit] [Boolean] State | Loading
     0x0 = False
     0x1 = True
     """
@@ -467,6 +474,15 @@ class Memory:
     RAYMAN_RESPAWN_POSITION_Y = word(0x1a6f0c)
     """
     [16-bit] Rayman | Respawn Position Y
+    """
+
+    STATE_MAP_READY = byte(0x1a702b)
+    """
+    [8-bit] [Boolean] State | Map Ready
+    0x0 = False
+    0x1 = True
+
+    Insuring all entities in the map are loaded if value is 0x1 and level select is 0x0
     """
 
     GENERAL_FRAME_COUNTER = word(0x1a7046)

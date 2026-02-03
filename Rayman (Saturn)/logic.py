@@ -151,9 +151,9 @@ class Level:
 
     def on_enter(self):
         return (
+            self.on_map_ready() &
             (Rayman.current_world() == self.world) &
-            (Rayman.current_map() == self.starting_map()) &
-            self.on_map_ready()
+            (Rayman.current_map() == self.starting_map())
         )
 
     def is_selected(self):
@@ -167,12 +167,19 @@ class Level:
         )
 
     @staticmethod
-    def on_map_ready():
-        return delta_check(Memory.STATE_MAP_READY, 1, 0)
+    def is_map_ready():
+        return (
+            (Memory.STATE_IN_LEVEL_SELECT == 0) &
+            (Memory.STATE_MAP_READY == 1)
+        )
 
     @staticmethod
-    def is_map_ready():
-        return Memory.STATE_MAP_READY == 0
+    def on_map_ready():
+        return (
+            (delta(Memory.STATE_IN_LEVEL_SELECT) == 1) |
+            (delta(Memory.STATE_MAP_READY) == 0) &
+            Level.is_map_ready()
+        )
 
     def generate_leaderboard(self, lb: Leaderboard, *, replayable_only = False, exclude_maps: list[int] = [], extra_condition = None):
         maps: list[int] = self.base_maps

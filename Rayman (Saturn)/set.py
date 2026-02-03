@@ -360,8 +360,7 @@ class RaymanSet(AchievementSet):
             bit2(Memory.COLLECTIBLE_PINK_PLANT_WOODS_4_2.address),
         ]
         ach.add_core([
-            Rayman.is_ingame(),
-            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
+            measured_if(Rayman.is_ingame()),
             measured_if(Levels.PINK_PLANT_WOODS.is_selected()),
             measured(delta_sources(sources, 7, 8))
         ])
@@ -465,9 +464,11 @@ class RaymanSet(AchievementSet):
     def challenge_allegro_presto(self, ach: Achievement):
         ach.add_core([
             Rayman.is_ingame(),
-            (Bosses.MR_SAX == 0) &
-            (Rayman.can_run() == 0) &
-            Levels.ALLEGRO_PRESTO.on_enter().with_hits(1),
+            (
+                Levels.ALLEGRO_PRESTO.on_enter() &
+                (Bosses.MR_SAX == 0) &
+                (Rayman.can_run() == 0)
+            ).with_hits(1),
             trigger(Level.on_clear(map_id=10)),
             reset_if(
                 Rayman.is_in_level(World.BAND_LAND, [7, 8, 9, 10]) &
@@ -508,8 +509,8 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             (
-                (Levels.TWILIGHT_GULCH.info.cages == 0) &
-                Levels.TWILIGHT_GULCH.on_enter()
+                Levels.TWILIGHT_GULCH.on_enter() &
+                (Levels.TWILIGHT_GULCH.info.cages == 0)
             ).with_hits(1),
             Rayman.current_map() == 1,
             trigger(Levels.TWILIGHT_GULCH.on_cages_unlocked()),
@@ -527,7 +528,7 @@ class RaymanSet(AchievementSet):
             bit7(Memory.COLLECTIBLE_THE_HARD_ROCKS_3_3.address),
         ]
         ach.add_core([
-            measured_if(Memory.STATE_IN_LEVEL_SELECT == 0),
+            measured_if(Rayman.is_ingame()),
             measured_if(Levels.THE_HARD_ROCKS.is_selected()),
             measured(delta_sources(sources, 5, 6))
         ])
@@ -660,8 +661,8 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             (
-                (Levels.MR_SKOPS_STALACTITES.info.cages == 0) &
-                Levels.MR_SKOPS_STALACTITES.on_enter()
+                Levels.MR_SKOPS_STALACTITES.on_enter() &
+                (Levels.MR_SKOPS_STALACTITES.info.cages == 0)
             ).with_hits(1),
             Rayman.is_in_level(World.CAVES_OF_SKOPS, 9),
             trigger(Levels.MR_SKOPS_STALACTITES.on_cages_unlocked()),
@@ -897,10 +898,10 @@ class RaymanSet(AchievementSet):
     def challenge_sax_speedrun(self, ach: Achievement):
         ach.add_core([
             (
+                Levels.PINK_PLANT_WOODS.on_enter() &
                 (Memory.STATE_DEMO_PLAY == 0) &
                 (Memory.STATE_CURRENT_SAVE_FILE != 0) &
-                Rayman.is_fresh_save() &
-                Levels.PINK_PLANT_WOODS.on_enter()
+                Rayman.is_fresh_save()
             ).with_hits(1),
             trigger(
             Level.is_map_ready() &
@@ -924,9 +925,9 @@ class RaymanSet(AchievementSet):
     @leaderboard(154961)
     def leaderboard_sax_speedrun(self, lb: Leaderboard):
         lb.set_start(
+            Levels.PINK_PLANT_WOODS.on_enter() &
             (Memory.STATE_CURRENT_SAVE_FILE == 3) &
-            Rayman.is_fresh_save() &
-            Levels.PINK_PLANT_WOODS.on_enter(),
+            Rayman.is_fresh_save()
         )
         lb.set_cancel(
             value(1) == value(1), # core
