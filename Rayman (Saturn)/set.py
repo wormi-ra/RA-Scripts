@@ -611,17 +611,37 @@ class RaymanSet(AchievementSet):
 
     @achievement(578889)
     def challenge_crystal_palace(self, ach: Achievement):
+        # map_id, respawn_y
+        checkpoints = [
+            (1, 0x00dd),
+            (1, 0x0022),
+            (2, 0x01dc),
+            (2, 0x01d2),
+        ]
+        checkpoints_conds = [
+            [
+                reset_next_if(
+                    (Rayman.current_map() == map_id) &
+                    (Rayman.respawn_position()[1] == respawn_y) &
+                    Rayman.on_spawn()
+                ),
+                pause_if(
+                    (Rayman.current_map() == map_id) &
+                    (Rayman.respawn_position()[1] == respawn_y) &
+                    (Memory.RAYMAN_HELICOPTER_TIMER != 0xffff)
+                ).with_hits(1),
+            ] for map_id, respawn_y in checkpoints
+        ]
         ach.add_core([
             Rayman.is_ingame(),
-            (
-                (Rayman.respawn_position()[0] == 0x00a1) &
-                Levels.CRYSTAL_PALACE.on_enter()
-            ).with_hits(1),
+            Levels.CRYSTAL_PALACE.is_selected(),
+            *checkpoints_conds,
             trigger(Level.on_clear(map_id=2)),
-            reset_if(Memory.RAYMAN_HELICOPTER_TIMER != 0xffff),
             reset_if(Level.on_leave()),
-            reset_if(Rayman.has_cheated_hp()),
         ])
+        ach.add_alt(
+            pause_if(Rayman.has_cheated_hp()).with_hits(1),
+        )
 
     @achievement(578890)
     def challenge_eat_at_joes(self, ach: Achievement):
