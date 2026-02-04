@@ -758,6 +758,7 @@ class RaymanSet(AchievementSet):
 
     @achievement(577255)
     def challenge_boss_mr_skops(self, ach: Achievement):
+        boss = EntityData(0, World.CAVES_OF_SKOPS)
         ach.add_core([
             Rayman.is_ingame(),
             Rayman.is_in_level(World.CAVES_OF_SKOPS, [10, 11]),
@@ -772,7 +773,11 @@ class RaymanSet(AchievementSet):
             ).with_hits(1),
             # implied fight checkpoint
             reset_next_if(Rayman.on_spawn()),
-            pause_if(Rayman.took_damage()).with_hits(1),
+            pause_if(
+                (Rayman.current_map() == 11) &
+                (boss.health > 1) &
+                Rayman.took_damage()
+            ).with_hits(1),
             trigger(Bosses.on_defeated(Bosses.MR_SKOPS)),
         ])
 

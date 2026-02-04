@@ -239,7 +239,7 @@ achievements = OrderedDict({
     ),
     577250: Achievement(
         id=577250,
-        title="""Gong Heights Challenge""",
+        title="""Invisible Force of Doom""",
         description="""Clear the autoscroller segment in Gong Heights without taking damage""",
         points=5,
         badge="657000",
@@ -533,7 +533,7 @@ achievements = OrderedDict({
     577255: Achievement(
         id=577255,
         title="""SkopsGasm""",
-        description="""Defeat Mr. Skops in Mr. Skops' Stalactites without taking damage""",
+        description="""Defeat Mr. Skops in Mr. Skops' Stalactites without taking damage except on his final attack""",
         points=10,
         badge="656702",
         type=AchievementType.MISSABLE,
@@ -549,7 +549,7 @@ achievements = OrderedDict({
     578892: Achievement(
         id=578892,
         title="""No Pressure""",
-        description="""Clear Dark Rayman's chase without running longer than 1 second total""",
+        description="""Clear Dark Rayman's chase without running longer than 1 second in total""",
         points=10,
         badge="657011",
         type=AchievementType.MISSABLE,
