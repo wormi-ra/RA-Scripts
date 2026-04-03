@@ -14,6 +14,7 @@ class Memory:
     - RayMap
     https://raym.app/maps_r1/index.html?mode=RaymanSaturnUS&folder=r1/saturn_us
     raym.app is a map viewer for every rayman games and versions, it is a great tool to identify level IDs, entity IDs and state IDs in a level
+    (source: https://github.com/BinarySerializer/Ray1Map)
 
     - Ray1 BinarySerializer
     https://github.com/BinarySerializer/BinarySerializer.Ray1/tree/main/src/BinarySerializer.Ray1/DataTypes
@@ -28,6 +29,12 @@ class Memory:
     """
     [28672 bytes] [Array] Entity Data
     Memory range specific to world 2-6 (All except Dream Forest)
+    Each entity is 112 bytes long following the same structure
+    Entities are different depending on the current map loaded
+    Check entity IDs on raym.app
+    Calculate the address of a specific entity's property by using the following formula:
+    0x4b000 + 112 * EntityId + PropertyOffset
+
     | [112 bytes] Entity Data Structure
     | 0x10 = [32-bit Pointer] Sprite data
     | 0x14 = [32-bit Pointer] Animation data
@@ -64,6 +71,12 @@ class Memory:
     """
     [28672 bytes] [Array] Entity Data | Dream Forest
     Memory range specific to world 1 (Dream Forest)
+    Each entity is 112 bytes long following the same structure
+    Entities are different depending on the current map loaded
+    Check entity IDs on raym.app
+    Calculate the address of a specific entity's property by using the following formula:
+    0x54000 + 112 * EntityId + PropertyOffset
+
     | [112 bytes] Entity Data Structure
     | 0x10 = [32-bit Pointer] Sprite data
     | 0x14 = [32-bit Pointer] Animation data
@@ -104,6 +117,8 @@ class Memory:
     STATE_WATCHING_CUTSCENE = byte(0x0a28e2)
     """
     [8-bit] [Boolean] State | Watching Cutscene
+    0x0 = False
+    0x1 = True
     """
 
     LEVEL_INFO_PINK_PLANT_WOODS = (0x18f900)
@@ -373,6 +388,7 @@ class Memory:
     LEVEL_SELECT_DESTINATION_LEVEL_ID = word(0x1a6cc4)
     """
     [16-bit] Level Select | Destination Level ID
+    The level ID Rayman is walking towards in the level select
     """
 
     STATE_TITLE_SCREEN = byte(0x1a6cc8)
@@ -463,17 +479,21 @@ class Memory:
     STATE_GAME_OVER = byte(0x1a6eb1)
     """
     [8-bit] [Boolean] State | Game Over
+    0x0 = False
+    0x1 = True
     True when on the game over screen, as well as the ending cutscene and credits
     """
 
     RAYMAN_RESPAWN_POSITION_X = word(0x1a6f0a)
     """
     [16-bit] Rayman | Respawn Position X
+    Not reliable if the player uses a checkpoint, as the value can vary slightly depending on Rayman's position at the time he used the checkpoint
     """
 
     RAYMAN_RESPAWN_POSITION_Y = word(0x1a6f0c)
     """
     [16-bit] Rayman | Respawn Position Y
+    Can be used reliably for checkpoints
     """
 
     STATE_MAP_READY = byte(0x1a702b)
@@ -494,6 +514,7 @@ class Memory:
     RAYMAN_CONTINUES = byte(0x1a8593)
     """
     [8-bit] Rayman | Continues
+    0x5 = Starting value
     """
 
     BOSS_VICTORY_TRIGGER = byte(0x1a97c1)
@@ -546,7 +567,7 @@ class Memory:
     """
     [16-bit] Bonus Level | Win cutscene timer
     0x0000 = Inactive
-    0x0001 - 0x111 = Active cutscene timer
+    0x0001 - 0x0111 = Active cutscene timer
     0xffe0 - 0xfffe = Pre-cutscene timer
     """
 
@@ -582,13 +603,17 @@ class Memory:
     LOADING_MAP_ID = byte(0x1ab662)
     """
     [8-bit] Loading | Map ID
+    Map ID specific to the current world
+    Matches the ID from raym.app (eg. JUN002 = Map ID 0x02 etc.)
     Changes when loading map
-    can be unreliable?
+    Can be unreliable?
     """
 
     LOADING_NEXT_MAP_ID = byte(0x1ab978)
     """
     [8-bit] Loading | Next Map ID
+    Map ID specific to the current world
+    Matches the ID from raym.app (eg. JUN002 = Map ID 0x02 etc.)
     Changes when a map change is requested
     when hitting a sign for example
     """
@@ -596,7 +621,10 @@ class Memory:
     INGAME_MAP_ID = byte(0x1ac286)
     """
     [8-bit] Ingame | Map ID
+    Map ID specific to the current world
+    Matches the ID from raym.app (eg. JUN002 = Map ID 0x02 etc.)
     Changes when the level is actually loaded
+
     """
 
     COLLECTIBLE_PINK_PLANT_WOODS_1 = byte(0x1ac2c1)
@@ -730,6 +758,7 @@ class Memory:
     INGAME_POINTER = dword(0x1bfb6c)
     """
     [32-bit Pointer] Ingame Pointer? (Deprecated)
-    Unreliable for eat at joe's second visit?
+    Used to check if the player is ingame
+    Unreliable for eat at joe's revisit
     """
 
