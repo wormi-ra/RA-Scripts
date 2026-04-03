@@ -34,6 +34,9 @@ class Bosses:
                 (Bosses.MR_SKOPS == 1) &
                 delta_check(Memory.BOSS_VICTORY_TRIGGER, 0, 1)
             )
+        # For some reason, the game goes into loading state at the same frame as the event trigger
+        if boss is Bosses.SPACE_MAMA:
+                return delta_check(Memory.BOSS_VICTORY_TRIGGER, 0, 1)
         return delta_check(boss, 0, 1)
 
 
