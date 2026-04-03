@@ -43,7 +43,8 @@ class RaymanRichPresence(RichPresence):
             (
                 (Memory.STATE_CURRENT_SAVE_FILE >= 1) &
                 (Memory.STATE_CURRENT_SAVE_FILE <= 3) &
-                (Level.is_map_ready()) &
+                (Memory.STATE_IN_LEVEL_SELECT == 0) &
+                (Memory.STATE_LOADING == 0) &
                 (Memory.BONUS_LEVEL_TIME_LEFT != 0xfffe)
             ),
             f"{self.paused()}Rayman is playing a Magician level in @Level({Memory.LEVEL_SELECT_CURRENT_LEVEL_ID}) {self.level_cages()} | {self.bonus_timer()} {self.bonus_tings()} {self.lives()} | {self.save_status()}"

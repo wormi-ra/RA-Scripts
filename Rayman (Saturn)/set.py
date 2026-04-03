@@ -293,7 +293,6 @@ class RaymanSet(AchievementSet):
         ach.add_core([
             Rayman.is_ingame(),
             measured_if(Memory.STATE_CURRENT_SAVE_FILE <= 3),
-            measured_if(Memory.STATE_TITLE_SCREEN == 0),
             measured(delta_check(Memory.TOTAL_CAGES_UNLOCKED, 101, 102))
         ])
 

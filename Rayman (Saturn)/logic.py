@@ -278,9 +278,12 @@ class Rayman:
     @staticmethod
     def is_ingame():
         return (
-            (Level.is_map_ready()) &
             (Memory.STATE_DEMO_PLAY == 0) &
-            (Memory.STATE_CURRENT_SAVE_FILE != 0)
+            (Memory.STATE_CURRENT_SAVE_FILE != 0) &
+            (Memory.STATE_GAME_OVER == 0) &
+            (Memory.STATE_TITLE_SCREEN == 0) &
+            (Memory.STATE_IN_LEVEL_SELECT == 0) &
+            (Memory.STATE_LOADING == 0)
         )
 
     @staticmethod
