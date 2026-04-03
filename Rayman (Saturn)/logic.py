@@ -36,7 +36,11 @@ class Bosses:
             )
         # For some reason, the game goes into loading state at the same frame as the event trigger
         if boss is Bosses.SPACE_MAMA:
-                return delta_check(Memory.BOSS_VICTORY_TRIGGER, 0, 1)
+            return delta_check(Memory.BOSS_VICTORY_TRIGGER, 0, 1)
+        # Same reason, game goes into loading state on the same same frame, also Bzzit uses a custom animation so can't rely on victory trigger
+        if boss is Bosses.BZZIT:
+            bzzit = EntityData(30, world_id=World.DREAM_FOREST)
+            return (delta(bzzit.health) > 0) & (bzzit.health == 0)
         return delta_check(boss, 0, 1)
 
 
