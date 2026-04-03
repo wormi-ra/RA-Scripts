@@ -130,14 +130,6 @@ achievements = OrderedDict({
         points=5,
         badge="656969",
     ),
-    574642: Achievement(
-        id=574642,
-        title="""Not so Friendly""",
-        description="""Defeat Moskito in Moskito's Nest""",
-        points=5,
-        badge="656679",
-        type=AchievementType.PROGRESSION,
-    ),
     577251: Achievement(
         id=577251,
         title="""Aedes Raymanis""",
@@ -145,6 +137,14 @@ achievements = OrderedDict({
         points=10,
         badge="656698",
         type=AchievementType.MISSABLE,
+    ),
+    574642: Achievement(
+        id=574642,
+        title="""Not so Friendly""",
+        description="""Defeat Moskito in Moskito's Nest""",
+        points=5,
+        badge="656679",
+        type=AchievementType.PROGRESSION,
     ),
     574638: Achievement(
         id=574638,
@@ -216,7 +216,7 @@ achievements = OrderedDict({
     577249: Achievement(
         id=577249,
         title="""Vivace Prestissimo""",
-        description="""Clear Allegro Presto under 4:30 before defeating Mr. Sax or Mr. Stone""",
+        description="""Clear Allegro Presto in less than 4:30 before defeating Mr. Sax or Mr. Stone""",
         points=25,
         badge="656972",
         type=AchievementType.MISSABLE,
@@ -255,16 +255,9 @@ achievements = OrderedDict({
     578882: Achievement(
         id=578882,
         title="""Smooth Jazz""",
-        description="""Clear the replayable segment of Mr Sax's Hullaballo under 2:40""",
+        description="""Clear the replayable segment of Mr. Sax's Hullaballo in less than 2:40""",
         points=10,
         badge="657001",
-    ),
-    574643: Achievement(
-        id=574643,
-        title="""Mr. Saxobeat""",
-        description="""Defeat Mr. Sax in Mr. Sax's Hullaballo""",
-        points=5,
-        badge="656680",
     ),
     577252: Achievement(
         id=577252,
@@ -274,13 +267,12 @@ achievements = OrderedDict({
         badge="656699",
         type=AchievementType.MISSABLE,
     ),
-    573023: Achievement(
-        id=573023,
-        title="""Ravine of Twilight""",
-        description="""Break all 6 Electoon cages in Twilight Gulch""",
+    574643: Achievement(
+        id=574643,
+        title="""Mr. Saxobeat""",
+        description="""Defeat Mr. Sax in Mr. Sax's Hullaballo""",
         points=5,
-        badge="656663",
-        type=AchievementType.PROGRESSION,
+        badge="656680",
     ),
     578883: Achievement(
         id=578883,
@@ -289,6 +281,14 @@ achievements = OrderedDict({
         points=5,
         badge="657002",
         type=AchievementType.MISSABLE,
+    ),
+    573023: Achievement(
+        id=573023,
+        title="""Ravine of Twilight""",
+        description="""Break all 6 Electoon cages in Twilight Gulch""",
+        points=5,
+        badge="656663",
+        type=AchievementType.PROGRESSION,
     ),
     578894: Achievement(
         id=578894,
@@ -322,7 +322,7 @@ achievements = OrderedDict({
     578885: Achievement(
         id=578885,
         title="""Flawless Flying""",
-        description="""Clear the first super helicopter segment of Mr Stone's Peaks under 1:45 without taking damage""",
+        description="""Clear the first super helicopter segment of Mr. Stone's Peaks in less than 1:45 without taking damage""",
         points=10,
         badge="657004",
     ),
@@ -341,14 +341,6 @@ achievements = OrderedDict({
         badge="656665",
         type=AchievementType.PROGRESSION,
     ),
-    574644: Achievement(
-        id=574644,
-        title="""Stone Head""",
-        description="""Defeat Mr. Stone in Mr. Stone's Peaks""",
-        points=5,
-        badge="656681",
-        type=AchievementType.PROGRESSION,
-    ),
     577253: Achievement(
         id=577253,
         title="""Rock and Stone""",
@@ -356,6 +348,14 @@ achievements = OrderedDict({
         points=10,
         badge="656700",
         type=AchievementType.MISSABLE,
+    ),
+    574644: Achievement(
+        id=574644,
+        title="""Stone Head""",
+        description="""Defeat Mr. Stone in Mr. Stone's Peaks""",
+        points=5,
+        badge="656681",
+        type=AchievementType.PROGRESSION,
     ),
     574640: Achievement(
         id=574640,
@@ -449,17 +449,9 @@ achievements = OrderedDict({
     578888: Achievement(
         id=578888,
         title="""Needle Platformer""",
-        description="""Clear the replayable segments of Space Mama's Crater under 5:00""",
+        description="""Clear the replayable segments of Space Mama's Crater in less than 5:00""",
         points=25,
         badge="657007",
-    ),
-    574646: Achievement(
-        id=574646,
-        title="""Technology from Outer Space""",
-        description="""Defeat Space Mama in Space Mama's Crater""",
-        points=5,
-        badge="656683",
-        type=AchievementType.PROGRESSION,
     ),
     577254: Achievement(
         id=577254,
@@ -468,6 +460,14 @@ achievements = OrderedDict({
         points=10,
         badge="656701",
         type=AchievementType.MISSABLE,
+    ),
+    574646: Achievement(
+        id=574646,
+        title="""Technology from Outer Space""",
+        description="""Defeat Space Mama in Space Mama's Crater""",
+        points=5,
+        badge="656683",
+        type=AchievementType.PROGRESSION,
     ),
     573029: Achievement(
         id=573029,
@@ -506,14 +506,6 @@ achievements = OrderedDict({
         badge="656670",
         type=AchievementType.PROGRESSION,
     ),
-    573031: Achievement(
-        id=573031,
-        title="""Stalactites of Skops""",
-        description="""Break all 6 Electoon cages in Mr. Skops' Stalactites""",
-        points=5,
-        badge="656671",
-        type=AchievementType.PROGRESSION,
-    ),
     578891: Achievement(
         id=578891,
         title="""Experienced Spelunker""",
@@ -522,12 +514,20 @@ achievements = OrderedDict({
         badge="657010",
         type=AchievementType.MISSABLE,
     ),
-    574647: Achievement(
-        id=574647,
-        title="""Tormented Scorpion""",
-        description="""Defeat Mr. Skops in Mr. Skops' Stalactites""",
+    573031: Achievement(
+        id=573031,
+        title="""Stalactites of Skops""",
+        description="""Break all 6 Electoon cages in Mr. Skops' Stalactites""",
         points=5,
-        badge="656684",
+        badge="656671",
+        type=AchievementType.PROGRESSION,
+    ),
+    574661: Achievement(
+        id=574661,
+        title="""Castle of Delights""",
+        description="""Free every Electoon and unlock Candy Chateau""",
+        points=25,
+        badge="656697",
         type=AchievementType.PROGRESSION,
     ),
     577255: Achievement(
@@ -538,12 +538,12 @@ achievements = OrderedDict({
         badge="656702",
         type=AchievementType.MISSABLE,
     ),
-    574661: Achievement(
-        id=574661,
-        title="""Castle of Delights""",
-        description="""Free every Electoon and unlock Candy Chateau""",
-        points=25,
-        badge="656697",
+    574647: Achievement(
+        id=574647,
+        title="""Tormented Scorpion""",
+        description="""Defeat Mr. Skops in Mr. Skops' Stalactites""",
+        points=5,
+        badge="656684",
         type=AchievementType.PROGRESSION,
     ),
     578892: Achievement(
@@ -573,7 +573,7 @@ achievements = OrderedDict({
     578898: Achievement(
         id=578898,
         title="""No Time for Mr. Sax""",
-        description="""Starting from a new save file, defeat Mr. Sax under 30:00 in a single session. Opt-in to the leaderboard by using the third save file""",
+        description="""Starting from a new save file, defeat Mr. Sax in less than 30:00 in a single session. Opt-in to the leaderboard by using the third save file""",
         points=50,
         badge="657017",
         type=AchievementType.MISSABLE,
