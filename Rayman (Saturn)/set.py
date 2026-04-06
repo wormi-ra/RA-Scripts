@@ -550,7 +550,10 @@ class RaymanSet(AchievementSet):
             Levels.ERASER_PLAINS.on_enter().with_hits(1),
             trigger(Levels.ERASER_PLAINS.on_clear(map_id=3)),
             reset_if(Level.on_leave()),
-            reset_if(Rayman.died()),
+            reset_if(
+                (Rayman.active() == 1) &
+                Rayman.died()
+            ),
         ])
         ach.add_alt([
             measured_if(Levels.ERASER_PLAINS.on_enter()).with_hits(1),

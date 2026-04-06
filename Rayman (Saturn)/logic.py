@@ -325,6 +325,10 @@ class Rayman:
         return bit5(Memory.RAYMAN_FLAGS.address)
 
     @staticmethod
+    def active():
+        return bit4(Memory.RAYMAN_FLAGS.address)
+
+    @staticmethod
     def has_cheated_hp():
         return (
             (Memory.INGAME_PAUSED == 1) &
