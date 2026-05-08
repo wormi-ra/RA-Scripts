@@ -1,0 +1,264 @@
+{
+    "arenaList": [
+        {
+            "data": {
+                "index": 0,
+                "impl": {
+                    "unk0": 8372288,
+                    "address": 7172224,
+                    "size": 1200000,
+                    "allocated": 966656,
+                    "elementSize": 0,
+                    "name": "XString%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 1,
+                "impl": {
+                    "unk0": 8372368,
+                    "address": 8380544,
+                    "size": 65536,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "XDxFieldManager.Data%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 2,
+                "impl": {
+                    "unk0": 8372448,
+                    "address": 8446208,
+                    "size": 65536,
+                    "allocated": 8192,
+                    "elementSize": 8,
+                    "name": "XDxFieldManager.Descriptor%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 3,
+                "impl": {
+                    "unk0": 8372528,
+                    "address": 8511872,
+                    "size": 13500000,
+                    "allocated": 5292032,
+                    "elementSize": 0,
+                    "name": "MField%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 4,
+                "impl": {
+                    "unk0": 8372608,
+                    "address": 22011904,
+                    "size": 3100000,
+                    "allocated": 1187840,
+                    "elementSize": 0,
+                    "name": "XContainer%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 5,
+                "impl": {
+                    "unk0": 8372688,
+                    "address": 25111936,
+                    "size": 262144,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "XLua%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 6,
+                "impl": {
+                    "unk0": 8372768,
+                    "address": 25374208,
+                    "size": 2620000,
+                    "allocated": 163840,
+                    "elementSize": 0,
+                    "name": "AnimArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 7,
+                "impl": {
+                    "unk0": 8372848,
+                    "address": 0,
+                    "size": 0,
+                    "allocated": 0,
+                    "elementSize": 0,
+                    "name": "ps2gl.DMA%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 8,
+                "impl": {
+                    "unk0": 28002480,
+                    "address": 0,
+                    "size": 0,
+                    "allocated": 0,
+                    "elementSize": 0,
+                    "name": "ps2gl.DList%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 9,
+                "impl": {
+                    "unk0": 8372928,
+                    "address": 28027136,
+                    "size": 600000,
+                    "allocated": 57344,
+                    "elementSize": 0,
+                    "name": "PS2.DisplayList%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 10,
+                "impl": {
+                    "unk0": 8373008,
+                    "address": 28627200,
+                    "size": 8192,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "CameraArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 11,
+                "impl": {
+                    "unk0": 8373088,
+                    "address": 28635520,
+                    "size": 16384,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "OtherStuffArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 12,
+                "impl": {
+                    "unk0": 8373168,
+                    "address": 28652032,
+                    "size": 8192,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "ScriptArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 13,
+                "impl": {
+                    "unk0": 8373248,
+                    "address": 28660352,
+                    "size": 8192,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "MessageRelayArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 14,
+                "impl": {
+                    "unk0": 8373328,
+                    "address": 28668672,
+                    "size": 12288,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "ParticleEmmiter%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 15,
+                "impl": {
+                    "unk0": 8373408,
+                    "address": 28681088,
+                    "size": 524288,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "ParticleObjects%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 16,
+                "impl": {
+                    "unk0": 8373488,
+                    "address": 29205504,
+                    "size": 24576,
+                    "allocated": 16384,
+                    "elementSize": 0,
+                    "name": "InputArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 17,
+                "impl": {
+                    "unk0": 8373568,
+                    "address": 29230208,
+                    "size": 524288,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "LandArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 18,
+                "impl": {
+                    "unk0": 8373648,
+                    "address": 29754624,
+                    "size": 8192,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "ObjectRegArena%00"
+                }
+            }
+        },
+        {
+            "data": {
+                "index": 19,
+                "impl": {
+                    "unk0": 8373728,
+                    "address": 29762944,
+                    "size": 270000,
+                    "allocated": 8192,
+                    "elementSize": 0,
+                    "name": "AiArena%00"
+                }
+            }
+        }
+    ]
+}

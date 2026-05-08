@@ -1,6 +1,6 @@
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from typing import Any
-from pycheevos.utils.import_notes import detect_type, sanitize_name
+from pycheevos.utils.import_notes import prefix_region, detect_type, sanitize_name
 import json
 import sys
 import re
@@ -11,6 +11,16 @@ JINJA_ENV = Environment(
     lstrip_blocks=True,
     trim_blocks=True
 )
+
+def get_region(note_text):
+    # List of known regions (case-insensitive)
+    regions = ["us", "eu", "jp", "pal", "ntsc"]
+    match = re.search(r'^.*[\[\(]([a-zA-Z]+)[\]\)]', note_text)
+    if match:
+        region = match.group(1).lower() 
+        if region in regions:
+            return region
+    return None
 
 def slugify(text: str) -> str:
     return re.sub(r'[\W_]+', '_', text.upper())
@@ -28,6 +38,7 @@ def process_note(note: dict[str, str]) -> dict[str, Any]:
         "slug": slugify(get_title(note["Note"])),
         "note": note["Note"].replace("\r\n", "\n"),
         "author": note["User"],
+        "region": get_region(note["Note"]),
     }
 
 with open(sys.argv[1], encoding="utf-8") as file:

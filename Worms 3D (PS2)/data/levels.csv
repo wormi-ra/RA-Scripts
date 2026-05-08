@@ -1,0 +1,65 @@
+Order,Type,Name,Filename,Gold Time,Land.InitialMaxHeight
+0,Tutorial,Atlantis Training Facility,tutorial1,,
+1,Tutorial,Down in the Dumps,tutorial2,,
+2,Tutorial,Return to Chateau Assassin,Tutorial3,,
+3,Tutorial,The Mighty Kong,Tutorial4,,
+4,Tutorial,Test Tubes,tutorial5,,
+5,Tutorial,The Driving Range,driving,,
+0,Mission,D-Day,dday,420000,
+1,Mission,Crate Britain,CrateBritain,180000,
+2,Mission,Grave Danger,graveyard,270000,
+3,Mission,A Leek in a Vegetable Patch,leek,390000,
+4,Mission,"Ice, Ice, Maybe",ICE,240000,
+5,Mission,When Annelids Collide,Collide,270000,
+6,Mission,Rum Deal,rum,120000,
+7,Mission,Earn Your Crust,crust,180000,
+8,Mission,Apple Core Island,applecore,120000,
+9,Mission,Helter Skelter,helterskelter,210000,
+10,Mission,Take My Cherry,cherry,170000,
+11,Mission,"In Space, No-One Can Hear You Clean",clean,230000,
+12,Mission,Shiver Me Timbers,timbers,440000,
+13,Mission,Falling For You,FALLING,230000,
+14,Mission,Crop Circle,cropcircle,800000,
+15,Mission,Tree Village Trouble,treevillage,330000,
+16,Mission,Movie Mayhem,landing,270000,
+17,Mission,Worm and the Beanstalk,beanstalk,130000,
+18,Mission,School's in for Summer,SCHOOLS,540000,
+19,Mission,High Stakes,highstakes,780000,
+20,Mission,A Quick Fix,notpc,340000,
+21,Mission,All Cooped Up,cooped,340000,
+22,Mission,Trial of the Damned,TRIAL,210000,
+23,Mission,Showdown at the OK Corale Reef,SHOWDOWN,270000,
+24,Mission,Plaice Holder,plaice,290000,
+25,Mission,"Hook, Line, and Skimmer",hookline,310000,
+26,Mission,Nobody Rides For Free,funfair,195000,
+27,Mission,Hold Until Relieved,Pegasus,660000,
+28,Mission,To Boldly Go,boldly,50000,
+29,Mission,Beautiful Balloon,balloon,240000,
+30,Mission,A Good Nights Sleep,countingsheep,240000,
+31,Mission,Beefcake Breakfast Brawl,BREAKFAST,870000,
+32,Mission,Costa Del Danger,holiday,255000,
+33,Mission,Ragnarok and Roll,pack,490000,
+34,Mission,Alien Juice Suckers,ALIEN,755000,
+0,Challenge,Shotgun Challenge 1,TargetHunt,425400,1141979524
+1,Challenge,Shotgun Challenge 2,TargetHunt2,214200,1160477083
+2,Challenge,Shotgun Challenge 3,HOMING,190600,1145516504
+3,Challenge,Super Sheep Challenge 1,Sheep1,306600,1161795141
+4,Challenge,Super Sheep Challenge 2,Sheep2,244200,1142287890
+5,Challenge,Super Sheep Challenge 3,TargetHunt4,148200,1141607388
+6,Challenge,Jet Pack Challenge 1,cratefun,249600,1139236375
+7,Challenge,Jet Pack Challenge 2,jetpackchall2,249600,1141383191
+8,Challenge,Jet Pack Challenge 3,jetpackchall3,144000,1148889308
+9,Challenge,Parachute Challenge 1,Chute1,307200,1160477083
+10,Challenge,Parachute Challenge 2,chute2,259200,1152067024
+11,Challenge,Parachute Challenge 3,chute3,138600,1158148706
+12,Challenge,Deathmatch Challenge 1,Deathmatch1,394000,1138271076
+13,Challenge,Deathmatch Challenge 2,Deathmatch2,428400,1137299115
+14,Challenge,Deathmatch Challenge 3,Deathmatch3,421000,1141329539
+15,Challenge,Deathmatch Challenge 4,Deathmatch4,629400,1140471083
+16,Challenge,Deathmatch Challenge 5,Deathmatch5,555600,1137702635
+17,Challenge,Deathmatch Challenge 6,Deathmatch6,324600,1136702257
+18,Challenge,Deathmatch Challenge 7,Deathmatch7,446400,1139859372
+19,Challenge,Deathmatch Challenge 8,Deathmatch8,574800,1143722342
+20,Challenge,Deathmatch Challenge 9,Deathmatch9,730800,1138032098
+21,Challenge,Deathmatch Challenge 10,Deathmatch10,1165200,1141611561
+0,Multiplayer,Multiplayer Game,stdvs,,

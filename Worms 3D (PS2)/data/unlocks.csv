@@ -1,0 +1,85 @@
+Name,Type,Condition Scenario,Condition Type,Key
+A Good Nights Sleep,Landscape,A Good Nights Sleep,Gold,L.L.Counting
+A Leek in a Vegetable Patch,Landscape,A Leek in a Vegetable Patch,Gold,L.L.Leek
+Addiction 2?,Wormapedia,Worm and the Beanstalk,Gold,L.P.Pinball
+Alien Juice Suckers,Landscape,Alien Juice Suckers,Gold,L.L.Alien
+All Action,Scheme,Hold Until Relieved,Gold,L.Sch.All
+All Cooped Up,Landscape,All Cooped Up,Gold,L.L.Cooped
+Apple Core Island,Landscape,Apple Core Island,Gold,L.L.Apple
+Atlantis Training Facility,Landscape,Atlantis Training Facility,Secret,L.L.Atlantis
+Banana Bomb,Weapon,Parachute Challenge 3,Gold,L.W.Banana
+Boggy Pete,Wormapedia,Crate Britain,Gold,L.P.Pete
+Bridge Kit,Weapon,Beefcake Breakfast Brawl,Secret,L.W.BridgeK
+Brightside,Wormapedia,School's in for Summer,Gold,L.P.Bright
+Chatter,Wormapedia,Plaice Holder,Gold,L.P.Chatter
+Concrete Donkey,Wormapedia,Beautiful Balloon,Gold,L.P.Donkey
+Costa Del Danger,Landscape,Costa Del Danger,Gold,L.L.Holiday
+Crate Britain,Landscape,Crate Britain,Gold,L.L.CrateBritain
+Crop Circle,Landscape,Crop Circle,Gold,L.L.Crop
+D-Day,Landscape,D-Day,Gold,L.L.DDay
+Darkside,Wormapedia,Trial of the Damned,Gold,L.P.Darkside
+Deathmatch Challenge 1,Challenge,D-Day,Clear,L.C.DM1
+Deathmatch Challenge 10,Challenge,Deathmatch Challenge 9,Clear,L.C.DM10
+Deathmatch Challenge 2,Challenge,Deathmatch Challenge 1,Clear,L.C.DM2
+Deathmatch Challenge 3,Challenge,Deathmatch Challenge 2,Clear,L.C.DM3
+Deathmatch Challenge 4,Challenge,Deathmatch Challenge 3,Clear,L.C.DM4
+Deathmatch Challenge 5,Challenge,Deathmatch Challenge 4,Clear,L.C.DM5
+Deathmatch Challenge 6,Challenge,Deathmatch Challenge 5,Clear,L.C.DM6
+Deathmatch Challenge 7,Challenge,Deathmatch Challenge 6,Clear,L.C.DM7
+Deathmatch Challenge 8,Challenge,Deathmatch Challenge 7,Clear,L.C.DM8
+Deathmatch Challenge 9,Challenge,Deathmatch Challenge 8,Clear,L.C.DM9
+Earn Your Crust,Landscape,Earn Your Crust,Gold,L.L.Crust
+Earthquake,Weapon,Jetpack Challenge 3,Gold,L.W.EQuake
+Enough in-jokes?,Wormapedia,Movie Mayhem,Silver,L.P.Tapper
+Fakes and April Fools,Wormapedia,Beefcake Breakfast Brawl,Gold,L.P.Fools
+French Lover,Voice,A Quick Fix,Secret,L.S.Lover
+Grandpa,Voice,Nobody Rides for Free,Secret,L.S.Gramps
+Grave Danger,Landscape,Grave Danger,Gold,L.L.Graveyard
+Helter Skelter,Landscape,Helter Skelter,Gold,L.L.Helter
+High Stakes,Landscape,High Stakes,Gold,L.L.High
+Horror,Voice,Grave Danger,Secret,L.S.Horror
+"Ice, Ice, Maybe",Landscape,"Ice, Ice, Maybe",Gold,L.L.Ice
+Jet Pack Challenge 1,Challenge,Rum Deal,Clear,L.C.JP1
+Jet Pack Challenge 1,Landscape,Jet Pack Challenge 1,Gold,L.L.Cratefun
+Jet Pack Challenge 2,Challenge,"In Space, No-One Can Hear You Clean",Clear,L.C.JP2
+Jet Pack Challenge 3,Challenge,Hold Until Relieved,Clear,L.C.JP3
+Lightside,Wormapedia,Trial of the Damned,Silver,L.P.Lightside
+Lightside and Darkside,Wormapedia,Showdown at the OK Corale Reef,Silver,L.P.LandD
+Mad Cow,Weapon,Shotgun Challenge 3,Gold,L.W.MadCow
+Madchester,Voice,School's in for Summer,Secret,L.S.Mad
+Movie Mayhem,Landscape,Movie Mayhem,Gold,L.L.Landing
+Nobody Rides For Free,Landscape,Nobody Rides For Free,Gold,L.L.Funfair
+Nuclear Bomb,Weapon,Deathmatch Challenge 10,Clear,L.W.Nuke
+Parachute Challenge 1,Challenge,Falling For You,Clear,L.C.P1
+Parachute Challenge 2,Challenge,Worm and the Beanstalk,Clear,L.C.P2
+Parachute Challenge 3,Challenge,Costa Del Danger,Clear,L.C.P3
+Pink Beard,Wormapedia,"Hook, Line, and Skimmer",Gold,L.P.Pink
+Plaice Holder,Landscape,Plaice Holder,Gold,L.L.Plaice
+Pro,Scheme,Test Tubes,Clear,L.Sch.Pro
+Ragnarok and Roll,Landscape,Ragnarok and Roll,Gold,L.L.Ragna
+Return to Chateau Assassin,Landscape,Return to Chateau Assassin,Clear,L.L.Chateau
+School's in for Summer,Landscape,School's in for Summer,Gold,L.L.Schools
+Shiver Me Timbers,Landscape,Shiver Me Timbers,Gold,L.L.Timbers
+Shotgun Challenge 2,Challenge,A Leek in a Vegetable Patch,Clear,L.C.Shotgun2
+Shotgun Challenge 3,Challenge,Movie Mayhem,Clear,L.C.Shotgun3
+Showdown at the OK Corale Reef,Landscape,Showdown at the OK Corale Reef,Gold,L.L.Showdown
+Sinking BnG,Scheme,To Boldly Go,Clear,L.Sch.WBnG
+Sniper,Scheme,"Hook, Line, and Skimmer",Clear,L.Sch.Sniping
+Spadge and Music,Wormapedia,Rum Deal,Gold,L.P.Beatbox
+Sticky Wars,Scheme,Beefcake Breakfast Brawl,Gold,L.Sch.Sticky
+Super Sheep Challenge 1,Challenge,High Stakes,Clear,L.C.SS1
+Super Sheep Challenge 2,Challenge,Plaice Holder,Clear,L.C.SS2
+Super Sheep Challenge 3,Challenge,A Good Nights Sleep,Clear,L.C.SS3
+Super Sheep,Weapon,Super Sheep Challenge 3,Gold,L.W.SSheep
+Super Villain,Voice,Alien Juice Suckers,Clear,L.S.Villain
+Take My Cherry,Landscape,Take My Cherry,Gold,L.L.Cherry
+Test Tubes,Landscape,Test Tubes,Clear,L.L.Tubes
+That Angular Chap...,Wormapedia,Showdown at the OK Corale Reef,Secret,L.P.Giraffe
+The Horror Theme,Wormapedia,Grave Danger,Secret,L.P.Horror
+The Lost Missions...,Wormapedia,"In Space, No-One Can Hear You Clean",Gold,L.P.Lost
+The Mighty Kong,Landscape,The Mighty Kong,Clear,L.L.Kong
+The Sally Army,Wormapedia,All Cooped Up,Clear,L.P.Sally
+The Worms Story,Wormapedia,Falling For You,Gold,L.P.Story
+Tree Village Trouble,Landscape,Tree Village Trouble,Gold,L.L.Tree
+When Annelids Collide,Landscape,When Annelids Collide,Gold,L.L.Collide
+Worms 3D Prototype,Wormapedia,To Boldly Go,Gold,L.P.Proto
