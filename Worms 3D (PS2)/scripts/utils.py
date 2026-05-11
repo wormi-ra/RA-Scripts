@@ -27,6 +27,35 @@ def calculate_challenges_hash():
             levels[(height + bytes) & 0xffffffff] = row["Name"]
     return levels
 
+def calculate_state_hash():
+    values = []
+    lookup = {
+        # "ingame": (),
+        "cutscene": (),
+        "loading": (),
+        "menu": (),
+    }
+    for i in range(0, 0xff):
+        i = i & 0x5c
+        if i not in values:
+            values.append(i)
+    for val in values:
+        # if val & 0x4e == 0x2:
+        #     lookup["ingame"] += (val,)
+        if val & 0x40 > 0x0:
+            lookup["cutscene"] += (val,)
+        elif val & 0x1c > 0x0:
+            lookup["loading"] += (val,)
+        elif val & 0x5e == 0x0:
+            lookup["menu"] += (val,)
+    for k, v in lookup.items():
+        display = {
+            "cutscene": "🎬Watching a movie",
+            "loading": "⏳Loading...",
+            "menu": "🌐Main Menu"
+        }
+        print(f"{v}: \"{display[k]}\",")
+
 def print_dict(d: dict):
     print("{")
     for k, v in d.items():
@@ -36,4 +65,3 @@ def print_dict(d: dict):
 if __name__=="__main__":
     # print_dict(calculate_challenges_hash())
     print_dict(calculate_levels_hash())
-

@@ -43,11 +43,10 @@ class XData:
 
 
 class GameMode:
-    TUTORIAL = 0x5475746f
-    CAMPAIGN = 0x43616d70
-    CHALLENGE = 0x4368616c
-    QUICK = 0x51756963
-    MULTIPLAYER = 0x4d756c74
+    TUTORIAL = 3
+    CAMPAIGN = 0
+    CHALLENGE = 4
+
 
 class Unlock:
     class Type:
@@ -85,12 +84,12 @@ class Level:
     @staticmethod
     def current_name(ctx: Context):
         return {
-            "EU": Memory.EU_INGAME_CURRENT_SCENARIO_NAME,
-            "US": Memory.US_INGAME_CURRENT_SCENARIO_NAME,
+            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_NAME,
+            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
         }[ctx.region]
 
     def is_loaded(self, ctx: Context):
-        return Level.current_name(ctx) == ascii_be(self.filename)
+        return string_equals(Level.current_name(ctx), self.filename)
 
 
 class Worms3D:
@@ -189,8 +188,8 @@ class Worms3D:
     @staticmethod
     def check_serial(ctx: Context):
         return {
-            "EU": Memory.EU_SERIAL == value(ascii_be("SLES")),
-            "US": Memory.NTSC_SERIAL == value(ascii_be("SLUS")),
+            "EU": string_equals(Memory.EU_SERIAL.address, "SLES"),
+            "US": string_equals(Memory.NTSC_SERIAL.address, "SLUS"),
         }[ctx.region]
 
     @staticmethod
@@ -202,39 +201,74 @@ class Worms3D:
         return XData.get_value(ctx, "MCa.CurrentMission")
 
     @staticmethod
-    def current_script(ctx: Context):
+    def game_booted(ctx: Context):
         return {
-            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_NAME,
-            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
-        }[ctx.region]
+            "EU": Memory.EU_STATE_CHECK_IS_GAME_INIT,
+            "US": Memory.US_STATE_CHECK_IS_GAME_INIT,
+        }[ctx.region] == value(0x1)
+        # return {
+        #     "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
+        #     "US": Memory.STATE_CHECK_IN_MENU == value(0x1),
+        # }[ctx.region]
 
     @staticmethod
     def is_in_menu(ctx: Context):
-        return {
-            "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
-            "US": Memory.STATE_CHECK_IN_MENU == value(0x1),
-        }[ctx.region]
+        return ({
+            "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE,
+            "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE,
+        }[ctx.region] & value(0x5e)) == value(0x0)
+        # return {
+        #     "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
+        #     "US": Memory.STATE_CHECK_IN_MENU == value(0x1),
+        # }[ctx.region]
 
     @staticmethod
     def is_ingame(ctx: Context):
-        return {
-            "EU": Memory.EU_STATE_CHECK_IN_GAME == value(0x1),
-            "US": Memory.STATE_CHECK_IN_GAME == value(0x1),
+        addr = {
+            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_NAME,
+            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
         }[ctx.region]
+        return dword_be(addr) != dword_be(addr+1)
+        # return {
+        #     "EU": Memory.EU_STATE_CHECK_IN_GAME == value(0x1),
+        #     "US": Memory.STATE_CHECK_IN_GAME == value(0x1),
+        # }[ctx.region]
+
+    @staticmethod
+    def is_in_attract(ctx: Context):
+        return bit2({
+            "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE_2.address,
+            "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE_2.address,
+        }[ctx.region]) == value(0x1)
+
+    @staticmethod
+    def is_paused(ctx: Context):
+        return bit0({
+            "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE_2.address,
+            "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE_2.address,
+        }[ctx.region]) == value(0x1)
 
     @staticmethod
     def is_watching_cutscene(ctx: Context):
-        return {
-            "EU": Memory.EU_STATE_CHECK_MOVIE_PLAYING == value(0x1),
-            "US": Memory.US_STATE_CHECK_MOVIE_PLAYING == value(0x1),
-        }[ctx.region]
+        return bit6({
+            "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE.address,
+            "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE.address,
+        }[ctx.region]) == value(0x1)
+        # return {
+        #     "EU": Memory.EU_STATE_CHECK_MOVIE_PLAYING == value(0x1),
+        #     "US": Memory.US_STATE_CHECK_MOVIE_PLAYING == value(0x1),
+        # }[ctx.region]
 
     @staticmethod
     def is_loading(ctx: Context):
-        return {
-            "EU": Memory.EU_STATE_CHECK_IS_LOADING == value(0x1),
-            "US": Memory.US_STATE_CHECK_IS_LOADING == value(0x1),
-        }[ctx.region]
-
-def ascii_be(value: str) -> int:
-    return reduce(lambda x, y: x | y, [ord(value[len(value) - i - 1]) << (8 * i) for i in range(len(value))])
+        return group(
+            add_source({
+                "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE,
+                "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE,
+            }[ctx.region] & value(0x1c)),
+            value(0x0) > value(0x0)
+        )
+        # return {
+        #     "EU": Memory.EU_STATE_CHECK_IS_LOADING == value(0x1),
+        #     "US": Memory.US_STATE_CHECK_IS_LOADING == value(0x1),
+        # }[ctx.region]
