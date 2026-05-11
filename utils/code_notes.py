@@ -36,7 +36,7 @@ def process_note(note: dict[str, str]) -> dict[str, Any]:
         "address": note["Address"],
         "type": get_type(note),
         "slug": slugify(get_title(note["Note"])),
-        "note": note["Note"].replace("\r\n", "\n"),
+        "note": note["Note"].replace("\r\n", "\n").replace("\\", "\\\\"),
         "author": note["User"],
         "region": get_region(note["Note"]),
     }
@@ -46,6 +46,14 @@ with open(sys.argv[1], encoding="utf-8") as file:
 notes = [
     process_note(note) for note in raw_notes
 ]
+uniques = {}
+for note in notes:
+    slug = f"{note['region']}_{note['slug']}"
+    if slug in uniques:
+        uniques[slug] += 1
+        note["slug"] = f"{note['slug']}_{uniques[slug]}"
+    else:
+        uniques[slug] = 0
 
 with open("memory.py", "w", encoding="utf-8") as file:
     template = JINJA_ENV.get_template("code_notes.jinja")
