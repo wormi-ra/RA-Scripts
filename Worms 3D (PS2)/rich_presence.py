@@ -1,6 +1,6 @@
 from pycheevos.core.condition import ConditionList
 from pycheevos.core.constants import ADD_SOURCE
-from pycheevos.core.helpers import add_address, add_source, byte, delta, dword, dword_be, measured, measured_percent, recall, remember, sub_source, value, group, string_equals, word_be
+from pycheevos.core.helpers import add_address, add_source, byte, delta, dword, dword_be, measured, measured_if, measured_percent, recall, remember, sub_source, value, group, string_equals, word_be
 from pycheevos.core.value import Flag
 from pycheevos.models.rich_presence import *
 
@@ -32,7 +32,9 @@ class WormsRichPresence(RichPresence):
             ],
             remember(value(0)),
             remember(recall() * 100),
-            measured(recall() / len(Worms3D.UNLOCKS)),
+            remember(recall() / len(Worms3D.UNLOCKS)),
+            measured(recall()),
+            measured_if(recall() <= 100),
         ])
         return f"🔓@Number({render(unlocks)})%"
 
@@ -45,9 +47,8 @@ class WormsRichPresence(RichPresence):
     def level_hash(self, ctx: Context):
         return group(
             add_source(Worms3D.current_gamemode(ctx) * value(100)),
-            Worms3D.current_mission(ctx)
-        ).with_flag(Flag.MEASURED)
-            # measured(Worms3D.current_mission(ctx))
+            measured(Worms3D.current_mission(ctx))
+        )
 
     def paused(self, ctx: Context):
         return f"@Paused({measured(Worms3D.is_paused(ctx).lvalue)})"
@@ -123,7 +124,7 @@ class WormsRichPresence(RichPresence):
             "Language",
             values={
                 0x0: " (🇬🇧)",
-                0x1: " (🇺🇸)",
+                # 0x1: " (🇺🇸)",
                 0x3: " (🇫🇷)",
                 0x4: " (🇩🇪)",
                 0x5: " (🇮🇹)",

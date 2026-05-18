@@ -18,6 +18,10 @@ class Context:
 
     def __init__(self, region: Region) -> None:
         self.region = region
+        self.framerate = {
+            "US": 60,
+            "EU": 50,
+        }[region]
 
 
 class XData:
