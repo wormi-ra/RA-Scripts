@@ -25,19 +25,18 @@ class WormsRichPresence(RichPresence):
         return f"{region}@Language({lang})"
 
     def unlocks(self, ctx: Context):
-        unlocks = ConditionList([
-            add_source(value(len(UNLOCKS))),
+        unlocks = group(
             *[
                 sub_source(unlock.locked(ctx))
                 for unlock in UNLOCKS
             ],
-            remember(value(0)),
+            remember(value(len(UNLOCKS))),
             remember(recall() * 100),
             remember(recall() / len(UNLOCKS)),
             measured_if(recall() <= 100),
             measured(recall()),
-        ])
-        return f"🔓@Number({render(unlocks)})%"
+        )
+        return f"🔓@Number({unlocks})%"
 
     def challenge(self, ctx: Context):
         return group(

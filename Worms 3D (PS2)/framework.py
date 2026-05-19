@@ -68,9 +68,10 @@ class achievement_set:
                     lb = Leaderboard(
                         id=id,
                         title=func.__name__,
-                        description=func.__doc__,
+                        description=func.__doc__ or "",
                     )
-                func(set, lb)
+                for ctx in [Context("US"), Context("EU")]:
+                    func(set, ctx, lb)
                 print(f"{lb.id}: {lb.title}")
                 set.add_leaderboard(lb)
                 for group in [*lb.start, *lb.cancel, *lb.submit, *lb.value]:

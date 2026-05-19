@@ -67,7 +67,7 @@ class Memory:
 
     EU_STATE_CHECK_IN_MENU = dword(0x5e200c)
     """
-    [32-bit Boolean]  (EU) State Check | In Menu
+    [32-bit Boolean] (EU) State Check | In Menu
     """
 
     EU_STATE_CHECK_IN_GAME = dword(0x5e2018)
@@ -91,10 +91,28 @@ class Memory:
     (g_FMVEnable)
     """
 
-    NTSC_SERIAL = dword_be(0x6b294c)
+    US_XDATARESOURCEMANAGER = dword(0x6ad854)
     """
-    [NTSC] | [32 Bit BE] Serial
+    [32-bit Pointer] (US) XDataResourceManager
+    +0x18 = [32-bit Pointer] Pointer to Hashmap | XDataResourceDescriptor
+    - Array of 6000 32-bit pointers in a deterministic order based on their key name
+    - Always point to 0x1cfb770
+    - Some pointers can be null because there is more reserved slots than actual keys
+    - Hash implementation is different between EU and US, keys are not stored in the same order between versions
+    - Dump of all keys with their associated base pointers:
+    - https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%203D%20(PS2)/data/xdata.csv
+    - Each entry follow the same structure:
+    ++0x4 = [32-bit Pointer] XDataResourceDetails
+    +++0x14 = [32-bit Pointer] (EU) Key Name
+    +++0x18 = [32-bit Pointer] (US) Key Name
+    +++0x1c = [32-bit] Data, can be a pointer or a value depending on resource type
+    """
+
+    US_SERIAL = dword_be(0x6b294c)
+    """
+    [32-bit BE ASCII] (US) Serial
     (cdrom0:\\SLUS_208.94;1)
+    0x534c5553 = SLUS
     """
 
     EU_XMEMORYMANAGER_ARENALIST = (0x6b84d8)
@@ -142,53 +160,53 @@ class Memory:
     +++0x78 = [32-bit] Pending Poison Damage
     +++0x7C = [32-bit Float] Slope Angle
     +++0x80 = [32-bit] Animation State
-    --- 0x00 = Waiting (End of turn?)
-    --- 0x01 = Walking
-    --- 0x02 = About to jump
-    --- 0x03 = Jump
-    --- 0x06 = Backflip
-    --- 0x07 = Bonk
-    --- 0x08 = Explosion recoil
-    --- 0x09 = Head in ground
-    --- 0x0a = Idle (Own turn)
-    --- 0x0d = Drowning
-    --- 0x0e = Using Jetpack
-    --- 0x0f = Using Ninja rope
-    --- 0x11 = Touching ground?
-    --- 0x13 = Using Parachute
-    --- 0x15 = Waiting (Own team turn?)
-    --- 0x16 = Waiting (Enemy team turn?)
-    --- 0x1b = Stunned
-    --- 0x22 = Waiting (During projectile launch)?
-    --- 0x24 = Frontflip
-    --- 0x25 = Using teleporter
-    --- 0x26 = Falling
+    ---- 0x00 = Waiting (End of turn?)
+    ---- 0x01 = Walking
+    ---- 0x02 = About to jump
+    ---- 0x03 = Jump
+    ---- 0x06 = Backflip
+    ---- 0x07 = Bonk
+    ---- 0x08 = Explosion recoil
+    ---- 0x09 = Head in ground
+    ---- 0x0a = Idle (Own turn)
+    ---- 0x0d = Drowning
+    ---- 0x0e = Using Jetpack
+    ---- 0x0f = Using Ninja rope
+    ---- 0x11 = Touching ground?
+    ---- 0x13 = Using Parachute
+    ---- 0x15 = Waiting (Own team turn?)
+    ---- 0x16 = Waiting (Enemy team turn?)
+    ---- 0x1b = Stunned
+    ---- 0x22 = Waiting (During projectile launch)?
+    ---- 0x24 = Frontflip
+    ---- 0x25 = Using teleporter
+    ---- 0x26 = Falling
     +++0x84 = [32-bit] Equipped Weapon ID
-    --- 0x00 = Bazooka
-    --- 0x01 = Grenade
-    --- 0x02 = Cluster Bomb
-    --- 0x04 = Dynamite
-    --- 0x07 = Land Mine
-    --- 0x08 = Shotgun
-    --- 0x09 = Uzi
-    --- 0x0a = Baseball Bat
-    --- 0x0b = Prod
-    --- 0x0d = Fire Punch
-    --- 0x0e = Homing Missile
-    --- 0x0f = Mortar
-    --- 0x12 = Sheep
-    --- 0x14 = Petrol Bomb
-    --- 0x15 = Gas Canister
-    --- 0x22 = Sticky Bomb
-    --- 0x23 = Binoculars
-    --- 0x27 = Girder
-    --- 0x29 = Ninja Rope
-    --- 0x2a = Parachute
-    --- 0x2f = Teleport
-    --- 0x30 = Jet Pack
-    --- 0x31 = Skip Go
-    --- 0x32 = Surrender
-    --- 0x33 = Worm Select
+    ---- 0x00 = Bazooka
+    ---- 0x01 = Grenade
+    ---- 0x02 = Cluster Bomb
+    ---- 0x04 = Dynamite
+    ---- 0x07 = Land Mine
+    ---- 0x08 = Shotgun
+    ---- 0x09 = Uzi
+    ---- 0x0a = Baseball Bat
+    ---- 0x0b = Prod
+    ---- 0x0d = Fire Punch
+    ---- 0x0e = Homing Missile
+    ---- 0x0f = Mortar
+    ---- 0x12 = Sheep
+    ---- 0x14 = Petrol Bomb
+    ---- 0x15 = Gas Canister
+    ---- 0x22 = Sticky Bomb
+    ---- 0x23 = Binoculars
+    ---- 0x27 = Girder
+    ---- 0x29 = Ninja Rope
+    ---- 0x2a = Parachute
+    ---- 0x2f = Teleport
+    ---- 0x30 = Jet Pack
+    ---- 0x31 = Skip Go
+    ---- 0x32 = Surrender
+    ---- 0x33 = Worm Select
     +++0x88 = [32-bit] Poison Rate
     +++0x8c = [32-bit Pointer] Name
     +++0x90 = [32-bit Float] Gun Wobble Yaw
@@ -395,11 +413,11 @@ class Memory:
     +++0x3c = [8-bit] Allied Group
     +++0x40 = [32-bit Boolean] Team Must Survive
     +++0x44 = [8-bit] Team Color
-    --- 0x0 = Red
-    --- 0x1 = Blue
-    --- 0x2 = Green
-    --- 0x3 = Yellow
-    --- * = Black
+    ---- 0x0 = Red
+    ---- 0x1 = Blue
+    ---- 0x2 = Green
+    ---- 0x3 = Yellow
+    ---- * = Black
     +++0x45 = [8-bit] Worms Count Start
     +++0x48 = [32-bit Boolean] Is Active
     """
@@ -617,53 +635,53 @@ class Memory:
     +++0x78 = [32-bit] Pending Poison Damage
     +++0x7C = [32-bit Float] Slope Angle
     +++0x80 = [32-bit] Animation State
-    --- 0x00 = Waiting (End of turn?)
-    --- 0x01 = Walking
-    --- 0x02 = About to jump
-    --- 0x03 = Jump
-    --- 0x06 = Backflip
-    --- 0x07 = Bonk
-    --- 0x08 = Explosion recoil
-    --- 0x09 = Head in ground
-    --- 0x0a = Idle (Own turn)
-    --- 0x0d = Drowning
-    --- 0x0e = Using Jetpack
-    --- 0x0f = Using Ninja rope
-    --- 0x11 = Touching ground?
-    --- 0x13 = Using Parachute
-    --- 0x15 = Waiting (Own team turn?)
-    --- 0x16 = Waiting (Enemy team turn?)
-    --- 0x1b = Stunned
-    --- 0x22 = Waiting (During projectile launch)?
-    --- 0x24 = Frontflip
-    --- 0x25 = Using teleporter
-    --- 0x26 = Falling
+    ---- 0x00 = Waiting (End of turn?)
+    ---- 0x01 = Walking
+    ---- 0x02 = About to jump
+    ---- 0x03 = Jump
+    ---- 0x06 = Backflip
+    ---- 0x07 = Bonk
+    ---- 0x08 = Explosion recoil
+    ---- 0x09 = Head in ground
+    ---- 0x0a = Idle (Own turn)
+    ---- 0x0d = Drowning
+    ---- 0x0e = Using Jetpack
+    ---- 0x0f = Using Ninja rope
+    ---- 0x11 = Touching ground?
+    ---- 0x13 = Using Parachute
+    ---- 0x15 = Waiting (Own team turn?)
+    ---- 0x16 = Waiting (Enemy team turn?)
+    ---- 0x1b = Stunned
+    ---- 0x22 = Waiting (During projectile launch)?
+    ---- 0x24 = Frontflip
+    ---- 0x25 = Using teleporter
+    ---- 0x26 = Falling
     +++0x84 = [32-bit] Equipped Weapon ID
-    --- 0x00 = Bazooka
-    --- 0x01 = Grenade
-    --- 0x02 = Cluster Bomb
-    --- 0x04 = Dynamite
-    --- 0x07 = Land Mine
-    --- 0x08 = Shotgun
-    --- 0x09 = Uzi
-    --- 0x0a = Baseball Bat
-    --- 0x0b = Prod
-    --- 0x0d = Fire Punch
-    --- 0x0e = Homing Missile
-    --- 0x0f = Mortar
-    --- 0x12 = Sheep
-    --- 0x14 = Petrol Bomb
-    --- 0x15 = Gas Canister
-    --- 0x22 = Sticky Bomb
-    --- 0x23 = Binoculars
-    --- 0x27 = Girder
-    --- 0x29 = Ninja Rope
-    --- 0x2a = Parachute
-    --- 0x2f = Teleport
-    --- 0x30 = Jet Pack
-    --- 0x31 = Skip Go
-    --- 0x32 = Surrender
-    --- 0x33 = Worm Select
+    ---- 0x00 = Bazooka
+    ---- 0x01 = Grenade
+    ---- 0x02 = Cluster Bomb
+    ---- 0x04 = Dynamite
+    ---- 0x07 = Land Mine
+    ---- 0x08 = Shotgun
+    ---- 0x09 = Uzi
+    ---- 0x0a = Baseball Bat
+    ---- 0x0b = Prod
+    ---- 0x0d = Fire Punch
+    ---- 0x0e = Homing Missile
+    ---- 0x0f = Mortar
+    ---- 0x12 = Sheep
+    ---- 0x14 = Petrol Bomb
+    ---- 0x15 = Gas Canister
+    ---- 0x22 = Sticky Bomb
+    ---- 0x23 = Binoculars
+    ---- 0x27 = Girder
+    ---- 0x29 = Ninja Rope
+    ---- 0x2a = Parachute
+    ---- 0x2f = Teleport
+    ---- 0x30 = Jet Pack
+    ---- 0x31 = Skip Go
+    ---- 0x32 = Surrender
+    ---- 0x33 = Worm Select
     +++0x88 = [32-bit] Poison Rate
     +++0x8c = [32-bit Pointer] Name
     +++0x90 = [32-bit Float] Gun Wobble Yaw
@@ -870,11 +888,11 @@ class Memory:
     +++0x3c = [8-bit] Allied Group
     +++0x40 = [32-bit Boolean] Team Must Survive
     +++0x44 = [8-bit] Team Color
-    --- 0x0 = Red
-    --- 0x1 = Blue
-    --- 0x2 = Green
-    --- 0x3 = Yellow
-    --- * = Black
+    ---- 0x0 = Red
+    ---- 0x1 = Blue
+    ---- 0x2 = Green
+    ---- 0x3 = Yellow
+    ---- * = Black
     +++0x45 = [8-bit] Worms Count Start
     +++0x48 = [32-bit Boolean] Is Active
     """
@@ -1021,19 +1039,19 @@ class Memory:
     [32-bit Pointer] (US) Alliance Instances Inventory Array [3]
     """
 
-    STATE_CHECK_TITLE_SCREEN_ACTIVE = dword(0x79eb40)
+    US_STATE_CHECK_TITLE_SCREEN_ACTIVE = dword(0x79eb40)
     """
-    [32 Bit] State Check | Title Screen Active
-    """
-
-    STATE_CHECK_IN_MENU = dword(0x79eb44)
-    """
-    [32 Bit] State Check | In Menu
+    [32-bit Boolean] (US) State Check | Title Screen Active
     """
 
-    STATE_CHECK_IN_GAME = dword(0x79eb50)
+    US_STATE_CHECK_IN_MENU = dword(0x79eb44)
     """
-    [32 Bit] State Check | In Game
+    [32-bit Boolean] (US) State Check | In Menu
+    """
+
+    US_STATE_CHECK_IN_GAME = dword(0x79eb50)
+    """
+    [32-bit Boolean] (US) State Check | In Game
     """
 
     US_CONTROLLER_BUTTON_PRESSED_PRIMARY = byte(0x79fcc0)
@@ -1062,29 +1080,6 @@ class Memory:
     bit7 = D-Pad Left
     """
 
-    US_INGAME_CURRENT_ACTIVE_WORM_ID = dword(0x153dd1c)
-    """
-    [32-bit] (US) Ingame | Current Active Worm ID
-    """
-
-    US_GAME_STATUS_GAME_ENDED = dword(0x154201c)
-    """
-    [32-bit] (US) Game Status | Game ended
-    0x0 = False
-    0x1 = True
-    """
-
-    LANDSCAPE_SELECTION_SMALL_OBJECTS = dword(0x154355c)
-    """
-    [32 Bit Pointer] Landscape Selection | Small Objects
-    +0x04
-    ++0x1C = [32 Bit] Small Object Amount
-    --- 00 = 0%
-    --- 01 = 33%
-    --- 02 = 67%
-    --- 03 = 100%
-    """
-
     US_GAME_STATUS_IS_IN_INGAME_CUTSCENE = dword(0x15703bc)
     """
     [32-bit] (US) Game Status | Is in ingame cutscene
@@ -1094,146 +1089,148 @@ class Memory:
 
     EU_INGAME_CURRENT_LUA_SCRIPT_NAME = (0x18005b0)
     """
-    [16-bytes BE ASCII] (EU) Ingame | Current LUA Script Name
+    [16 bytes BE ASCII] (EU) Ingame | Current LUA Script Name
+    The first 5 bytes are always overwritten with 0xdd upon exiting a level
     0x00000000 = Uninitialized
     0xdddddddd = Uninitialized
-    0x7475746f7269616c3100 = "tutorial1" | Atlantis Training Facility
-    0x7475746f7269616c3200 = "tutorial2" | Down in the Dumps
-    0x5475746f7269616c3300 = "Tutorial3" | Return to Chateau Assassin
-    0x5475746f7269616c3400 = "Tutorial4" | The Mighty Kong
-    0x7475746f7269616c3500 = "tutorial5" | Test Tubes
-    0x64726976696e6700 = "driving" | The Driving Range
-    0x6464617900 = "dday" | D-Day
-    0x43726174654272697461696e00 = "CrateBritain" | Crate Britain
-    0x67726176657961726400 = "graveyard" | Grave Danger
-    0x6c65656b00 = "leek" | A Leek in a Vegetable Patch
-    0x49434500 = "ICE" | Ice, Ice, Maybe
-    0x436f6c6c69646500 = "Collide" | When Annelids Collide
-    0x72756d00 = "rum" | Rum Deal
-    0x637275737400 = "crust" | Earn Your Crust
-    0x6170706c65636f726500 = "applecore" | Apple Core Island
-    0x68656c746572736b656c74657200 = "helterskelter" | Helter Skelter
-    0x63686572727900 = "cherry" | Take My Cherry
-    0x636c65616e00 = "clean" | In Space, No-One Can Hear You Clean
-    0x74696d6265727300 = "timbers" | Shiver Me Timbers
-    0x46414c4c494e4700 = "FALLING" | Falling For You
-    0x63726f70636972636c6500 = "cropcircle" | Crop Circle
-    0x7472656576696c6c61676500 = "treevillage" | Tree Village Trouble
-    0x6c616e64696e6700 = "landing" | Movie Mayhem
-    0x6265616e7374616c6b00 = "beanstalk" | Worm and the Beanstalk
-    0x5343484f4f4c5300 = "SCHOOLS" | School's in for Summer
-    0x686967687374616b657300 = "highstakes" | High Stakes
-    0x6e6f74706300 = "notpc" | A Quick Fix
-    0x636f6f70656400 = "cooped" | All Cooped Up
-    0x545249414c00 = "TRIAL" | Trial of the Damned
-    0x53484f57444f574e00 = "SHOWDOWN" | Showdown at the OK Corale Reef
-    0x706c6169636500 = "plaice" | Plaice Holder
-    0x686f6f6b6c696e6500 = "hookline" | Hook, Line, and Skimmer
-    0x66756e6661697200 = "funfair" | Nobody Rides For Free
-    0x5065676173757300 = "Pegasus" | Hold Until Relieved
-    0x626f6c646c7900 = "boldly" | To Boldly Go
-    0x62616c6c6f6f6e00 = "balloon" | Beautiful Balloon
-    0x636f756e74696e67736865657000 = "countingsheep" | A Good Nights Sleep
-    0x425245414b4641535400 = "BREAKFAST" | Beefcake Breakfast Brawl
-    0x686f6c6964617900 = "holiday" | Costa Del Danger
-    0x7061636b00 = "pack" | Ragnarok and Roll
-    0x414c49454e00 = "ALIEN" | Alien Juice Suckers
-    0x54617267657448756e7400 = "TargetHunt" | Shotgun Challenge 1
-    0x54617267657448756e743200 = "TargetHunt2" | Shotgun Challenge 2
-    0x484f4d494e4700 = "HOMING" | Shotgun Challenge 3
-    0x53686565703100 = "Sheep1" | Super Sheep Challenge 1
-    0x53686565703200 = "Sheep2" | Super Sheep Challenge 2
-    0x54617267657448756e743400 = "TargetHunt4" | Super Sheep Challenge 3
-    0x637261746566756e00 = "cratefun" | Jet Pack Challenge 1
-    0x6a65747061636b6368616c6c3200 = "jetpackchall2" | Jet Pack Challenge 2
-    0x6a65747061636b6368616c6c3300 = "jetpackchall3" | Jet Pack Challenge 3
-    0x43687574653100 = "Chute1" | Parachute Challenge 1
-    0x63687574653200 = "chute2" | Parachute Challenge 2
-    0x63687574653300 = "chute3" | Parachute Challenge 3
-    0x44656174686d617463683100 = "Deathmatch1" | Deathmatch Challenge 1
-    0x44656174686d617463683200 = "Deathmatch2" | Deathmatch Challenge 2
-    0x44656174686d617463683300 = "Deathmatch3" | Deathmatch Challenge 3
-    0x44656174686d617463683400 = "Deathmatch4" | Deathmatch Challenge 4
-    0x44656174686d617463683500 = "Deathmatch5" | Deathmatch Challenge 5
-    0x44656174686d617463683600 = "Deathmatch6" | Deathmatch Challenge 6
-    0x44656174686d617463683700 = "Deathmatch7" | Deathmatch Challenge 7
-    0x44656174686d617463683800 = "Deathmatch8" | Deathmatch Challenge 8
-    0x44656174686d617463683900 = "Deathmatch9" | Deathmatch Challenge 9
-    0x44656174686d61746368313000 = "Deathmatch10" | Deathmatch Challenge 10
-    0x737464767300 = "stdvs" | Multiplayer Game
-    0x6174747261637400 = "attract" | Attract Mode
+    "tutorial1" = Atlantis Training Facility
+    "tutorial2" = Down in the Dumps
+    "Tutorial3" = Return to Chateau Assassin
+    "Tutorial4" = The Mighty Kong
+    "tutorial5" = Test Tubes
+    "driving" = The Driving Range
+    "dday" = D-Day
+    "CrateBritain" = Crate Britain
+    "graveyard" = Grave Danger
+    "leek" = A Leek in a Vegetable Patch
+    "ICE" = Ice, Ice, Maybe
+    "Collide" = When Annelids Collide
+    "rum" = Rum Deal
+    "crust" = Earn Your Crust
+    "applecore" = Apple Core Island
+    "helterskelter" = Helter Skelter
+    "cherry" = Take My Cherry
+    "clean" = In Space, No-One Can Hear You Clean
+    "timbers" = Shiver Me Timbers
+    "FALLING" = Falling For You
+    "cropcircle" = Crop Circle
+    "treevillage" = Tree Village Trouble
+    "landing" = Movie Mayhem
+    "beanstalk" = Worm and the Beanstalk
+    "SCHOOLS" = School's in for Summer
+    "highstakes" = High Stakes
+    "notpc" = A Quick Fix
+    "cooped" = All Cooped Up
+    "TRIAL" = Trial of the Damned
+    "SHOWDOWN" = Showdown at the OK Corale Reef
+    "plaice" = Plaice Holder
+    "hookline" = Hook, Line, and Skimmer
+    "funfair" = Nobody Rides For Free
+    "Pegasus" = Hold Until Relieved
+    "boldly" = To Boldly Go
+    "balloon" = Beautiful Balloon
+    "countingsheep" = A Good Nights Sleep
+    "BREAKFAST" = Beefcake Breakfast Brawl
+    "holiday" = Costa Del Danger
+    "pack" = Ragnarok and Roll
+    "ALIEN" = Alien Juice Suckers
+    "TargetHunt" = Shotgun Challenge 1
+    "TargetHunt2" = Shotgun Challenge 2
+    "HOMING" = Shotgun Challenge 3
+    "Sheep1" = Super Sheep Challenge 1
+    "Sheep2" = Super Sheep Challenge 2
+    "TargetHunt4" = Super Sheep Challenge 3
+    "cratefun" = Jet Pack Challenge 1
+    "jetpackchall2" = Jet Pack Challenge 2
+    "jetpackchall3" = Jet Pack Challenge 3
+    "Chute1" = Parachute Challenge 1
+    "chute2" = Parachute Challenge 2
+    "chute3" = Parachute Challenge 3
+    "Deathmatch1" = Deathmatch Challenge 1
+    "Deathmatch2" = Deathmatch Challenge 2
+    "Deathmatch3" = Deathmatch Challenge 3
+    "Deathmatch4" = Deathmatch Challenge 4
+    "Deathmatch5" = Deathmatch Challenge 5
+    "Deathmatch6" = Deathmatch Challenge 6
+    "Deathmatch7" = Deathmatch Challenge 7
+    "Deathmatch8" = Deathmatch Challenge 8
+    "Deathmatch9" = Deathmatch Challenge 9
+    "Deathmatch10" = Deathmatch Challenge 10
+    "stdvs" = Multiplayer Game
+    "attract" = Attract Mode
     """
 
     US_INGAME_CURRENT_LUA_SCRIPT_NAME = (0x180c5f8)
     """
-    [16-bytes BE ASCII] (US) Ingame | Current LUA Script Name
+    [16 bytes BE ASCII] (US) Ingame | Current LUA Script Name
+    The first 5 bytes are always overwritten with 0xdd upon exiting a level
     0x00000000 = Uninitialized
     0xdddddddd = Uninitialized
-    0x7475746f7269616c3100 = "tutorial1" | Atlantis Training Facility
-    0x7475746f7269616c3200 = "tutorial2" | Down in the Dumps
-    0x5475746f7269616c3300 = "Tutorial3" | Return to Chateau Assassin
-    0x5475746f7269616c3400 = "Tutorial4" | The Mighty Kong
-    0x7475746f7269616c3500 = "tutorial5" | Test Tubes
-    0x64726976696e6700 = "driving" | The Driving Range
-    0x6464617900 = "dday" | D-Day
-    0x43726174654272697461696e00 = "CrateBritain" | Crate Britain
-    0x67726176657961726400 = "graveyard" | Grave Danger
-    0x6c65656b00 = "leek" | A Leek in a Vegetable Patch
-    0x49434500 = "ICE" | Ice, Ice, Maybe
-    0x436f6c6c69646500 = "Collide" | When Annelids Collide
-    0x72756d00 = "rum" | Rum Deal
-    0x637275737400 = "crust" | Earn Your Crust
-    0x6170706c65636f726500 = "applecore" | Apple Core Island
-    0x68656c746572736b656c74657200 = "helterskelter" | Helter Skelter
-    0x63686572727900 = "cherry" | Take My Cherry
-    0x636c65616e00 = "clean" | In Space, No-One Can Hear You Clean
-    0x74696d6265727300 = "timbers" | Shiver Me Timbers
-    0x46414c4c494e4700 = "FALLING" | Falling For You
-    0x63726f70636972636c6500 = "cropcircle" | Crop Circle
-    0x7472656576696c6c61676500 = "treevillage" | Tree Village Trouble
-    0x6c616e64696e6700 = "landing" | Movie Mayhem
-    0x6265616e7374616c6b00 = "beanstalk" | Worm and the Beanstalk
-    0x5343484f4f4c5300 = "SCHOOLS" | School's in for Summer
-    0x686967687374616b657300 = "highstakes" | High Stakes
-    0x6e6f74706300 = "notpc" | A Quick Fix
-    0x636f6f70656400 = "cooped" | All Cooped Up
-    0x545249414c00 = "TRIAL" | Trial of the Damned
-    0x53484f57444f574e00 = "SHOWDOWN" | Showdown at the OK Corale Reef
-    0x706c6169636500 = "plaice" | Plaice Holder
-    0x686f6f6b6c696e6500 = "hookline" | Hook, Line, and Skimmer
-    0x66756e6661697200 = "funfair" | Nobody Rides For Free
-    0x5065676173757300 = "Pegasus" | Hold Until Relieved
-    0x626f6c646c7900 = "boldly" | To Boldly Go
-    0x62616c6c6f6f6e00 = "balloon" | Beautiful Balloon
-    0x636f756e74696e67736865657000 = "countingsheep" | A Good Nights Sleep
-    0x425245414b4641535400 = "BREAKFAST" | Beefcake Breakfast Brawl
-    0x686f6c6964617900 = "holiday" | Costa Del Danger
-    0x7061636b00 = "pack" | Ragnarok and Roll
-    0x414c49454e00 = "ALIEN" | Alien Juice Suckers
-    0x54617267657448756e7400 = "TargetHunt" | Shotgun Challenge 1
-    0x54617267657448756e743200 = "TargetHunt2" | Shotgun Challenge 2
-    0x484f4d494e4700 = "HOMING" | Shotgun Challenge 3
-    0x53686565703100 = "Sheep1" | Super Sheep Challenge 1
-    0x53686565703200 = "Sheep2" | Super Sheep Challenge 2
-    0x54617267657448756e743400 = "TargetHunt4" | Super Sheep Challenge 3
-    0x637261746566756e00 = "cratefun" | Jet Pack Challenge 1
-    0x6a65747061636b6368616c6c3200 = "jetpackchall2" | Jet Pack Challenge 2
-    0x6a65747061636b6368616c6c3300 = "jetpackchall3" | Jet Pack Challenge 3
-    0x43687574653100 = "Chute1" | Parachute Challenge 1
-    0x63687574653200 = "chute2" | Parachute Challenge 2
-    0x63687574653300 = "chute3" | Parachute Challenge 3
-    0x44656174686d617463683100 = "Deathmatch1" | Deathmatch Challenge 1
-    0x44656174686d617463683200 = "Deathmatch2" | Deathmatch Challenge 2
-    0x44656174686d617463683300 = "Deathmatch3" | Deathmatch Challenge 3
-    0x44656174686d617463683400 = "Deathmatch4" | Deathmatch Challenge 4
-    0x44656174686d617463683500 = "Deathmatch5" | Deathmatch Challenge 5
-    0x44656174686d617463683600 = "Deathmatch6" | Deathmatch Challenge 6
-    0x44656174686d617463683700 = "Deathmatch7" | Deathmatch Challenge 7
-    0x44656174686d617463683800 = "Deathmatch8" | Deathmatch Challenge 8
-    0x44656174686d617463683900 = "Deathmatch9" | Deathmatch Challenge 9
-    0x44656174686d61746368313000 = "Deathmatch10" | Deathmatch Challenge 10
-    0x737464767300 = "stdvs" | Multiplayer Game
-    0x6174747261637400 = "attract" | Attract Mode
+    "tutorial1" = Atlantis Training Facility
+    "tutorial2" = Down in the Dumps
+    "Tutorial3" = Return to Chateau Assassin
+    "Tutorial4" = The Mighty Kong
+    "tutorial5" = Test Tubes
+    "driving" = The Driving Range
+    "dday" = D-Day
+    "CrateBritain" = Crate Britain
+    "graveyard" = Grave Danger
+    "leek" = A Leek in a Vegetable Patch
+    "ICE" = Ice, Ice, Maybe
+    "Collide" = When Annelids Collide
+    "rum" = Rum Deal
+    "crust" = Earn Your Crust
+    "applecore" = Apple Core Island
+    "helterskelter" = Helter Skelter
+    "cherry" = Take My Cherry
+    "clean" = In Space, No-One Can Hear You Clean
+    "timbers" = Shiver Me Timbers
+    "FALLING" = Falling For You
+    "cropcircle" = Crop Circle
+    "treevillage" = Tree Village Trouble
+    "landing" = Movie Mayhem
+    "beanstalk" = Worm and the Beanstalk
+    "SCHOOLS" = School's in for Summer
+    "highstakes" = High Stakes
+    "notpc" = A Quick Fix
+    "cooped" = All Cooped Up
+    "TRIAL" = Trial of the Damned
+    "SHOWDOWN" = Showdown at the OK Corale Reef
+    "plaice" = Plaice Holder
+    "hookline" = Hook, Line, and Skimmer
+    "funfair" = Nobody Rides For Free
+    "Pegasus" = Hold Until Relieved
+    "boldly" = To Boldly Go
+    "balloon" = Beautiful Balloon
+    "countingsheep" = A Good Nights Sleep
+    "BREAKFAST" = Beefcake Breakfast Brawl
+    "holiday" = Costa Del Danger
+    "pack" = Ragnarok and Roll
+    "ALIEN" = Alien Juice Suckers
+    "TargetHunt" = Shotgun Challenge 1
+    "TargetHunt2" = Shotgun Challenge 2
+    "HOMING" = Shotgun Challenge 3
+    "Sheep1" = Super Sheep Challenge 1
+    "Sheep2" = Super Sheep Challenge 2
+    "TargetHunt4" = Super Sheep Challenge 3
+    "cratefun" = Jet Pack Challenge 1
+    "jetpackchall2" = Jet Pack Challenge 2
+    "jetpackchall3" = Jet Pack Challenge 3
+    "Chute1" = Parachute Challenge 1
+    "chute2" = Parachute Challenge 2
+    "chute3" = Parachute Challenge 3
+    "Deathmatch1" = Deathmatch Challenge 1
+    "Deathmatch2" = Deathmatch Challenge 2
+    "Deathmatch3" = Deathmatch Challenge 3
+    "Deathmatch4" = Deathmatch Challenge 4
+    "Deathmatch5" = Deathmatch Challenge 5
+    "Deathmatch6" = Deathmatch Challenge 6
+    "Deathmatch7" = Deathmatch Challenge 7
+    "Deathmatch8" = Deathmatch Challenge 8
+    "Deathmatch9" = Deathmatch Challenge 9
+    "Deathmatch10" = Deathmatch Challenge 10
+    "stdvs" = Multiplayer Game
+    "attract" = Attract Mode
     """
 
     EU_LUA_SCRIPT_INIT_POINTER = dword(0x1b55290)
@@ -1266,11 +1263,30 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sticky Wars
     """
 
+    EU_HASHMAP_QLRET = dword(0x1ce3780)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.LRet
+    +0x4
+    ++0x1c = [32-bit] Game Option | Retreat Time
+    --- Time measured in milliseconds
+    --- 0x0 = 0 Seconds
+    --- 0xbb8 = 3 Seconds
+    --- 0x1388 = 5 Seconds
+    --- 0x2710 = 10 Seconds
+    """
+
     EU_HASHMAP_ELAPSEDROUNDTIME = dword(0x1ce37b4)
     """
     [32-bit Pointer] (EU) Hashmap | ElapsedRoundTime
     +0x4
     ++0x1c = [32-bit] Elapsed Round Time in milliseconds
+    """
+
+    EU_HASHMAP_JETPACKFUEL = dword(0x1ce3810)
+    """
+    [32-bit Pointer] (EU) Hashmap | Jetpack.Fuel
+    +0x4
+    ++0x1c = [32-bit] Jetpack Fuel
     """
 
     EU_HASHMAP_LLFUNFAIR = dword(0x1ce3898)
@@ -1279,6 +1295,55 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Nobody Rides For Free
+    """
+
+    EU_HASHMAP_QHOT = dword(0x1ce3b00)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Hot
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Hot Seat Timer
+    --- Time measured in milliseconds
+    --- 0x0 = 0 Seconds
+    --- 0x1388 = 5 Seconds
+    --- 0x2710 = 10 Seconds
+    --- 0x3a98 = 15 Seconds
+    """
+
+    EU_HASHMAP_QUCHANCE = dword(0x1ce3b74)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.UChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Utility Crate Chance
+    """
+
+    EU_HASHMAP_LANDINITIALMAXHEIGHT = dword(0x1ce3b90)
+    """
+    [32-bit Pointer] (EU) Hashmap | Land.InitialMaxHeight
+    +0x4
+    ++0x1c = [32-bit Float] Current map's initial max height
+    -- Unique value to each map, used in conjunction with the script name to determine the current challenge in the RP
+    -- 0x44113984 = Shotgun Challenge 1
+    -- 0x452b799b = Shotgun Challenge 2
+    -- 0x444731d8 = Shotgun Challenge 3
+    -- 0x453f9645 = Super Sheep Challenge 1
+    -- 0x4415ee12 = Super Sheep Challenge 2
+    -- 0x440b8bdc = Super Sheep Challenge 3
+    -- 0x43e75e17 = Jet Pack Challenge 1
+    -- 0x44082017 = Jet Pack Challenge 2
+    -- 0x447aa8dc = Jet Pack Challenge 3
+    -- 0x452b799b = Parachute Challenge 1
+    -- 0x44ab25d0 = Parachute Challenge 2
+    -- 0x4507f262 = Parachute Challenge 3
+    -- 0x43d8a364 = Deathmatch Challenge 1
+    -- 0x43c9ceab = Deathmatch Challenge 2
+    -- 0x44074e83 = Deathmatch Challenge 3
+    -- 0x43fa352b = Deathmatch Challenge 4
+    -- 0x43cff6eb = Deathmatch Challenge 5
+    -- 0x43c0b331 = Deathmatch Challenge 6
+    -- 0x43f0dfac = Deathmatch Challenge 7
+    -- 0x442bd166 = Deathmatch Challenge 8
+    -- 0x43d4fde2 = Deathmatch Challenge 9
+    -- 0x440b9c29 = Deathmatch Challenge 10
     """
 
     EU_HASHMAP_LWNUKE = dword(0x1ce3c08)
@@ -1297,12 +1362,26 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Voice: Horror
     """
 
+    EU_HASHMAP_QDTIME = dword(0x1ce3d34)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.DTime
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Round Time Display
+    """
+
     EU_HASHMAP_LLHELTER = dword(0x1ce3d98)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.Helter
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Helter Skelter
+    """
+
+    EU_HASHMAP_QHCHANCE = dword(0x1ce3e04)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.HChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Health Crate Chance
     """
 
     EU_HASHMAP_LPHORROR = dword(0x1ce3e6c)
@@ -1328,12 +1407,30 @@ class Memory:
     ++0x1c = [32-bit] Current Active Worm ID
     """
 
+    EU_HASHMAP_FELANDSPACE = dword(0x1ce3f74)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Space
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Distance
+    --- 0x0 = 0%
+    --- 0x1 = 50%
+    --- 0x2 = 100%
+    """
+
     EU_HASHMAP_LLLANDING = dword(0x1ce4004)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.Landing
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Movie Mayhem
+    """
+
+    EU_HASHMAP_TURNTIMEREMAINING = dword(0x1ce403c)
+    """
+    [32-bit Pointer] (EU) Hashmap | TurnTimeRemaining
+    +0x4
+    ++0x1c = [32-bit] Ingame | Turn Time Remaining
+    --- Time measured in milliseconds
     """
 
     EU_HASHMAP_GAMEOVERGAMETYPE = dword(0x1ce4094)
@@ -1391,6 +1488,15 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Challenge: Jet Pack Challenge 3
     """
 
+    EU_HASHMAP_QTELIN = dword(0x1ce4198)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.TelIn
+    +0x4
+    ++0x1c = [32-bit] Game Option | Placement
+    --- 0x0 = Random
+    --- 0x1 = Manual
+    """
+
     EU_HASHMAP_CURRENTTEAMINDEX = dword(0x1ce4240)
     """
     [32-bit Pointer] (EU) Hashmap | CurrentTeamIndex
@@ -1406,12 +1512,29 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Grave Danger
     """
 
+    EU_HASHMAP_QFALL = dword(0x1ce4510)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Fall
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Fall Damage Setting
+    """
+
     EU_HASHMAP_LSGRAMPS = dword(0x1ce451c)
     """
     [32-bit Pointer] (EU) Hashmap | L.S.Gramps
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Voice: Grandpa
+    """
+
+    EU_HASHMAP_FELANDTIME = dword(0x1ce4544)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Time
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Time of Day
+    --- 0x0 = Day
+    --- 0x1 = Rain
+    --- 0x2 = Night
     """
 
     EU_HASHMAP_LLCOOPED = dword(0x1ce4560)
@@ -1486,6 +1609,13 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Challenge: Shotgun Challenge 3
     """
 
+    EU_HASHMAP_AUDIOVOLMUSIC = dword(0x1ce498c)
+    """
+    [32-bit Pointer] (EU) Hashmap | Audio.Vol.Music
+    +0x4
+    ++0x1c = [32-bit Float] Settings | Music Volume
+    """
+
     EU_HASHMAP_LPLOST = dword(0x1ce4c60)
     """
     [32-bit Pointer] (EU) Hashmap | L.P.Lost
@@ -1508,6 +1638,13 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sniper
+    """
+
+    EU_HASHMAP_AUDIOVOLSFX = dword(0x1ce4ef0)
+    """
+    [32-bit Pointer] (EU) Hashmap | Audio.Vol.Sfx
+    +0x4
+    ++0x1c = [32-bit Float] Settings | SFX Volume
     """
 
     EU_HASHMAP_LPGIRAFFE = dword(0x1ce4ef4)
@@ -1547,6 +1684,13 @@ class Memory:
     -- 0xffffffff = Untriggered
     """
 
+    EU_HASHMAP_QWHEALTH = dword(0x1ce5110)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.WHealth
+    +0x4
+    ++0x1c = [32-bit] Game Option | Worm Health
+    """
+
     EU_HASHMAP_LWBRIDGEK = dword(0x1ce518c)
     """
     [32-bit Pointer] (EU) Hashmap | L.W.BridgeK
@@ -1561,6 +1705,53 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: The Sally Army
+    """
+
+    EU_HASHMAP_QWCHANCE = dword(0x1ce5364)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.WChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Weapon Crate Chance
+    """
+
+    EU_HASHMAP_QOBJ = dword(0x1ce5398)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Obj
+    +0x4
+    ++0x1c = [32-bit] Game Option | Objects
+    --- 0x0 = None Active
+    --- 0x1 = Mine Only
+    --- 0x2 = Oil Drum Only
+    --- 0x3 = All Active
+    """
+
+    EU_HASHMAP_FELANDSOBJECTS = dword(0x1ce53dc)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.SObjects
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Small Objects
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
+    """
+
+    EU_HASHMAP_FELANDLOBJECTS = dword(0x1ce541c)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.LObjects
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Object Quantity
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
+    """
+
+    EU_HASHMAP_AUDIOVOLAMBIENT = dword(0x1ce5420)
+    """
+    [32-bit Pointer] (EU) Hashmap | Audio.Vol.Ambient
+    +0x4
+    ++0x1c = [32-bit Float] Settings | Ambient Volume
     """
 
     EU_HASHMAP_LPFOOLS = dword(0x1ce545c)
@@ -1579,6 +1770,28 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Enough in-jokes?
     """
 
+    EU_HASHMAP_ROUNDTIME = dword(0x1ce5544)
+    """
+    [32-bit Pointer] (EU) Hashmap | RoundTime
+    +0x4
+    ++0x1c = [32-bit] Ingame | Initial Round Time
+    --- Time measured in milliseconds
+    """
+
+    EU_HASHMAP_FELANDSIZE = dword(0x1ce5554)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Size
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Block Size
+    --- 0x0 = 0%
+    --- 0x1 = 17%
+    --- 0x2 = 33%
+    --- 0x3 = 50%
+    --- 0x4 = 67%
+    --- 0x5 = 83%
+    --- 0x6 = 100%
+    """
+
     EU_HASHMAP_LWSSHEEP = dword(0x1ce55b0)
     """
     [32-bit Pointer] (EU) Hashmap | L.W.SSheep
@@ -1592,9 +1805,43 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | Game.NextLevel
     +0x4
     ++0x1c = [32-bit Pointer] Next Level ID
-    +++0x0 = [9-bytes BE ASCII] Level ID String
+    +++0x0 = [9 bytes BE ASCII] Level ID String
     ---  0x46452e4c6576656c2e = "FE.Level."
     +++0x9 = [ASCII] Level ID Discriminator
+    """
+
+    EU_HASHMAP_QRTIME = dword(0x1ce5644)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.RTime
+    +0x4
+    ++0x1c = [32-bit] Game Option | Round Time
+    --- Values measured in milliseconds
+    --- 0x0 = 0 Minutes
+    --- 0x493e0 = 5 Minutes
+    --- 0x927c0 = 10 Minutes
+    --- 0xdbba0 = 15 Minutes
+    --- 0x124f80 = 20 Minutes
+    --- 0x16e360 = 25 Minutes
+    --- 0x1b7740 = 30 Minutes
+    """
+
+    EU_HASHMAP_QHCRATE = dword(0x1ce56b4)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.HCrate
+    +0x4
+    ++0x1c = [32-bit] Game Option | Health Amount
+    """
+
+    EU_HASHMAP_SAVELANGUAGE = dword(0x1ce57a4)
+    """
+    [32-bit Pointer] (EU) Hashmap | SAVE.Language
+    +0x4
+    ++0x1c = [32-bit] Selected Language
+    -- 0x0 = English
+    -- 0x3 = French
+    -- 0x4 = German
+    -- 0x5 = Italian
+    -- 0x9 = Spanish
     """
 
     EU_HASHMAP_LSLOVER = dword(0x1ce5858)
@@ -1603,6 +1850,28 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Voice: French Lover
+    """
+
+    EU_HASHMAP_QSTOCK = dword(0x1ce593c)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Stock
+    +0x4
+    ++0x1c = [32-bit]  Game Option | Stockpiling
+    --- 0x0 = Inactive
+    --- 0x1 = Active
+    --- 0x2 = Anti
+    """
+
+    EU_HASHMAP_FELANDHEIGHT = dword(0x1ce5980)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Height
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Height
+    --- 0x0 = 0%
+    --- 0x1 = 25%
+    --- 0x2 = 50%
+    --- 0x3 = 75%
+    --- 0x4 = 100%
     """
 
     EU_HASHMAP_LPDARKSIDE = dword(0x1ce59d4)
@@ -1621,6 +1890,13 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Boggy Pete
     """
 
+    EU_HASHMAP_QWSEL = dword(0x1ce5b80)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.WSel
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Worm Select
+    """
+
     EU_HASHMAP_LPCHATTER = dword(0x1ce5bcc)
     """
     [32-bit Pointer] (EU) Hashmap | L.P.Chatter
@@ -1635,6 +1911,17 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Alien Juice Suckers
+    """
+
+    EU_HASHMAP_FELANDBRIDGES = dword(0x1ce5cfc)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Bridges
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Bridges
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
     """
 
     EU_HASHMAP_CRATEINDEX = dword(0x1ce5d90)
@@ -1659,11 +1946,110 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Lightside and Darkside
     """
 
-    EU_HASHMAP_LAND_FILE = dword(0x1ce60e8)
+    EU_HASHMAP_FELANDAMOUNT = dword(0x1ce6090)
     """
-    [32-bit Pointer] (EU) Hashmap | Land File
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Amount
     +0x4
-    ++0x1c [32-bit Pointer] Currently loaded XOM map filename
+    ++0x1c = [32-bit] Landscape Selection | Land Amount
+    --- 0x0 = 0%
+    --- 0x1 = 14%
+    --- 0x2 = 29%
+    --- 0x3 = 43%
+    --- 0x4 = 57%
+    --- 0x5 = 71%
+    --- 0x6 = 86%
+    --- 0x7 = 100%
+    """
+
+    EU_HASHMAP_FEWORMPOTREEL1 = dword(0x1ce60b8)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Wormpot.Reel1
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 1
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
+    """
+
+    EU_HASHMAP_FEWORMPOTREEL2 = dword(0x1ce60bc)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Wormpot.Reel2
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 2
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
+    """
+
+    EU_HASHMAP_LANDFILE = dword(0x1ce60e8)
+    """
+    [32-bit Pointer] (EU) Hashmap | Land.File
+    +0x4
+    ++0x1c = [32-bit Pointer] Loaded .XOM Land Filename
+    """
+
+    EU_HASHMAP_FEWORMPOTREEL3 = dword(0x1ce60f0)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Wormpot.Reel3
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 3
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
     """
 
     EU_HASHMAP_LSCHPRO = dword(0x1ce61bc)
@@ -1674,12 +2060,32 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Pro
     """
 
+    EU_HASHMAP_QWATER = dword(0x1ce6348)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Water
+    +0x4
+    ++0x1c = [32-bit] Game Option | Sudden Death Water Setting
+    --- 0x0 = Inactive
+    --- 0x1 = Slow Speed
+    --- 0x2 = Medium Speed
+    --- 0x3 = Fast Speed
+    """
+
     EU_HASHMAP_LLHIGH = dword(0x1ce6370)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.High
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: High Stakes
+    """
+
+    EU_HASHMAP_QMFUSE = dword(0x1ce6374)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.MFuse
+    +0x4
+    ++0x1c = [32-bit] Game Option | Mine Fuse Setting
+    --- 0x0 = Instant
+    --- 0x1 = Random
     """
 
     EU_HASHMAP_LCSS1 = dword(0x1ce63f4)
@@ -1753,6 +2159,17 @@ class Memory:
     ++0x1c = [32-bit Boolean] Game Over
     """
 
+    EU_HASHMAP_QSDEATH = dword(0x1ce6850)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.SDeath
+    +0x4
+    ++0x1c = [32-bit] Game Option | Sudden Death
+    --- 0x0 = Round Time Expiry Triggers Sudden Death
+    --- 0x1 = 1 Health Point Sudden Death
+    --- 0x2 = Sudden Death Rises Water
+    --- 0x3 = No Sudden Death
+    """
+
     EU_HASHMAP_LLHOLIDAY = dword(0x1ce6854)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.Holiday
@@ -1783,6 +2200,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sinking BnG
+    """
+
+    EU_HASHMAP_TURNTIME = dword(0x1ce6a74)
+    """
+    [32-bit Pointer] (EU) Hashmap | TurnTime
+    +0x4
+    ++0x1c = [32-bit] Ingame | Turn Time Setting
+    --- Time measured in milliseconds
     """
 
     EU_HASHMAP_LCDM1 = dword(0x1ce6ba4)
@@ -1925,6 +2350,13 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Voice: Super Villain
     """
 
+    EU_HASHMAP_FELANDREALSEED = dword(0x1ce6f00)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.RealSeed
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Landscape Seed
+    """
+
     EU_HASHMAP_LPLIGHTSIDE = dword(0x1ce6fe8)
     """
     [32-bit Pointer] (EU) Hashmap | L.P.Lightside
@@ -1949,6 +2381,13 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: The Worms Story
     """
 
+    EU_HASHMAP_FELANDIND = dword(0x1ce722c)
+    """
+    [32-bit Pointer] (EU) Hashmap | FE.Land.Ind
+    +0x4
+    ++0x1c = [32-bit Boolean] Landscape Selection | Indestructable Terrain
+    """
+
     EU_HASHMAP_LLPLAICE = dword(0x1ce7248)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.Plaice
@@ -1963,6 +2402,13 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Earn Your Crust
+    """
+
+    EU_HASHMAP_QWINS = dword(0x1ce72ac)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Wins
+    +0x4
+    ++0x1c = [32-bit] Game Option | Number of Round Wins
     """
 
     EU_HASHMAP_LLCOLLIDE = dword(0x1ce7324)
@@ -2005,6 +2451,28 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Weapon: Earthquake
     """
 
+    EU_HASHMAP_QTTIME = dword(0x1ce76a4)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.TTime
+    +0x4
+    ++0x1c = [32-bit] Game Option | Turn Time
+    --- Time measured in milliseconds
+    --- 0x3a98 = 15 Seconds
+    --- 0x4e20 = 20 Seconds
+    --- 0x7530 = 30 Seconds
+    --- 0xafc8 = 45 Seconds
+    --- 0xea60 = 60 Seconds
+    --- 0x15f90 = 90 Seconds
+    """
+
+    EU_HASHMAP_ROUNDTIMEREMAINING = dword(0x1ce776c)
+    """
+    [32-bit Pointer] (EU) Hashmap | RoundTimeRemaining
+    +0x4
+    ++0x1c = [32-bit] Ingame | Round Time Remaining
+    --- Time measured in milliseconds
+    """
+
     EU_HASHMAP_LLCOUNTING = dword(0x1ce77fc)
     """
     [32-bit Pointer] (EU) Hashmap | L.L.Counting
@@ -2026,6 +2494,7 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | DATA.TeamBarracks
     +0x4
     ++0x1c = [32-bit Pointer] TeamDataColective
+
     +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
     ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
     +++++0x14 = [32-bit] Bronze Time in milliseconds
@@ -2172,15 +2641,15 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Take My Cherry
     """
 
-    GAME_OPTION_SUDDEN_DEATH_WATER_SETTING = dword(0x1cfb7f8)
+    US_HASHMAP_QWATER = dword(0x1cfb7f8)
     """
-    [32 Bit Pointer] Game Option | Sudden Death Water Setting
-    +0x04
-    ++0x1C = [32 Bit] Sudden Death Water Setting
-    --- 00 = Inactive
-    --- 01 = Slow Speed
-    --- 02 = Medium Speed
-    --- 03 = Fast Speed
+    [32-bit Pointer] (US) Hashmap | Q.Water
+    +0x4
+    ++0x1c = [32-bit] Game Option | Sudden Death Water Setting
+    --- 0x0 = Inactive
+    --- 0x1 = Slow Speed
+    --- 0x2 = Medium Speed
+    --- 0x3 = Fast Speed
     """
 
     US_HASHMAP_LLGRAVEYARD = dword(0x1cfb808)
@@ -2191,13 +2660,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Grave Danger
     """
 
-    LANDSCAPE_SELECTION_INDESTRUCTABLE_TERRAIN = dword(0x1cfb8dc)
+    US_HASHMAP_FELANDIND = dword(0x1cfb8dc)
     """
-    [32 Bit Pointer] Landscape Selection | Indestructable Terrain
-    +0x04
-    ++0x1C = [32 Bit] Indestructable Terrain
-    --- 00 = Inactive
-    --- 01 = Active
+    [32-bit Pointer] (US) Hashmap | FE.Land.Ind
+    +0x4
+    ++0x1c = [32-bit Boolean] Landscape Selection | Indestructable Terrain
     """
 
     US_HASHMAP_LPTAPPER = dword(0x1cfb978)
@@ -2223,30 +2690,6 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Take My Cherry
     """
 
-    P1_INVENTORY = dword(0x1cfbab0)
-    """
-    [32 Bit Pointer] P1 Inventory
-    +0x04
-    ++0x1C
-    +++0x17 = [8 Bit] Total Ammo | Gas Canister
-    +++0x18 = [8 Bit] Total Ammo | Petrol Bomb
-    +++0x1A = [8 Bit] Total Ammo | Sheep
-    +++0x1D = [8 Bit] Total Ammo | Mortar
-    +++0x1F = [8 Bit] Total Ammo | Fire Punch
-    +++0x22 = [8 Bit] Total Ammo | Baseball Bat
-    +++0x23 = [8 Bit] Total Ammo | Uzi
-    +++0x24 = [8 Bit] Total Ammo | Shotgun
-    +++0x25 = [8 Bit] Total Ammo | Land Mine
-    +++0x28 = [8 Bit] Total Ammo | Dynamite
-    +++0x2A = [8 Bit] Total Ammo | Cluster Bomb
-    +++0x2E = [8 Bit] Total Ammo | Teleport
-    +++0x30 = [8 Bit] Total Ammo | Sticky Bomb
-    +++0x39 = [8 Bit] Total Ammo | Jetpack
-    +++0x3F = [8 Bit] Total Ammo | Parachute
-    +++0x40 = [8 Bit] Total Ammo | Ninja Rope
-    +++0x42 = [8 Bit] Total Ammo | Girder
-    """
-
     US_HASHMAP_LSMAD = dword(0x1cfbc00)
     """
     [32-bit Pointer] (US) Hashmap | L.S.Mad
@@ -2263,11 +2706,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Test Tubes
     """
 
-    POINTER_TO_MUSIC = dword(0x1cfbd7c)
+    US_HASHMAP_AUDIOVOLMUSIC = dword(0x1cfbd7c)
     """
-    [32-bit] Pointer to Music
-    +0x04 
-    ++0x1c | Music Volume [Float]
+    [32-bit Pointer] (US) Hashmap | Audio.Vol.Music
+    +0x4
+    ++0x1c = [32-bit Float] Settings | Music Volume
     """
 
     US_HASHMAP_LLALIEN = dword(0x1cfbde8)
@@ -2286,36 +2729,36 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Weapon: Earthquake
     """
 
-    GAME_OPTION_STOCKPILING = dword(0x1cfbf20)
+    US_HASHMAP_QSTOCK = dword(0x1cfbf20)
     """
-    [32 Bit Pointer] Game Option | Stockpiling
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Inactive
-    --- 01 = Active
-    --- 02 = Anti
-    """
-
-    GAME_OPTION_ROUND_TIME = dword(0x1cfbf44)
-    """
-    [32 Bit Pointer] Game Option | Round Time
-    +0x04
-    ++0x1C = [32 Bit] Round Timer
-    (Values use the time values ingame).
-    --- 00 = 0 Minutes
-    --- 493e0 = 5 Minutes
-    --- 927c0 = 10 Minutes
-    --- dbba0 = 15 Minutes
-    --- 124f80 = 20 Minutes
-    --- 16e360 = 25 Minutes
-    --- 1b7740 = 30 Minutes
+    [32-bit Pointer] (US) Hashmap | Q.Stock
+    +0x4
+    ++0x1c = [32-bit]  Game Option | Stockpiling
+    --- 0x0 = Inactive
+    --- 0x1 = Active
+    --- 0x2 = Anti
     """
 
-    GAME_OPTION_WEAPON_CRATE_CHANCE = dword(0x1cfbf84)
+    US_HASHMAP_QRTIME = dword(0x1cfbf44)
     """
-    [32 Bit Pointer] Game Option | Weapon Crate Chance
-    +0x04
-    ++0x1C = [32 Bit] Weapon Crate Chance
+    [32-bit Pointer] (US) Hashmap | Q.RTime
+    +0x4
+    ++0x1c = [32-bit] Game Option | Round Time
+    --- Values measured in milliseconds
+    --- 0x0 = 0 Minutes
+    --- 0x493e0 = 5 Minutes
+    --- 0x927c0 = 10 Minutes
+    --- 0xdbba0 = 15 Minutes
+    --- 0x124f80 = 20 Minutes
+    --- 0x16e360 = 25 Minutes
+    --- 0x1b7740 = 30 Minutes
+    """
+
+    US_HASHMAP_QWCHANCE = dword(0x1cfbf84)
+    """
+    [32-bit Pointer] (US) Hashmap | Q.WChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Weapon Crate Chance
     """
 
     US_HASHMAP_CURRENTTEAMINDEX = dword(0x1cfbf90)
@@ -2403,73 +2846,12 @@ class Memory:
     ++0x1c = [32-bit] Current Active Worm ID
     """
 
-    P1_WORM_DATA = dword(0x1cfc430)
+    US_HASHMAP_ROUNDTIMEREMAINING = dword(0x1cfc458)
     """
-    [32 Bit Pointer] P1 Worm Data [1]
-    +0x04
-    ++0x1C
-    +++0x50 = [32 Bit Float] X Position
-    +++0x54 = [32 Bit Float] Y Position
-    +++0x58 = [32 Bit Float] Z Position
-    +++0x84 = [32 Bit] Equipped Weapon ID
-    --- 00 = Bazooka
-    --- 01 = Grenade
-    --- 02 = Cluster Bomb
-    --- 04 = Dynamite
-    --- 07 = Land Mine
-    --- 08 = Shotgun
-    --- 09 = Uzi
-    --- 0a = Baseball Bat
-    --- 0b = Prod
-    --- 0d = Fire Punch
-    --- 0e = Homing Missile
-    --- 0f = Mortar
-    --- 12 = Sheep
-    --- 14 = Petrol Bomb
-    --- 15 = Gas Canister
-    --- 22 = Sticky Bomb
-    --- 23 = Binoculars
-    --- 27 = Girder
-    --- 29 = Ninja Rope
-    --- 2a = Parachute
-    --- 2f = Teleport
-    --- 30 = Jet Pack
-    --- 31 = Skip Go
-    --- 32 = Surrender
-    --- 33 = Worm Select
-    +++0xAA = [8 Bit] Worm Health
-    """
-
-    P1_WORM_DATA_1 = dword(0x1cfc434)
-    """
-    [32 Bit Pointer] P1 Worm Data [2]
-    """
-
-    P1_WORM_DATA_2 = dword(0x1cfc438)
-    """
-    [32 Bit Pointer] P1 Worm Data [3]
-    """
-
-    P1_WORM_DATA_3 = dword(0x1cfc43c)
-    """
-    [32 Bit Pointer] P1 Worm Data [4]
-    """
-
-    P1_WORM_DATA_4 = dword(0x1cfc440)
-    """
-    [32 Bit Pointer] P1 Worm Data [5]
-    """
-
-    P1_WORM_DATA_5 = dword(0x1cfc444)
-    """
-    [32 Bit Pointer] P1 Worm Data [6]
-    """
-
-    ROUND_TIMER = dword(0x1cfc458)
-    """
-    [32 Bit Pointer] Round Timer
-    +0x04
-    ++0x1C = [32 Bit] Round Timer
+    [32-bit Pointer] (US) Hashmap | RoundTimeRemaining
+    +0x4
+    ++0x1c = [32-bit] Ingame | Round Time Remaining
+    --- Time measured in milliseconds
     """
 
     US_HASHMAP_LWNUKE = dword(0x1cfc460)
@@ -2480,13 +2862,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Weapon: Nuclear Bomb
     """
 
-    GAME_OPTION_ROUND_TIME_DISPLAY = dword(0x1cfc708)
+    US_HASHMAP_QDTIME = dword(0x1cfc708)
     """
-    [32 Bit Pointer] Game Option | Round Time Display
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Inactive
-    --- 01 = Active
+    [32-bit Pointer] (US) Hashmap | Q.DTime
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Round Time Display
     """
 
     US_HASHMAP_LCDM10 = dword(0x1cfc770)
@@ -2513,39 +2893,124 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: All Cooped Up
     """
 
-    COMPLETION_ATLANTIS_TRAINING_FACILITY = dword(0x1cfcb3c)
+    US_HASHMAP_DATATEAMBARRACKS = dword(0x1cfcb3c)
     """
-    [32 Bit Pointer] Completion - Atlantis Training Facility
-    +0x04
-    ++0x58
-    +++0x40 - Team 1
-    +++0x44 - Team 2
-    +++0x50 - Team 3
-    +++0x58 - Team 4
-    +++0x5C - Team 5
-    +++0x60 - Team 6
-    +++0x64 - Team 7
-    +++0x68 - Team 8
-    +++0x6C - Team 9
-    +++0x70 - Team 10
-    +++0x74 - Team 11
-    +++0x78 - Team 12
-    +++0x7C - Team 13
-    +++0x80 - Team 14
-    +++0x84 - Team 15
-    +++0x88 - Team 16
-    +++0x8C - Team 17
-    ++++0x30 = [32 Bit] Levels Completion Progression | Tutorial
-    --- 00 = None
-    --- 01 = Completed Atlantis Training Facility
-    --- 02 = Completed Down in the Dumps
-    --- 03 = Completed Return to Chateau Assassin
-    --- 04 = Completed The Mighty Kong
-    --- 05 = Completed Test Tubes
-    --- 06 = Completed The Driving Range
-    ++++0x40 = [32 Bit] Profile Selected Check
-    --- 00 = Inactive
-    --- 01 = Active
+    [32-bit Pointer] (US) Hashmap | DATA.TeamBarracks
+    +0x4
+    ++0x1c = [32-bit Pointer] TeamDataColective
+
+    +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+    ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
+    +++++0x14 = [32-bit] Bronze Time in milliseconds
+    +++++0x18 = [32-bit Pointer] Bronze Player Name
+    +++++0x1c = [32-bit] Silver Time in milliseconds
+    +++++0x20 = [32-bit Pointer] Silver Player Name
+    +++++0x24 = [32-bit] Gold Time in milliseconds
+    +++++0x28 = [32-bit Pointer] Gold Player Name
+    ++++0x44 = [32-bit Pointer] HighScoreData | Shotgun Challenge 2
+    ++++0x48 = [32-bit Pointer] HighScoreData | Shotgun Challenge 3
+    ++++0x4c = [32-bit Pointer] HighScoreData | Super Sheep Challenge 1
+    ++++0x50 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 2
+    ++++0x54 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 3
+    ++++0x58 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 1
+    ++++0x5c = [32-bit Pointer] HighScoreData | Jet Pack Challenge 2
+    ++++0x60 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 3
+    ++++0x64 = [32-bit Pointer] HighScoreData | Parachute Challenge 1
+    ++++0x68 = [32-bit Pointer] HighScoreData | Parachute Challenge 2
+    ++++0x6c = [32-bit Pointer] HighScoreData | Parachute Challenge 3
+    ++++0x70 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 1
+    ++++0x74 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 2
+    ++++0x78 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 3
+    ++++0x7c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 4
+    ++++0x80 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 5
+    ++++0x84 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 6
+    ++++0x88 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 7
+    ++++0x8c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 8
+    ++++0x90 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 9
+    ++++0x94 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 10
+
+    +++0x18 = [32-bit Pointer] XomContainerArray | Teams Array
+    ++++0x40 = [32-bit Pointer] StoredTeamData | Team 1
+    +++++0x14 = [32-bit Pointer] Player ID (String)
+    +++++0x18 = [32-bit Pointer] Speech ID (String)
+    +++++0x1c = [32-bit Pointer] Flag ID (String)
+    +++++0x20 = [32-bit] Special Weapon ID
+    +++++0x24 = [32-bit] Grave ID
+    +++++0x28 = [32-bit] Skill ID
+    +++++0x2c = [32-bit] New Team?
+    +++++0x30 = [32-bit] Tutorial Progression
+    ----- 0x0 = None
+    ----- 0x1 = Completed Atlantis Training Facility
+    ----- 0x2 = Completed Down in the Dumps
+    ----- 0x3 = Completed Return to Chateau Assassin
+    ----- 0x4 = Completed The Mighty Kong
+    ----- 0x5 = Completed Test Tubes
+    ----- 0x6 = Completed The Driving Range (Not possible)
+    +++++0x34 = [32-bit Pointer] XomContainerArray | Campaign Array
+    ++++++0x40 = [32-bit Pointer] CampaignData | D-Day
+    +++++++0x14 = [32-bit] Retries
+    +++++++0x18 = [32-bit] Medal
+    ------- 0x0 = None
+    ------- 0x1 = Bronze
+    ------- 0x2 = Silver
+    ------- 0x3 = Gold
+    ++++++0x44 = [32-bit Pointer] CampaignData | Crate Britain
+    ++++++0x48 = [32-bit Pointer] CampaignData | Grave Danger
+    ++++++0x4c = [32-bit Pointer] CampaignData | A Leek in a Vegetable Patch
+    ++++++0x50 = [32-bit Pointer] CampaignData | Ice, Ice, Maybe
+    ++++++0x54 = [32-bit Pointer] CampaignData | When Annelids Collide
+    ++++++0x58 = [32-bit Pointer] CampaignData | Rum Deal
+    ++++++0x5c = [32-bit Pointer] CampaignData | Earn Your Crust
+    ++++++0x60 = [32-bit Pointer] CampaignData | Apple Core Island
+    ++++++0x64 = [32-bit Pointer] CampaignData | Helter Skelter
+    ++++++0x68 = [32-bit Pointer] CampaignData | Take My Cherry
+    ++++++0x6c = [32-bit Pointer] CampaignData | In Space, No-One Can Hear You Clean
+    ++++++0x70 = [32-bit Pointer] CampaignData | Shiver Me Timbers
+    ++++++0x74 = [32-bit Pointer] CampaignData | Falling For You
+    ++++++0x78 = [32-bit Pointer] CampaignData | Crop Circle
+    ++++++0x7c = [32-bit Pointer] CampaignData | Tree Village Trouble
+    ++++++0x80 = [32-bit Pointer] CampaignData | Movie Mayhem
+    ++++++0x84 = [32-bit Pointer] CampaignData | Worm and the Beanstalk
+    ++++++0x88 = [32-bit Pointer] CampaignData | School's in for Summer
+    ++++++0x8c = [32-bit Pointer] CampaignData | High Stakes
+    ++++++0x90 = [32-bit Pointer] CampaignData | A Quick Fix
+    ++++++0x94 = [32-bit Pointer] CampaignData | All Cooped Up
+    ++++++0x98 = [32-bit Pointer] CampaignData | Trial of the Damned
+    ++++++0x9c = [32-bit Pointer] CampaignData | Showdown at the OK Corale Reef
+    ++++++0xa0 = [32-bit Pointer] CampaignData | Plaice Holder
+    ++++++0xa4 = [32-bit Pointer] CampaignData | Hook, Line, and Skimmer
+    ++++++0xa8 = [32-bit Pointer] CampaignData | Nobody Rides For Free
+    ++++++0xac = [32-bit Pointer] CampaignData | Hold Until Relieved
+    ++++++0xb0 = [32-bit Pointer] CampaignData | To Boldly Go
+    ++++++0xb4 = [32-bit Pointer] CampaignData | Beautiful Balloon
+    ++++++0xb8 = [32-bit Pointer] CampaignData | A Good Nights Sleep
+    ++++++0xbc = [32-bit Pointer] CampaignData | Beefcake Breakfast Brawl
+    ++++++0xc0 = [32-bit Pointer] CampaignData | Costa Del Danger
+    ++++++0xc4 = [32-bit Pointer] CampaignData | Ragnarok and Roll
+    ++++++0xc8 = [32-bit Pointer] CampaignData | Alien Juice Suckers
+    +++++0x38 = [32-bit Pointer] Worms Array
+    +++++0x3c = [32-bit Pointer] Team Name
+    +++++0x40 = [32-bit Boolean] Profile Selected
+
+    ++++0x44 = [32-bit Pointer] StoredTeamData | Team 2
+    ++++0x48 = [32-bit Pointer] StoredTeamData | Team 3
+    ++++0x4c = [32-bit Pointer] StoredTeamData | Team 4
+    ++++0x50 = [32-bit Pointer] StoredTeamData | Team 5
+    ++++0x54 = [32-bit Pointer] StoredTeamData | Team 6
+    ++++0x58 = [32-bit Pointer] StoredTeamData | Team 7
+    ++++0x5c = [32-bit Pointer] StoredTeamData | Team 8
+    ++++0x60 = [32-bit Pointer] StoredTeamData | Team 9
+    ++++0x64 = [32-bit Pointer] StoredTeamData | Team 10
+    ++++0x68 = [32-bit Pointer] StoredTeamData | Team 11
+    ++++0x6c = [32-bit Pointer] StoredTeamData | Team 12
+    ++++0x70 = [32-bit Pointer] StoredTeamData | Team 13
+    ++++0x74 = [32-bit Pointer] StoredTeamData | Team 14
+    ++++0x78 = [32-bit Pointer] StoredTeamData | Team 15
+    ++++0x7c = [32-bit Pointer] StoredTeamData | Team 16
+    ++++0x80 = [32-bit Pointer] StoredTeamData | Team 17
+    ++++0x84 = [32-bit Pointer] StoredTeamData | Team 18
+    ++++0x88 = [32-bit Pointer] StoredTeamData | Team 19
+    ++++0x8c = [32-bit Pointer] StoredTeamData | Team 20
     """
 
     US_HASHMAP_LLTIMBERS = dword(0x1cfcd3c)
@@ -2589,15 +3054,15 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Voice: Super Villain
     """
 
-    GAME_OPTION_SUDDEN_DEATH = dword(0x1cfd150)
+    US_HASHMAP_QSDEATH = dword(0x1cfd150)
     """
-    [32 Bit Pointer] Game Option | Sudden Death
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Round Time Expiry Triggers Sudden Death
-    --- 01 = 1 Health Point Sudden Death
-    --- 02 = Sudden Death Rises Water
-    --- 03 = No Sudden Death
+    [32-bit Pointer] (US) Hashmap | Q.SDeath
+    +0x4
+    ++0x1c = [32-bit] Game Option | Sudden Death
+    --- 0x0 = Round Time Expiry Triggers Sudden Death
+    --- 0x1 = 1 Health Point Sudden Death
+    --- 0x2 = Sudden Death Rises Water
+    --- 0x3 = No Sudden Death
     """
 
     US_HASHMAP_LSCHSNIPING = dword(0x1cfd250)
@@ -2608,11 +3073,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sniper
     """
 
-    GAME_OPTION_HEALTH_CRATE_CHANCE = dword(0x1cfd2c4)
+    US_HASHMAP_QHCHANCE = dword(0x1cfd2c4)
     """
-    [32 Bit Pointer] Game Option | Health Crate Chance
-    +0x04
-    ++0x1C = [32 Bit] Health Crate Chance
+    [32-bit Pointer] (US) Hashmap | Q.HChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Health Crate Chance
     """
 
     US_HASHMAP_LSHORROR = dword(0x1cfd378)
@@ -2679,22 +3144,19 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Challenge: Parachute Challenge 3
     """
 
-    MODE_CONTEXT = dword(0x1cfd678)
-    """
-    [32 Bit Pointer] Mode Context
-    +0x04
-    ++0x1C = [32 Bit] Mode
-    --- 00 = Tutorial
-    --- 14 = Challenge
-    --- 28 = Free Battle
-    --- 32 = Campaign
-    """
-
     US_HASHMAP_MCABESTGOLD = dword(0x1cfd688)
     """
     [32-bit Pointer] (US) Hashmap | MCa.BestGold
     +0x4
     ++0x1c = [32-bit] Gold time record in milliseconds of selected challenge
+    """
+
+    US_HASHMAP_ROUNDTIME = dword(0x1cfd744)
+    """
+    [32-bit Pointer] (US) Hashmap | RoundTime
+    +0x4
+    ++0x1c = [32-bit] Ingame | Initial Round Time
+    --- Time measured in milliseconds
     """
 
     US_HASHMAP_LCSHOTGUN2 = dword(0x1cfd778)
@@ -2713,15 +3175,34 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Challenge: Shotgun Challenge 3
     """
 
-    LANDSCAPE_SELECTION_OBJECT_QUANTITY = dword(0x1cfd93c)
+    US_HASHMAP_FELANDSOBJECTS = dword(0x1cfd8fc)
     """
-    [32 Bit Pointer] Landscape Selection | Object Quantity
-    +0x04
-    ++0x1C = [32 Bit] Object Quantity Amount
-    --- 00 = 0%
-    --- 01 = 33%
-    --- 02 = 67%
-    --- 03 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.SObjects
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Small Objects
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
+    """
+
+    US_HASHMAP_FELANDLOBJECTS = dword(0x1cfd93c)
+    """
+    [32-bit Pointer] (US) Hashmap | FE.Land.LObjects
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Object Quantity
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
+    """
+
+    US_HASHMAP_TURNTIME = dword(0x1cfdb4c)
+    """
+    [32-bit Pointer] (US) Hashmap | TurnTime
+    +0x4
+    ++0x1c = [32-bit] Ingame | Turn Time Setting
+    --- Time measured in milliseconds
     """
 
     US_HASHMAP_LLHELTER = dword(0x1cfdbb8)
@@ -2732,18 +3213,19 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Helter Skelter
     """
 
-    TURN_TIMER = dword(0x1cfdccc)
+    US_HASHMAP_TURNTIMEREMAINING = dword(0x1cfdccc)
     """
-    [32 Bit Pointer] Turn Timer
-    +0x04
-    ++0x1C = [32 Bit] Turn Timer
+    [32-bit Pointer] (US) Hashmap | TurnTimeRemaining
+    +0x4
+    ++0x1c = [32-bit] Ingame | Turn Time Remaining
+    --- Time measured in milliseconds
     """
 
-    GAME_OPTION_NUMBER_OF_ROUND_WINS = dword(0x1cfdd3c)
+    US_HASHMAP_QWINS = dword(0x1cfdd3c)
     """
-    [32 Bit Pointer] Game Option | Number of Round Wins
-    +0x04
-    ++0x1C = [32 Bit] Number of Rounds Required to Win Match
+    [32-bit Pointer] (US) Hashmap | Q.Wins
+    +0x4
+    ++0x1c = [32-bit] Game Option | Number of Round Wins
     """
 
     US_HASHMAP_LLAPPLE = dword(0x1cfdf04)
@@ -2754,29 +3236,27 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Apple Core Island
     """
 
-    GAME_OPTION_WORM_HEALTH = dword(0x1cfdf90)
+    US_HASHMAP_QWHEALTH = dword(0x1cfdf90)
     """
-    [32 Bit Pointer] Game Option | Worm Health
-    +0x04
-    ++0x1C = [32 Bit] Worm Health Amount
-    """
-
-    GAME_OPTION_WORM_SELECT = dword(0x1cfe0a0)
-    """
-    [32 Bit Pointer] Game Option | Worm Select
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Inactive
-    --- 01 = Active
+    [32-bit Pointer] (US) Hashmap | Q.WHealth
+    +0x4
+    ++0x1c = [32-bit] Game Option | Worm Health
     """
 
-    GAME_OPTION_MINE_FUSE_SETTING = dword(0x1cfe0c4)
+    US_HASHMAP_QWSEL = dword(0x1cfe0a0)
     """
-    [32 Bit Pointer] Game Option | Mine Fuse Setting
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Instant
-    --- 01 = Random
+    [32-bit Pointer] (US) Hashmap | Q.WSel
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Worm Select
+    """
+
+    US_HASHMAP_QMFUSE = dword(0x1cfe0c4)
+    """
+    [32-bit Pointer] (US) Hashmap | Q.MFuse
+    +0x4
+    ++0x1c = [32-bit] Game Option | Mine Fuse Setting
+    --- 0x0 = Instant
+    --- 0x1 = Random
     """
 
     US_HASHMAP_LLICE = dword(0x1cfe14c)
@@ -2787,6 +3267,36 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Ice, Ice, Maybe
     """
 
+    US_HASHMAP_LANDINITIALMAXHEIGHT = dword(0x1cfe180)
+    """
+    [32-bit Pointer] (US) Hashmap | Land.InitialMaxHeight
+    +0x4
+    ++0x1c = [32-bit Float] Current map's initial max height
+    -- Unique value to each map, used in conjunction with the script name to determine the current challenge in the RP
+    -- 0x44113984 = Shotgun Challenge 1
+    -- 0x452b799b = Shotgun Challenge 2
+    -- 0x444731d8 = Shotgun Challenge 3
+    -- 0x453f9645 = Super Sheep Challenge 1
+    -- 0x4415ee12 = Super Sheep Challenge 2
+    -- 0x440b8bdc = Super Sheep Challenge 3
+    -- 0x43e75e17 = Jet Pack Challenge 1
+    -- 0x44082017 = Jet Pack Challenge 2
+    -- 0x447aa8dc = Jet Pack Challenge 3
+    -- 0x452b799b = Parachute Challenge 1
+    -- 0x44ab25d0 = Parachute Challenge 2
+    -- 0x4507f262 = Parachute Challenge 3
+    -- 0x43d8a364 = Deathmatch Challenge 1
+    -- 0x43c9ceab = Deathmatch Challenge 2
+    -- 0x44074e83 = Deathmatch Challenge 3
+    -- 0x43fa352b = Deathmatch Challenge 4
+    -- 0x43cff6eb = Deathmatch Challenge 5
+    -- 0x43c0b331 = Deathmatch Challenge 6
+    -- 0x43f0dfac = Deathmatch Challenge 7
+    -- 0x442bd166 = Deathmatch Challenge 8
+    -- 0x43d4fde2 = Deathmatch Challenge 9
+    -- 0x440b9c29 = Deathmatch Challenge 10
+    """
+
     US_HASHMAP_LWBRIDGEK = dword(0x1cfe19c)
     """
     [32-bit Pointer] (US) Hashmap | L.W.BridgeK
@@ -2795,13 +3305,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Weapon: Bridge Kit
     """
 
-    GAME_OPTION_FALL_DAMAGE = dword(0x1cfe1a0)
+    US_HASHMAP_QFALL = dword(0x1cfe1a0)
     """
-    [32 Bit Pointer] Game Option | Fall Damage
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Inactive
-    --- 01 = Active
+    [32-bit Pointer] (US) Hashmap | Q.Fall
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Fall Damage Setting
     """
 
     US_HASHMAP_LLCOLLIDE = dword(0x1cfe584)
@@ -2852,16 +3360,16 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Plaice Holder
     """
 
-    GAME_OPTION_HOT_SEAT = dword(0x1cfe8c0)
+    US_HASHMAP_QHOT = dword(0x1cfe8c0)
     """
-    [32 Bit Pointer] Game Option | Hot Seat
-    +0x04
-    ++0x1C = [32 Bit] Hot Seat Timer
-    (Values use the time values ingame).
-    --- 00 = 0 Seconds
-    --- 1388 = 5 Seconds
-    --- 2710 = 10 Seconds
-    --- 3a98 = 15 Seconds
+    [32-bit Pointer] (US) Hashmap | Q.Hot
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Option | Hot Seat Timer
+    --- Time measured in milliseconds
+    --- 0x0 = 0 Seconds
+    --- 0x1388 = 5 Seconds
+    --- 0x2710 = 10 Seconds
+    --- 0x3a98 = 15 Seconds
     """
 
     US_HASHMAP_LLCRATEFUN = dword(0x1cfe8f0)
@@ -2880,13 +3388,20 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: The Sally Army
     """
 
-    GAME_OPTION_PLACEMENT = dword(0x1cfeaa8)
+    US_HASHMAP_QTELIN = dword(0x1cfeaa8)
     """
-    [32 Bit Pointer] Game Option | Placement
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = Random
-    --- 01 = Manual
+    [32-bit Pointer] (US) Hashmap | Q.TelIn
+    +0x4
+    ++0x1c = [32-bit] Game Option | Placement
+    --- 0x0 = Random
+    --- 0x1 = Manual
+    """
+
+    US_HASHMAP_AUDIOVOLAMBIENT = dword(0x1cfec00)
+    """
+    [32-bit Pointer] (US) Hashmap | Audio.Vol.Ambient
+    +0x4
+    ++0x1c = [32-bit Float] Settings | Ambient Volume
     """
 
     US_HASHMAP_LLCHATEAU = dword(0x1cfecc4)
@@ -2904,16 +3419,16 @@ class Memory:
     ++0x1c = [32-bit] Elapsed Round Time in milliseconds
     """
 
-    LANDSCAPE_SELECTION_LAND_HEIGHT = dword(0x1cfee44)
+    US_HASHMAP_FELANDHEIGHT = dword(0x1cfee44)
     """
-    [32 Bit Pointer] Landscape Selection | Land Height
-    +0x04
-    ++0x1C = [32 Bit] Land Height Amount
-    --- 00 = 0%
-    --- 01 = 25%
-    --- 02 = 50%
-    --- 03 = 75%
-    --- 04 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.Height
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Height
+    --- 0x0 = 0%
+    --- 0x1 = 25%
+    --- 0x2 = 50%
+    --- 0x3 = 75%
+    --- 0x4 = 100%
     """
 
     US_HASHMAP_MCALASTGAMETIME = dword(0x1cfee50)
@@ -2972,14 +3487,14 @@ class Memory:
     -- Cannot be used to distinguish actual missions and quick/multiplayer games
     """
 
-    SELECTED_LANGUAGE = dword(0x1cff5c8)
+    US_HASHMAP_SAVELANGUAGE = dword(0x1cff5c8)
     """
-    [32 Bit Pointer] Selected Language
-    +0x04
-    ++0x1C = [Lower4] Selected Language
-    --- 00 = Unselected
-    --- 01 = English
-    --- 03 = French
+    [32-bit Pointer] (US) Hashmap | SAVE.Language
+    +0x4
+    ++0x1c = [32-bit] Selected Language
+    -- 0x0 = Unselected
+    -- 0x1 = US English
+    -- 0x3 = French
     """
 
     US_HASHMAP_LLHOLIDAY = dword(0x1cff6d4)
@@ -2990,18 +3505,18 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Costa Del Danger
     """
 
-    GAME_OPTION_UTILITY_CRATE_CHANCE = dword(0x1cff744)
+    US_HASHMAP_QUCHANCE = dword(0x1cff744)
     """
-    [32 Bit Pointer] Game Option | Utility Crate Chance
-    +0x04
-    ++0x1C = [32 Bit] Utility Crate Chance
+    [32-bit Pointer] (US) Hashmap | Q.UChance
+    +0x4
+    ++0x1c = [32-bit] Game Option | Utility Crate Chance
     """
 
-    GAME_OPTION_UTILITY_CRATE_CHANCE_1 = dword(0x1cff74c)
+    US_HASHMAP_FELANDREALSEED = dword(0x1cff74c)
     """
-    [32 Bit Pointer] Game Option | Utility Crate Chance
-    +0x04
-    ++0x1C = [32 Bit] Landscape Seed
+    [32-bit Pointer] (US) Hashmap | FE.Land.RealSeed
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Landscape Seed
     """
 
     US_HASHMAP_LSCHSTICKY = dword(0x1cff914)
@@ -3012,6 +3527,13 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sticky Wars
     """
 
+    US_HASHMAP_JETPACKFUEL = dword(0x1cffa20)
+    """
+    [32-bit Pointer] (US) Hashmap | Jetpack.Fuel
+    +0x4
+    ++0x1c = [32-bit] Jetpack Fuel
+    """
+
     US_HASHMAP_LLATLANTIS = dword(0x1cffb40)
     """
     [32-bit Pointer] (US) Hashmap | L.L.Atlantis
@@ -3020,28 +3542,28 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Atlantis Training Facility
     """
 
-    LANDSCAPE_SELECTION_LAND_BLOCK_SIZE = dword(0x1cffb44)
+    US_HASHMAP_FELANDSIZE = dword(0x1cffb44)
     """
-    [32 Bit Pointer] Landscape Selection | Land Block Size
-    +0x04
-    ++0x1C = [32 Bit] Land Block Size Amount
-    --- 00 = 0%
-    --- 01 = 17%
-    --- 02 = 33%
-    --- 03 = 50%
-    --- 04 = 67%
-    --- 05 = 83%
-    --- 06 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.Size
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Block Size
+    --- 0x0 = 0%
+    --- 0x1 = 17%
+    --- 0x2 = 33%
+    --- 0x3 = 50%
+    --- 0x4 = 67%
+    --- 0x5 = 83%
+    --- 0x6 = 100%
     """
 
-    LANDSCAPE_SELECTION_LAND_DISTANCE = dword(0x1cffb48)
+    US_HASHMAP_FELANDSPACE = dword(0x1cffb48)
     """
-    [32 Bit Pointer] Landscape Selection | Land Distance
-    +0x04
-    ++0x1C = [32 Bit] Land Distance Amount
-    --- 00 = 0%
-    --- 01 = 50%
-    --- 02 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.Space
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Distance
+    --- 0x0 = 0%
+    --- 0x1 = 50%
+    --- 0x2 = 100%
     """
 
     US_HASHMAP_LLHIGH = dword(0x1cffb50)
@@ -3076,22 +3598,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: That Angular Chap...
     """
 
-    XOM_LEVEL_ASCII = dword(0x1cfff04)
+    US_HASHMAP_LANDFILE = dword(0x1cfff04)
     """
-    [32 Bit Pointer] .XOM Level ASCII
-    +0x04
-    ++0x1C
-    +++0x00 = [32 Bit BE] Level ID 1
-    --- 54617267 = 'TargetHunt.xom' | Challenge - 
-    --- 64646179 = 'dday.xom' | Campaign - D-Day
-    --- 64726976 = 'driving.xom' | Tutorial - The Driving Range
-    --- 706c6561 = 'pleasenomoreislands.xom' | Deathmatch - Please No More Islands
-    +++0x05 = [32 Bit BE] Level ID 2
-    --- 69616c31 = 'tutorial1' | Tutorial - Atlantis Training Facility
-    --- 69616c32 = 'tutorial2' | Tutorial - Down in the Dumps
-    --- 69616c33 = 'tutorial3' | Tutorial - Return to Chateau Assassin
-    --- 69616c34 = 'tutorial4' | Tutorial - The Mighty Kong
-    --- 69616c35 = 'tutorial5' | Tutorial - Test Tubes
+    [32-bit Pointer] (US) Hashmap | Land.File
+    +0x4
+    ++0x1c = [32-bit Pointer] Loaded .XOM Land Filename
     """
 
     US_HASHMAP_GAMEOVERGAMETYPE = dword(0x1cfff84)
@@ -3117,11 +3628,11 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: D-Day
     """
 
-    POINTER_TO_SFX = dword(0x1cfffd0)
+    US_HASHMAP_AUDIOVOLSFX = dword(0x1cfffd0)
     """
-    [32-bit] Pointer to SFX
-    +0x04 
-    ++0x1c | SFX Volume [Float]
+    [32-bit Pointer] (US) Hashmap | Audio.Vol.Sfx
+    +0x4
+    ++0x1c = [32-bit Float] Settings | SFX Volume
     """
 
     US_HASHMAP_LPSTORY = dword(0x1d00014)
@@ -3132,30 +3643,30 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: The Worms Story
     """
 
-    LANDSCAPE_SELECTION_AMOUNT_OF_LAND = dword(0x1d00040)
+    US_HASHMAP_FELANDAMOUNT = dword(0x1d00040)
     """
-    [32 Bit Pointer] Landscape Selection | Amount of Land
-    +0x04
-    ++0x1C = [32 Bit] Land Amount
-    --- 00 = 0%
-    --- 01 = 14%
-    --- 02 = 29%
-    --- 03 = 43%
-    --- 04 = 57%
-    --- 05 = 71%
-    --- 06 = 86%
-    --- 07 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.Amount
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Land Amount
+    --- 0x0 = 0%
+    --- 0x1 = 14%
+    --- 0x2 = 29%
+    --- 0x3 = 43%
+    --- 0x4 = 57%
+    --- 0x5 = 71%
+    --- 0x6 = 86%
+    --- 0x7 = 100%
     """
 
-    GAME_OPTION_OBJECTS = dword(0x1d00158)
+    US_HASHMAP_QOBJ = dword(0x1d00158)
     """
-    [32 Bit Pointer] Game Option | Objects
-    +0x04
-    ++0x1C = [32 Bit] Game Option Check
-    --- 00 = None Active
-    --- 01 = Mine Only
-    --- 02 = Oil Drum Only
-    --- 03 = All Active
+    [32-bit Pointer] (US) Hashmap | Q.Obj
+    +0x4
+    ++0x1c = [32-bit] Game Option | Objects
+    --- 0x0 = None Active
+    --- 0x1 = Mine Only
+    --- 0x2 = Oil Drum Only
+    --- 0x3 = All Active
     """
 
     US_HASHMAP_LPCHATTER = dword(0x1d001c4)
@@ -3190,21 +3701,21 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Earn Your Crust
     """
 
-    LANDSCAPE_SELECTION_TIME_OF_DAY_TOGGLE = dword(0x1d005c4)
+    US_HASHMAP_FELANDTIME = dword(0x1d005c4)
     """
-    [32 Bit Pointer] Landscape Selection | Time of Day Toggle
-    +0x04
-    ++0x1C = [32 Bit] Time of Day
-    --- 00 = Day
-    --- 01 = Rain
-    --- 02 = Night
+    [32-bit Pointer] (US) Hashmap | FE.Land.Time
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Time of Day
+    --- 0x0 = Day
+    --- 0x1 = Rain
+    --- 0x2 = Night
     """
 
-    GAME_OPTION_HEALTH_IN_CRATES = dword(0x1d00604)
+    US_HASHMAP_QHCRATE = dword(0x1d00604)
     """
-    [32 Bit Pointer] Game Option | Health in Crates
-    +0x04
-    ++0x1C = [32 Bit] Health Amount
+    [32-bit Pointer] (US) Hashmap | Q.HCrate
+    +0x4
+    ++0x1c = [32-bit] Game Option | Health Amount
     """
 
     US_HASHMAP_LPDARKSIDE = dword(0x1d00608)
@@ -3287,25 +3798,88 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Challenge: Deathmatch Challenge 9
     """
 
-    WORMPOT_REEL_1 = dword(0x1d00864)
+    US_HASHMAP_FEWORMPOTREEL1 = dword(0x1d00864)
     """
-    [32 Bit Pointer] Wormpot | Reel 1
-    +0x04
-    ++0x1C = [32 Bit] Wormpot ID
+    [32-bit Pointer] (US) Hashmap | FE.Wormpot.Reel1
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 1
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
     """
 
-    WORMPOT_REEL_2 = dword(0x1d00868)
+    US_HASHMAP_FEWORMPOTREEL2 = dword(0x1d00868)
     """
-    [32 Bit Pointer] Wormpot | Reel 2
-    +0x04
-    ++0x1C = [32 Bit] Wormpot ID
+    [32-bit Pointer] (US) Hashmap | FE.Wormpot.Reel2
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 2
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
     """
 
-    WORMPOT_REEL_3 = dword(0x1d0086c)
+    US_HASHMAP_FEWORMPOTREEL3 = dword(0x1d0086c)
     """
-    [32 Bit Pointer] Wormpot | Reel 3
-    +0x04
-    ++0x1C = [32 Bit] Wormpot ID
+    [32-bit Pointer] (US) Hashmap | FE.Wormpot.Reel3
+    +0x4
+    ++0x1c = [32-bit] Wormpot | Reel 3
+    --- 0x0 = Crates Everywhere
+    --- 0x2 = Super Animal Weapons
+    --- 0x3 = Super Firearms
+    --- 0x4 = Super Explosives
+    --- 0x5 = Super Hand to Hand Combat
+    --- 0x6 = Super Cluster Weapons
+    --- 0x7 = Energy or Enemy
+    --- 0x8 = Max Fall Damage
+    --- 0x9 = Power Cluster Weapons
+    --- 0xa = Power Explosives
+    --- 0xb = Power Firearms
+    --- 0xc = Power Hand to Hand
+    --- 0xf = Max Health Drops
+    --- 0x10 = No Retreat, No Surrender
+    --- 0x11 = Nothing
+    --- 0x13 = Worms Only Drown
+    --- 0x14 = Power Animals
+    --- 0x15 = Specialist Worms
+    --- 0x17 = X2 Damage
+    --- 0x18 = Wind Affects Weapons
+    --- 0x1a = Crate Drops Only
     """
 
     US_HASHMAP_TRIGGERCOLLECTOR = dword(0x1d009f8)
@@ -3317,16 +3891,16 @@ class Memory:
     -- 0xffffffff = Untriggered
     """
 
-    GAME_OPTION_RETREAT_TIME = dword(0x1d00ac0)
+    US_HASHMAP_QLRET = dword(0x1d00ac0)
     """
-    [32 Bit Pointer] Game Option | Retreat Time
-    +0x04
-    ++0x1C = [32 Bit] Retreat Timer
-    (Values use the time values ingame).
-    --- 00 = 0 Seconds
-    --- bb8 = 3 Seconds
-    --- 1388 = 5 Seconds
-    --- 2710 = 10 Seconds
+    [32-bit Pointer] (US) Hashmap | Q.LRet
+    +0x4
+    ++0x1c = [32-bit] Game Option | Retreat Time
+    --- Time measured in milliseconds
+    --- 0x0 = 0 Seconds
+    --- 0xbb8 = 3 Seconds
+    --- 0x1388 = 5 Seconds
+    --- 0x2710 = 10 Seconds
     """
 
     US_HASHMAP_LLRAGNA = dword(0x1d00bf4)
@@ -3337,18 +3911,18 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Ragnarok and Roll
     """
 
-    GAME_OPTION_TURN_TIME = dword(0x1d00e84)
+    US_HASHMAP_QTTIME = dword(0x1d00e84)
     """
-    [32 Bit Pointer] Game Option | Turn Time
-    +0x04
-    ++0x1C = [32 Bit] Turn Timer
-    (Values use the time values ingame).
-    --- 3a98 = 15 Seconds
-    --- 4e20 = 20 Seconds
-    --- 7530 = 30 Seconds
-    --- afc8 = 45 Seconds
-    --- ea60 = 60 Seconds
-    --- 15f90 = 90 Seconds
+    [32-bit Pointer] (US) Hashmap | Q.TTime
+    +0x4
+    ++0x1c = [32-bit] Game Option | Turn Time
+    --- Time measured in milliseconds
+    --- 0x3a98 = 15 Seconds
+    --- 0x4e20 = 20 Seconds
+    --- 0x7530 = 30 Seconds
+    --- 0xafc8 = 45 Seconds
+    --- 0xea60 = 60 Seconds
+    --- 0x15f90 = 90 Seconds
     """
 
     US_HASHMAP_LLFUNFAIR = dword(0x1d00ef8)
@@ -3375,15 +3949,15 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sinking BnG
     """
 
-    LANDSCAPE_SELECTION_BRIDGES = dword(0x1d010fc)
+    US_HASHMAP_FELANDBRIDGES = dword(0x1d010fc)
     """
-    [32 Bit Pointer] Landscape Selection | Bridges
-    +0x04
-    ++0x1C = [32 Bit] Bridge Amount
-    --- 00 = 0%
-    --- 01 = 33%
-    --- 02 = 67%
-    --- 03 = 100%
+    [32-bit Pointer] (US) Hashmap | FE.Land.Bridges
+    +0x4
+    ++0x1c = [32-bit] Landscape Selection | Bridges
+    --- 0x0 = 0%
+    --- 0x1 = 33%
+    --- 0x2 = 67%
+    --- 0x3 = 100%
     """
 
     US_HASHMAP_LWBANANA = dword(0x1d01134)

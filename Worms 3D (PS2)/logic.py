@@ -46,6 +46,42 @@ class XData:
         }[ctx.region]) >> dword(0x4) >> dword(0x1c)
 
 
+class Controller:
+    class Button(Enum):
+        L2 = 0
+        R2 = 1
+        L1 = 2
+        R1 = 3
+        TRIANGLE = 4
+        O = 5
+        X = 6
+        SQUARE = 7
+        SELECT = 8
+        L3 = 9
+        R3 = 10
+        START = 11
+        UP = 12
+        RIGHT = 13
+        DOWN = 14
+        LEFT = 15
+
+    @staticmethod
+    def button_pressed(ctx: Context, button: Button):
+        addr = [
+            {
+                "US": Memory.US_CONTROLLER_BUTTON_PRESSED_PRIMARY,
+                "EU": Memory.EU_CONTROLLER_BUTTON_PRESSED_PRIMARY,
+            },
+            {
+                "US": Memory.US_CONTROLLER_BUTTON_PRESSED_SECONDARY,
+                "EU": Memory.EU_CONTROLLER_BUTTON_PRESSED_SECONDARY,
+            },
+        ][button.value // 8][ctx.region].address
+        return [
+            bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7
+        ][button.value % 8](addr)
+
+
 class GameMode:
     TUTORIAL = 3
     CAMPAIGN = 0
@@ -100,7 +136,7 @@ class Mission:
     mtype: int
     name: str
     filename: str
-    gold: int | None
+    gold: int
     land_maxheight: int | None
     teams: list
 
@@ -109,9 +145,19 @@ class Mission:
         self.mtype = mtype
         self.name = name
         self.filename = filename
-        self.gold = gold
+        self.gold = gold or 0
         self.land_maxheight = land_maxheight
         self.teams = teams
+
+    @staticmethod
+    def current_script(ctx: Context):
+        return {
+            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_NAME,
+            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
+        }[ctx.region]
+
+    def is_loaded(self, ctx: Context):
+        return string_equals(Mission.current_script(ctx), self.filename)
 
     @property
     def rp_hash(self):
@@ -155,7 +201,7 @@ class Worms3D:
     def check_serial(ctx: Context):
         return {
             "EU": string_equals(Memory.EU_SERIAL.address, "SLES"),
-            "US": string_equals(Memory.NTSC_SERIAL.address, "SLUS"),
+            "US": string_equals(Memory.US_SERIAL.address, "SLUS"),
         }[ctx.region]
 
     @staticmethod
@@ -175,14 +221,10 @@ class Worms3D:
 
     @staticmethod
     def is_in_menu(ctx: Context):
-        return ({
-            "EU": Memory.EU_FLOWCONTROLSERVICE_GAME_STATE,
-            "US": Memory.US_FLOWCONTROLSERVICE_GAME_STATE,
-        }[ctx.region] & value(0x5e)) == value(0x0)
-        # return {
-        #     "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
-        #     "US": Memory.STATE_CHECK_IN_MENU == value(0x1),
-        # }[ctx.region]
+        return {
+            "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
+            "US": Memory.US_STATE_CHECK_IN_MENU == value(0x1),
+        }[ctx.region]
 
     @staticmethod
     def is_ingame(ctx: Context):
