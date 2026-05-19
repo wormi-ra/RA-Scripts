@@ -71,6 +71,29 @@ class Unlock:
     def locked(self, ctx: Context):
         return XData.get_value(ctx, self.key) >> dword(0x1c)
 
+    def on_unlock(self, ctx: Context):
+        return group(
+            delta(self.locked(ctx)) == 1,
+            self.locked(ctx) == 0
+        )
+
+    @staticmethod
+    def on_unlock_type(ctx: Context, type: int):
+        from data import UNLOCKS
+        unlocks = list(filter(lambda e: e.type == type, UNLOCKS))
+        return group(
+            [
+                sub_source(delta(unlock.locked(ctx)))
+                for unlock in unlocks
+            ],
+            value(len(unlocks)) < value(len(unlocks)),
+            [
+                sub_source(unlock.locked(ctx))
+                for unlock in unlocks
+            ],
+            value(len(unlocks)) == value(len(unlocks))
+        )
+
 
 class Mission:
     index: int
