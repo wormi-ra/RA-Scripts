@@ -1,5 +1,5 @@
-from enum import Enum
 from functools import reduce
+from os import name
 from typing import Literal
 from pycheevos.models.generic import GameObject
 from pycheevos.core.helpers import *
@@ -72,6 +72,30 @@ class Unlock:
         return XData.get_value(ctx, self.key) >> dword(0x1c)
 
 
+class Mission:
+    index: int
+    mtype: int
+    name: str
+    filename: str
+    gold: int | None
+    land_maxheight: int | None
+
+    def __init__(self, index: int, mtype: int, name: str, filename: str, gold: int | None, land_maxheight: int | None, teams: list) -> None:
+        self.index = index
+        self.filename = filename
+        self.name = name
+        self.gold = gold
+        self.land_maxheight = land_maxheight
+        self.teams = teams
+
+    @property
+    def rp_hash(self):
+        if self.land_maxheight == None:
+            return None
+        bytes = (int.from_bytes(self.filename.encode()[:4]))
+        return (self.land_maxheight + bytes) & 0xffffffff
+
+
 class Level:
     NAMES: dict[str, str]
 
@@ -97,93 +121,6 @@ class Level:
 
 
 class Worms3D:
-    UNLOCKS = [
-        Unlock("L.L.Counting", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Leek", Unlock.Type.LANDSCAPE),
-        Unlock("L.P.Pinball", Unlock.Type.WORMAPEDIA),
-        Unlock("L.L.Alien", Unlock.Type.LANDSCAPE),
-        Unlock("L.Sch.All", Unlock.Type.SCHEME),
-        Unlock("L.L.Cooped", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Apple", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Atlantis", Unlock.Type.LANDSCAPE),
-        Unlock("L.W.Banana", Unlock.Type.WEAPON),
-        Unlock("L.P.Pete", Unlock.Type.WORMAPEDIA),
-        Unlock("L.W.BridgeK", Unlock.Type.WEAPON),
-        Unlock("L.P.Bright", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Chatter", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Donkey", Unlock.Type.WORMAPEDIA),
-        Unlock("L.L.Holiday", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.CrateBritain", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Crop", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.DDay", Unlock.Type.LANDSCAPE),
-        Unlock("L.P.Darkside", Unlock.Type.WORMAPEDIA),
-        Unlock("L.C.DM1", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM10", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM2", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM3", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM4", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM5", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM6", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM7", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM8", Unlock.Type.CHALLENGE),
-        Unlock("L.C.DM9", Unlock.Type.CHALLENGE),
-        Unlock("L.L.Crust", Unlock.Type.LANDSCAPE),
-        Unlock("L.W.EQuake", Unlock.Type.WEAPON),
-        Unlock("L.P.Tapper", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Fools", Unlock.Type.WORMAPEDIA),
-        Unlock("L.S.Lover", Unlock.Type.VOICE),
-        Unlock("L.S.Gramps", Unlock.Type.VOICE),
-        Unlock("L.L.Graveyard", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Helter", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.High", Unlock.Type.LANDSCAPE),
-        Unlock("L.S.Horror", Unlock.Type.VOICE),
-        Unlock("L.L.Ice", Unlock.Type.LANDSCAPE),
-        Unlock("L.C.JP1", Unlock.Type.CHALLENGE),
-        Unlock("L.L.Cratefun", Unlock.Type.LANDSCAPE),
-        Unlock("L.C.JP2", Unlock.Type.CHALLENGE),
-        Unlock("L.C.JP3", Unlock.Type.CHALLENGE),
-        Unlock("L.P.Lightside", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.LandD", Unlock.Type.WORMAPEDIA),
-        Unlock("L.W.MadCow", Unlock.Type.WEAPON),
-        Unlock("L.S.Mad", Unlock.Type.VOICE),
-        Unlock("L.L.Landing", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Funfair", Unlock.Type.LANDSCAPE),
-        Unlock("L.W.Nuke", Unlock.Type.WEAPON),
-        Unlock("L.C.P1", Unlock.Type.CHALLENGE),
-        Unlock("L.C.P2", Unlock.Type.CHALLENGE),
-        Unlock("L.C.P3", Unlock.Type.CHALLENGE),
-        Unlock("L.P.Pink", Unlock.Type.WORMAPEDIA),
-        Unlock("L.L.Plaice", Unlock.Type.LANDSCAPE),
-        Unlock("L.Sch.Pro", Unlock.Type.SCHEME),
-        Unlock("L.L.Ragna", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Chateau", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Schools", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Timbers", Unlock.Type.LANDSCAPE),
-        Unlock("L.C.Shotgun2", Unlock.Type.CHALLENGE),
-        Unlock("L.C.Shotgun3", Unlock.Type.CHALLENGE),
-        Unlock("L.L.Showdown", Unlock.Type.LANDSCAPE),
-        Unlock("L.Sch.WBnG", Unlock.Type.SCHEME),
-        Unlock("L.Sch.Sniping", Unlock.Type.SCHEME),
-        Unlock("L.P.Beatbox", Unlock.Type.WORMAPEDIA),
-        Unlock("L.Sch.Sticky", Unlock.Type.SCHEME),
-        Unlock("L.C.SS1", Unlock.Type.CHALLENGE),
-        Unlock("L.C.SS2", Unlock.Type.CHALLENGE),
-        Unlock("L.C.SS3", Unlock.Type.CHALLENGE),
-        Unlock("L.W.SSheep", Unlock.Type.WEAPON),
-        Unlock("L.S.Villain", Unlock.Type.VOICE),
-        Unlock("L.L.Cherry", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Tubes", Unlock.Type.LANDSCAPE),
-        Unlock("L.P.Giraffe", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Horror", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Lost", Unlock.Type.WORMAPEDIA),
-        Unlock("L.L.Kong", Unlock.Type.LANDSCAPE),
-        Unlock("L.P.Sally", Unlock.Type.WORMAPEDIA),
-        Unlock("L.P.Story", Unlock.Type.WORMAPEDIA),
-        Unlock("L.L.Tree", Unlock.Type.LANDSCAPE),
-        Unlock("L.L.Collide", Unlock.Type.LANDSCAPE),
-        Unlock("L.P.Proto", Unlock.Type.WORMAPEDIA),
-    ]
-
     @staticmethod
     def init():
         XData.init()
@@ -210,10 +147,6 @@ class Worms3D:
             "EU": Memory.EU_STATE_CHECK_IS_GAME_INIT,
             "US": Memory.US_STATE_CHECK_IS_GAME_INIT,
         }[ctx.region] == value(0x1)
-        # return {
-        #     "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
-        #     "US": Memory.STATE_CHECK_IN_MENU == value(0x1),
-        # }[ctx.region]
 
     @staticmethod
     def is_in_menu(ctx: Context):

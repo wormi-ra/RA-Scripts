@@ -29,7 +29,25 @@ f"""
                 notes[addr] = note
     return notes
 
+def level_notes():
+    with open("data/levels.csv") as file:
+        for row in csv.DictReader(file):
+            b = (row["Filename"] + "\0").encode()
+            filename = row["Filename"]
+            name = row["Name"]
+            print(f"\"{filename}\" = {name}")
+
+def land_maxheight():
+    with open("data/levels.csv") as file:
+        for row in csv.DictReader(file):
+            # b = (row["Filename"] + "\0").encode()
+            height = row["Land.InitialMaxHeight"]
+            if height != "":
+                name = row["Name"]
+                print(f"-- {hex(int(height))} = {name}")
+
 if __name__=="__main__":
-    notes = unlock_notes()
-    for addr, note in dict(sorted(notes.items())).items():
-        print(f'N0:{hex(addr)}:"{note}"')
+    # notes = unlock_notes()
+    # for addr, note in dict(sorted(notes.items())).items():
+    #     print(f'N0:{hex(addr)}:"{note}"')
+    land_maxheight()

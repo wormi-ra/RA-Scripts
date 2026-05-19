@@ -4,6 +4,7 @@ from pycheevos.core.helpers import add_address, add_source, byte, delta, dword, 
 from pycheevos.core.value import Flag
 from pycheevos.models.rich_presence import *
 
+from data import UNLOCKS
 from logic import Context, GameMode, Level, Worms3D, XData
 from memory import Memory
 
@@ -25,16 +26,16 @@ class WormsRichPresence(RichPresence):
 
     def unlocks(self, ctx: Context):
         unlocks = ConditionList([
-            add_source(value(len(Worms3D.UNLOCKS))),
+            add_source(value(len(UNLOCKS))),
             *[
                 sub_source(unlock.locked(ctx))
-                for unlock in Worms3D.UNLOCKS
+                for unlock in UNLOCKS
             ],
             remember(value(0)),
             remember(recall() * 100),
-            remember(recall() / len(Worms3D.UNLOCKS)),
-            measured(recall()),
+            remember(recall() / len(UNLOCKS)),
             measured_if(recall() <= 100),
+            measured(recall()),
         ])
         return f"🔓@Number({render(unlocks)})%"
 
@@ -115,9 +116,9 @@ class WormsRichPresence(RichPresence):
         self.add_lookup(
             "GameMode",
             values={
-                0x3: "🎯Tutorial",
-                0x0: "🗺️Campaign",
-                0x4: "🏆Challenge",
+                GameMode.TUTORIAL: "🎯Tutorial",
+                GameMode.CAMPAIGN: "🗺️Campaign",
+                GameMode.CHALLENGE: "🏆Challenge",
             }
         )
         self.add_lookup(
@@ -177,20 +178,7 @@ class WormsRichPresence(RichPresence):
             default="🥥Shaking their coconuts"
         )
         for ctx in [Context("US"), Context("EU")]:
-            # self.add_display(
-            #     (
-            #         Worms3D.check_serial(ctx) &
-            #         Worms3D.is_loading(ctx)
-            #     ),
-            #     f"⏳Loading... • {self.region(ctx)}"
-            # )
-            # self.add_display(
-            #     (
-            #         Worms3D.check_serial(ctx) &
-            #         Worms3D.is_watching_cutscene(ctx)
-            #     ),
-            #     f"Watching a cutscene • {self.region(ctx)}"
-            # )
+            # TODO: multiplayer map detection
             self.add_display(
                 (
                     Worms3D.check_serial(ctx) &

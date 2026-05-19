@@ -4,7 +4,7 @@ def calculate_levels_hash():
     with open("data/levels.csv") as file:
         levels = {}
         for row in csv.DictReader(file):
-            if row["Type"] == "Mission":
+            if row["Type"] == "Campaign":
                 type = 0x0
             elif row["Type"] == "Tutorial":
                 type = 0x3
@@ -56,6 +56,61 @@ def calculate_state_hash():
         }
         print(f"{v}: \"{display[k]}\",")
 
+def generate_unlocks():
+    with open("data/unlocks.csv") as file:
+        for row in csv.DictReader(file):
+            type = {
+                "Voice": "Unlock.Type.VOICE",
+                "Scheme": "Unlock.Type.SCHEME",
+                "Weapon": "Unlock.Type.WEAPON",
+                "Challenge": "Unlock.Type.CHALLENGE",
+                "Wormapedia": "Unlock.Type.WORMAPEDIA",
+                "Landscape": "Unlock.Type.LANDSCAPE",
+            }[row["Type"]]
+            print(f"Unlock(\"{row['Container']}\", {type}),")
+
+def generate_missions():
+    groups = {
+        "CAMPAIGN": [],
+        "TUTORIAL": [],
+        "CHALLENGE": [],
+    }
+    print("class Missions:")
+    with open("data/levels.csv") as file:
+        for row in csv.DictReader(file):
+            fname = row["Filename"]
+            name = row["Name"]
+            slug = fname.upper()
+            index = int(row["Order"])
+            mtype = row["Type"].upper()
+            gold = row["Gold Time"]
+            if gold != "":
+                gold = int(gold)
+            else:
+                gold = None
+            land = row["Land.InitialMaxHeight"]
+            if land != "":
+                land = hex(int(land))
+            else:
+                land = None
+            if mtype not in groups:
+                continue
+            groups[mtype].append(slug)
+            print(
+                f"    {slug} = Mission(\n"
+                f"        index={index},\n"
+                f"        mtype=GameMode.{mtype},\n"
+                f"        name=\"{name}\",\n"
+                f"        filename=\"{fname}\",\n"
+                f"        gold={gold},\n"
+                f"        land_maxheight={land},\n"
+                f"        teams=[],\n"
+                f"    )"
+            )
+    print()
+    for mtype, missions in groups.items():
+        print(f"    {mtype} = [\n        {",\n        ".join(missions)}\n    ]")
+
 def print_dict(d: dict):
     print("{")
     for k, v in d.items():
@@ -64,4 +119,5 @@ def print_dict(d: dict):
 
 if __name__=="__main__":
     # print_dict(calculate_challenges_hash())
-    print_dict(calculate_levels_hash())
+    # print_dict(calculate_levels_hash())
+    generate_missions()
