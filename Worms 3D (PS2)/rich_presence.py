@@ -4,7 +4,7 @@ from pycheevos.core.helpers import add_address, add_source, byte, delta, dword, 
 from pycheevos.core.value import Flag
 from pycheevos.models.rich_presence import *
 
-from data import UNLOCKS
+from data import UNLOCKS, Missions
 from logic import Context, GameMode, Level, Worms3D, XData
 from memory import Memory
 
@@ -69,47 +69,8 @@ class WormsRichPresence(RichPresence):
         self.add_lookup(
             "Level", 
             values={
-                0x12c: "Atlantis Training Facility",
-                0x12d: "Down in the Dumps",
-                0x12e: "Return to Chateau Assassin",
-                0x12f: "The Mighty Kong",
-                0x130: "Test Tubes",
-                0x131: "The Driving Range",
-                0x0: "D-Day",
-                0x1: "Crate Britain",
-                0x2: "Grave Danger",
-                0x3: "A Leek in a Vegetable Patch",
-                0x4: "Ice, Ice, Maybe",
-                0x5: "When Annelids Collide",
-                0x6: "Rum Deal",
-                0x7: "Earn Your Crust",
-                0x8: "Apple Core Island",
-                0x9: "Helter Skelter",
-                0xa: "Take My Cherry",
-                0xb: "In Space, No-One Can Hear You Clean",
-                0xc: "Shiver Me Timbers",
-                0xd: "Falling For You",
-                0xe: "Crop Circle",
-                0xf: "Tree Village Trouble",
-                0x10: "Movie Mayhem",
-                0x11: "Worm and the Beanstalk",
-                0x12: "School's in for Summer",
-                0x13: "High Stakes",
-                0x14: "A Quick Fix",
-                0x15: "All Cooped Up",
-                0x16: "Trial of the Damned",
-                0x17: "Showdown at the OK Corale Reef",
-                0x18: "Plaice Holder",
-                0x19: "Hook, Line, and Skimmer",
-                0x1a: "Nobody Rides For Free",
-                0x1b: "Hold Until Relieved",
-                0x1c: "To Boldly Go",
-                0x1d: "Beautiful Balloon",
-                0x1e: "A Good Nights Sleep",
-                0x1f: "Beefcake Breakfast Brawl",
-                0x20: "Costa Del Danger",
-                0x21: "Ragnarok and Roll",
-                0x22: "Alien Juice Suckers",
+                (mission.mtype * 100 + mission.index): mission.name
+                for mission in (Missions.TUTORIAL + Missions.CAMPAIGN)
             },
             default=""
         )
@@ -143,28 +104,8 @@ class WormsRichPresence(RichPresence):
         self.add_lookup(
             "Challenge",
             values={
-                0x9872abeb: "Shotgun Challenge 1",
-                0x998cec02: "Shotgun Challenge 2",
-                0x8c967f21: "Shotgun Challenge 3",
-                0x98a7fbaa: "Super Sheep Challenge 1",
-                0x977e5377: "Super Sheep Challenge 2",
-                0x986cfe43: "Super Sheep Challenge 3",
-                0xa759bf8b: "Jet Pack Challenge 1",
-                0xae6d9487: "Jet Pack Challenge 2",
-                0xaee01d4c: "Jet Pack Challenge 3",
-                0x8893ef0f: "Parachute Challenge 1",
-                0xa8139b44: "Parachute Challenge 2",
-                0xa87067d6: "Parachute Challenge 3",
-                0x883e04d8: "Deathmatch Challenge 1",
-                0x882f301f: "Deathmatch Challenge 2",
-                0x886caff7: "Deathmatch Challenge 3",
-                0x885f969f: "Deathmatch Challenge 4",
-                0x8835585f: "Deathmatch Challenge 5",
-                0x882614a5: "Deathmatch Challenge 6",
-                0x88564120: "Deathmatch Challenge 7",
-                0x889132da: "Deathmatch Challenge 8",
-                0x883a5f56: "Deathmatch Challenge 9",
-                0x8870fd9d: "Deathmatch Challenge 10",
+                mission.rp_hash: mission.name
+                for mission in (Missions.CHALLENGE)
             },
             default=""
         )

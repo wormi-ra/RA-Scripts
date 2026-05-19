@@ -79,11 +79,13 @@ class Mission:
     filename: str
     gold: int | None
     land_maxheight: int | None
+    teams: list
 
     def __init__(self, index: int, mtype: int, name: str, filename: str, gold: int | None, land_maxheight: int | None, teams: list) -> None:
         self.index = index
-        self.filename = filename
+        self.mtype = mtype
         self.name = name
+        self.filename = filename
         self.gold = gold
         self.land_maxheight = land_maxheight
         self.teams = teams
@@ -91,7 +93,7 @@ class Mission:
     @property
     def rp_hash(self):
         if self.land_maxheight == None:
-            return None
+            return 0
         bytes = (int.from_bytes(self.filename.encode()[:4]))
         return (self.land_maxheight + bytes) & 0xffffffff
 
