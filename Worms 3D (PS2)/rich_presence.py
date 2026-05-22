@@ -5,7 +5,7 @@ from pycheevos.core.value import Flag
 from pycheevos.models.rich_presence import *
 
 from data import UNLOCKS, Missions
-from logic import Context, GameMode, Level, Worms3D, XData
+from logic import Context, GameMode, Mission, Worms3D, XData
 from memory import Memory
 
 def render(conditions: ConditionList):
@@ -41,7 +41,7 @@ class WormsRichPresence(RichPresence):
     def challenge(self, ctx: Context):
         return group(
             add_source(XData.get_value(ctx, "Land.InitialMaxHeight")),
-            measured(dword_be(Level.current_name(ctx)))
+            measured(dword_be(Mission.current_script(ctx)))
         )
 
     def level_hash(self, ctx: Context):
@@ -123,7 +123,7 @@ class WormsRichPresence(RichPresence):
                 (
                     Worms3D.check_serial(ctx) &
                     Worms3D.is_ingame(ctx) &
-                    (string_equals(Level.current_name(ctx), "stdv"))
+                    (string_equals(Mission.current_script(ctx), "stdv"))
                 ),
                 f"{self.paused(ctx)}👥Multiplayer • 🗺️Custom Map • {self.round_time(ctx)} • {self.unlocks(ctx)} • {self.region(ctx)}"
             )
@@ -132,7 +132,7 @@ class WormsRichPresence(RichPresence):
                     Worms3D.check_serial(ctx) &
                     Worms3D.is_ingame(ctx) &
                     ~Worms3D.is_in_attract(ctx) &
-                    ~string_equals(Level.current_name(ctx), "stdv")
+                    ~string_equals(Mission.current_script(ctx), "stdv")
                 ),
                 f"{self.paused(ctx)}@GameMode({measured(Worms3D.current_gamemode(ctx))}) • 🗺️@Challenge({self.challenge(ctx)})@Level({self.level_hash(ctx)}) • {self.round_time(ctx)} • {self.unlocks(ctx)} • {self.region(ctx)}"
             )
@@ -151,4 +151,3 @@ if __name__=="__main__":
     rp = WormsRichPresence()
     rp.generate()
     rp.save(rp.game_id, path="output/")
-

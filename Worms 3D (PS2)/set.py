@@ -22,7 +22,7 @@ class Worms3DSet(AchievementSet):
             game_id=21184,
             title="Worms 3D"
         )
-        XData.init()
+        Worms3D.init()
 
     @achievement(610367)
     def wormpot(self, ctx: Context, ach: Achievement):
@@ -126,6 +126,10 @@ class Worms3DSet(AchievementSet):
             measured(Unlock.on_unlock_type(ctx, Unlock.Type.LANDSCAPE))
         ))
 
+    #############################
+    # Leaderboards              #
+    #############################
+
     @leaderboard(163325)
     def gold_tracker(self, ctx: Context, lb: Leaderboard):
         for g in [lb.start, lb.cancel]:
@@ -176,6 +180,138 @@ class Worms3DSet(AchievementSet):
                 measured_if(recall() < 0x80000000),
                 measured(recall() / value(10)),
             ))
+
+    #############################
+    # Leaderboards: Challenge   #
+    #############################
+
+    @leaderboard(163408)
+    def leaderboard_challenge_shotgun_1(self, ctx: Context, lb: Leaderboard):
+        return Missions.TARGETHUNT.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163409)
+    def leaderboard_challenge_shotgun_2(self, ctx: Context, lb: Leaderboard):
+        return Missions.TARGETHUNT2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163410)
+    def leaderboard_challenge_shotgun_3(self, ctx: Context, lb: Leaderboard):
+        return Missions.HOMING.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163411)
+    def leaderboard_challenge_sheep_1(self, ctx: Context, lb: Leaderboard):
+        return Missions.SHEEP1.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163412)
+    def leaderboard_challenge_sheep_2(self, ctx: Context, lb: Leaderboard):
+        return Missions.SHEEP2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163413)
+    def leaderboard_challenge_sheep_3(self, ctx: Context, lb: Leaderboard):
+        return Missions.TARGETHUNT4.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163414)
+    def leaderboard_challenge_jetpack_1(self, ctx: Context, lb: Leaderboard):
+        return Missions.CRATEFUN.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163415)
+    def leaderboard_challenge_jetpack_2(self, ctx: Context, lb: Leaderboard):
+        return Missions.JETPACKCHALL2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163416)
+    def leaderboard_challenge_jetpack_3(self, ctx: Context, lb: Leaderboard):
+        return Missions.JETPACKCHALL3.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163417)
+    def leaderboard_challenge_parachute_1(self, ctx: Context, lb: Leaderboard):
+        return Missions.CHUTE1.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163418)
+    def leaderboard_challenge_parachute_2(self, ctx: Context, lb: Leaderboard):
+        return Missions.CHUTE2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163419)
+    def leaderboard_challenge_parachute_3(self, ctx: Context, lb: Leaderboard):
+        return Missions.CHUTE3.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163420)
+    def leaderboard_challenge_dm1(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH1.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163421)
+    def leaderboard_challenge_dm2(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163422)
+    def leaderboard_challenge_dm3(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH3.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163423)
+    def leaderboard_challenge_dm4(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH4.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163424)
+    def leaderboard_challenge_dm5(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH5.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163425)
+    def leaderboard_challenge_dm6(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH6.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163426)
+    def leaderboard_challenge_dm7(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH7.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163427)
+    def leaderboard_challenge_dm8(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH8.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163428)
+    def leaderboard_challenge_dm9(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH9.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163429)
+    def leaderboard_challenge_dm10(self, ctx: Context, lb: Leaderboard):
+        return Missions.DEATHMATCH10.generate_leaderboard(ctx, lb)
+
+    #############################
+    # Leaderboards: Missions    #
+    #############################
+
+    @leaderboard(163430)
+    def leaderboard_rum(self, ctx: Context, lb: Leaderboard):
+        return Missions.RUM.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163431)
+    def leaderboard_cherry(self, ctx: Context, lb: Leaderboard):
+        return Missions.CHERRY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163432)
+    def leaderboard_falling(self, ctx: Context, lb: Leaderboard):
+        return Missions.FALLING.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163433)
+    def leaderboard_beanstalk(self, ctx: Context, lb: Leaderboard):
+        return Missions.BEANSTALK.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163434)
+    def leaderboard_trial(self, ctx: Context, lb: Leaderboard):
+        return Missions.TRIAL.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163435)
+    def leaderboard_plaice(self, ctx: Context, lb: Leaderboard):
+        return Missions.PLAICE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163436)
+    def leaderboard_boldly(self, ctx: Context, lb: Leaderboard):
+        return Missions.BOLDLY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163437)
+    def leaderboard_countingsheep(self, ctx: Context, lb: Leaderboard):
+        return Missions.COUNTINGSHEEP.generate_leaderboard(ctx, lb)
+
+    @leaderboard(163438)
+    def leaderboard_costa(self, ctx: Context, lb: Leaderboard):
+        return Missions.HOLIDAY.generate_leaderboard(ctx, lb)
 
 
 if __name__=="__main__":

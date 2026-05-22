@@ -157,7 +157,7 @@ class Mission:
         }[ctx.region]
 
     def is_loaded(self, ctx: Context):
-        return string_equals(Mission.current_script(ctx), self.filename)
+        return string_equals(Mission.current_script(ctx), f"{self.filename}\0")
 
     @property
     def rp_hash(self):
@@ -166,36 +166,31 @@ class Mission:
         bytes = (int.from_bytes(self.filename.encode()[:4]))
         return (self.land_maxheight + bytes) & 0xffffffff
 
+    def on_complete(self, ctx: Context):
+        gametime = XData.get_value(ctx, "MCa.LastGameTime")
+        return (delta(gametime) == 0) & (gametime != 0)
 
-class Level:
-    NAMES: dict[str, str]
-
-    filename: str
-    name: str
-
-    @staticmethod
-    def init():
-        with open('data/levels.csv', newline='') as csvfile:
-            Level.NAMES = {
-                row["Filename"]: row["Name"] for row in csv.DictReader(csvfile)
-            }
-
-    @staticmethod
-    def current_name(ctx: Context):
-        return {
-            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_NAME,
-            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
-        }[ctx.region]
-
-    def is_loaded(self, ctx: Context):
-        return string_equals(Level.current_name(ctx), self.filename)
+    def generate_leaderboard(self, ctx: Context, lb: Leaderboard):
+        for g in [lb.start]:
+            if len(g) == 0:
+                g.append(group(always_true()))
+        lb.add_start(group(
+            Worms3D.check_serial(ctx),
+            self.is_loaded(ctx),
+            self.on_complete(ctx),
+        ))
+        lb.set_cancel(always_false())
+        lb.set_submit(always_true())
+        lb.add_value(group(
+            measured_if(Worms3D.check_serial(ctx)),
+            measured(XData.get_value(ctx, "ElapsedRoundTime") / 10),
+        ))
 
 
 class Worms3D:
     @staticmethod
     def init():
         XData.init()
-        Level.init()
 
     @staticmethod
     def check_serial(ctx: Context):
