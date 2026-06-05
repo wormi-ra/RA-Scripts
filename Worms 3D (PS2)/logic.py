@@ -187,6 +187,23 @@ class Mission:
         ))
 
 
+class Lua:
+    @staticmethod
+    def string_hash(s: str)-> int:
+        l = len(s)
+        h = l
+        step = (l>>5)+1
+        i = l
+        while i >= step:
+            h = h ^ ((h<<5)+(h>>2)+ord(s[i-1]))
+            i -= step
+        return h & 0xffffffff
+
+    @staticmethod
+    def get_index(s: str, lsize: int):
+        return Lua.string_hash(s) % (1<<lsize)
+
+
 class Worms3D:
     @staticmethod
     def init():

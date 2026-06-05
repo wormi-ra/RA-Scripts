@@ -3,3 +3,4 @@ requests
 jinja2
 Pillow
 polars
+tabulate
