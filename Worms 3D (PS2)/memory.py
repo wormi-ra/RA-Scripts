@@ -1087,6 +1087,249 @@ class Memory:
     0x1 = True
     """
 
+    EU_LUA_STATE_STACK_TOP = dword(0x17f2e18)
+    """
+    [32-bit Pointer] (EU) Lua State | Stack Top
+    First free slot in the stack
+    """
+
+    EU_LUA_STATE_BASE = dword(0x17f2e1c)
+    """
+    [32-bit Pointer] (EU) Lua State | Base
+    Base of current function
+    """
+
+    EU_LUA_STATE_GLOBAL_STATE = dword(0x17f2e20)
+    """
+    [32-bit Pointer] (EU) Lua State | Global State
+    +0x0 = [32-bit Pointer] String Hashtable
+    +0x8 = [32-bit] String Hashtable | Number of elements
+    +0x10 = [32-bit] String Hashtable | Size Allocated
+    +0x18 = [32-bit] RootGC
+    -- List of all collectable objects
+    """
+
+    EU_LUA_STATE_CALL_INFO = dword(0x17f2e24)
+    """
+    [32-bit Pointer] (EU) Lua State | Call Info
+    Call info for current function
+    """
+
+    EU_LUA_STATE_STACK_LAST = dword(0x17f2e28)
+    """
+    [32-bit Pointer] (EU) Lua State | Stack Last
+    Last free slot in the stack
+    """
+
+    EU_LUA_STATE_STACK_BASE = dword(0x17f2e2c)
+    """
+    [32-bit Pointer] (EU) Lua State | Stack Base
+    """
+
+    EU_LUA_STATE_STACK_SIZE = dword(0x17f2e30)
+    """
+    [32-bit] (EU) Lua State | Stack Size
+    """
+
+    EU_LUA_STATE_END_CALL_INFO = dword(0x17f2e34)
+    """
+    [32-bit Pointer] (EU) Lua State | End Call Info
+    Points after end of ci array
+    """
+
+    EU_LUA_STATE_BASE_CALL_INFO = dword(0x17f2e38)
+    """
+    [32-bit Pointer] (EU) Lua State | Base Call Info
+    Array of CallInfo's
+    """
+
+    EU_LUA_STATE_CALL_INFO_SIZE = word(0x17f2e3c)
+    """
+    [16-bit] (EU) Lua State | Call Info Size
+    Size of Base Call Info array
+    """
+
+    EU_LUA_STATE_NESTED_C_CALLS = word(0x17f2e3e)
+    """
+    [16-bit] (EU) Lua State | Nested C Calls
+    Number of nested C calls
+    """
+
+    EU_LUA_STATE_TABLE_OF_GLOBALS = dword(0x17f2e54)
+    """
+    [32-bit Pointer] (EU) Lua State | Table of Globals
+    Always point to 0x17f31c0
+    +0x0 = [32-bit Pointer] Next Element
+    +0x7 = [8-bit] LSizeNode
+    -- Refer to $0x017f31c7
+    +0x8 = [32-bit Pointer] Meta Table
+    +0xc = [32-bit Pointer] Array Part
+    +0x10 = [32-bit Pointer] Global Node Vector
+    -- Refer to $0x17f31d0
+    +0x14 = [32-bit Pointer] First Free Node
+    +0x18 = [32-bit Pointer] GCList
+    +0x1c = [32-bit Pointer] Size of Array Part
+    """
+
+    EU_LUA_GLOBAL_TABLE_LSIZENODE = byte(0x17f31c7)
+    """
+    [8-bit] (EU) Lua Global Table | LSizeNode
+    Log2 of the size of the vector
+    Most missions starts at 7 or 8 once initialized and never exceeds 8
+    0x0 = 0
+    0x1 = 1
+    0x2 = 2
+    0x3 = 4
+    0x4 = 8
+    0x5 = 16
+    0x6 = 32
+    0x7 = 64
+    0x8 = 128
+    0x9 = 256
+    0xa = 512
+    0xb = 1024
+    0xc = 2048
+    0xd = 4096 (Theoretical max before memory runs out)
+    """
+
+    EU_LUA_GLOBAL_TABLE_NODE_VECTOR = dword(0x17f31d0)
+    """
+    [32-bit Pointer] (EU) Lua Global Table | Node Vector
+    Hashmap of all global variables instanciated in the script, implemented as a chained scatter table.
+    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf (Page 4)
+    Source code: https://www.lua.org/source/5.0/ltable.c.html
+
+    Each node is 20 bytes long and follow this structure:
+    | +0x0 = [32-bit] Key type (always 4 for strings)
+    | +0x4 = [32-bit Pointer] Pointer to key string
+    | ++0x0 = [ASCII] Key string
+    | ++0xfffffffc = [32-bit] String length
+    | ++0xfffffff8 = [32-bit] String hash
+    | ++0x8 = [32-bit] = Value type (Always 3 for numbers)
+    | ++0xc = [32-bit Float] = Value
+    | --- Lua numbers are stored as float even if interpreted as integers
+    | ++0x10 = [32-bit Pointer] = Next node
+
+    The offset of a given node is calculated using the following formula:
+    (StringHash % (1 << LSize)) * 20
+    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x017f31c7)
+    This means that the offset varies depending on the vector size (which is a power of two and can only grow as the script runs) but these offsets can be precalculated and checked against in alt groups for each LSize value.
+
+    The hashmap deals with hash clashes by creating a node in the next empty slot and by appending it to the linked list of it's actual slot. That means you are not guaranteed to find the variable you are looking for in the calculated slot directly, but you are guaranteed to find it if you follow the linked list.
+    Fortunately, clashes are rare by design and should never exceed a linked list of depth 2 for any given slot.
+
+    All pointer chains below are based on testing and are specific to each script being currently run.
+    Hopefully the chains are deterministic as these variables are initialized at the start of the script and should never be garbage collected.
+    Offsets are consistent between EU and USA versions.
+
+    +0x20 = [32-bit Float] Costa Del Danger | MineNumber (LSize 1-8)
+    -- "MineNumber" variable from "holiday.lua"
+    +0x268
+    ++0xc = [32-bit Float] Driving Range | TargetNumber (LSize 5-7)
+    --- "TargetNumber" variable from "driving.lua"
+    --- Ranges from 1.0 to 15.0
+    +0x740
+    ++0xc = [32-bit Float] School | Easter Egg (LSize 7-8)
+    --- "EasterEgg" variable from "SCHOOLS.lua"
+    --- 0.0 = No basket
+    --- 1.0 = First basket
+    --- 2.0 = Second basket
+    +0x920
+    ++0xc = [32-bit Float] A Quick Fix | Team17 Easter Egg (LSize 7-10)
+    --- "Team17" variable from "notpc.lua"
+    --- 0.0 = Default value
+    --- 100000.0 = T
+    --- 110000.0 = TE
+    --- 111000.0 = TEA
+    --- 111100.0 = TEAM
+    --- 111110.0 = TEAM1
+    --- 111111.0 = TEAM17
+    +0xb4c = [32-bit Float] Showdown | CrateNumber (LSize 8)
+    -- "CrateNumber" variable from "SHOWDOWN.lua"
+    -- 1.0 = Donkey Crate
+    -- 2.0 = Easter Egg
+    +0x1280
+    ++0xc = [32-bit Float] Nobody Rides For Free | TicketBoothDestroyed (LSize 8-12)
+    --- "TicketBoothDestroyed" variable from "funfair.lua"
+    --- 0.0 = False
+    --- 1.0 = True
+    +0x12e0 = [32-bit Float] Graveyard | TriggerIndex (LSize 8-12)
+    -- "TriggerIndex" variable from "graveyard.lua"
+    -- 9.0 = Easter Egg
+    """
+
+    EU_INGAME_CURRENT_LUA_SCRIPT_HASH = dword(0x18005a8)
+    """
+    [32-bit] (EU) Ingame | Current LUA Script Hash
+    0x00000000 = Uninitialized
+    0xdddddddd = No script loaded
+    0x4d884e4d = tutorial1 (Atlantis Training Facility)
+    0xe059c1ce = tutorial2 (Down in the Dumps)
+    0x796efc55 = Tutorial3 (Return to Chateau Assassin)
+    0x9166854b = Tutorial4 (The Mighty Kong)
+    0x98d2e8ca = tutorial5 (Test Tubes)
+    0xf4a542f6 = driving (The Driving Range)
+    0x8c96ec = dday (D-Day)
+    0xa2c82545 = CrateBritain (Crate Britain)
+    0x665fe3f6 = graveyard (Grave Danger)
+    0x75cdd4 = leek (A Leek in a Vegetable Patch)
+    0x2a361 = ICE (Ice, Ice, Maybe)
+    0x1c37e844 = Collide (When Annelids Collide)
+    0x3417d = rum (Rum Deal)
+    0x11bd853a = crust (Earn Your Crust)
+    0x51aefa4a = applecore (Apple Core Island)
+    0x8be523b4 = helterskelter (Helter Skelter)
+    0xafe262f5 = cherry (Take My Cherry)
+    0x10530c6f = clean (In Space, No-One Can Hear You Clean)
+    0x99727cd0 = timbers (Shiver Me Timbers)
+    0xf95e9e91 = FALLING (Falling For You)
+    0xe52395ca = cropcircle (Crop Circle)
+    0x369832aa = treevillage (Tree Village Trouble)
+    0xf4a6179c = landing (Movie Mayhem)
+    0xad602956 = beanstalk (Worm and the Beanstalk)
+    0xbf359705 = SCHOOLS (School's in for Summer)
+    0x1e6dea78 = highstakes (High Stakes)
+    0x11cc0f09 = notpc (A Quick Fix)
+    0x76dc359c = cooped (All Cooped Up)
+    0xe9a91aa = TRIAL (Trial of the Damned)
+    0xab409627 = SHOWDOWN (Showdown at the OK Corale Reef)
+    0x4a099be8 = plaice (Plaice Holder)
+    0x751f79c9 = hookline (Hook, Line, and Skimmer)
+    0x4fc95563 = funfair (Nobody Rides For Free)
+    0x3709f4b1 = Pegasus (Hold Until Relieved)
+    0x9cf66df1 = boldly (To Boldly Go)
+    0x2ec3734 = balloon (Beautiful Balloon)
+    0xde191d7f = countingsheep (A Good Nights Sleep)
+    0xa4f675a = BREAKFAST (Beefcake Breakfast Brawl)
+    0xce3787ce = holiday (Costa Del Danger)
+    0x75fbb1 = pack (Ragnarok and Roll)
+    0xeb94d71 = ALIEN (Alien Juice Suckers)
+    0xc5b5cccd = TargetHunt (Shotgun Challenge 1)
+    0x4dd3575c = TargetHunt2 (Shotgun Challenge 2)
+    0x45c54185 = HOMING (Shotgun Challenge 3)
+    0xaeed8ea = Sheep1 (Super Sheep Challenge 1)
+    0xfc7259f8 = Sheep2 (Super Sheep Challenge 2)
+    0x9e1d76e5 = TargetHunt4 (Super Sheep Challenge 3)
+    0x3629ec94 = cratefun (Jet Pack Challenge 1)
+    0xab55da97 = jetpackchall2 (Jet Pack Challenge 2)
+    0xa43f4a1b = jetpackchall3 (Jet Pack Challenge 3)
+    0xba5e49c = Chute1 (Parachute Challenge 1)
+    0xfc6b191b = chute2 (Parachute Challenge 2)
+    0xe27338ed = chute3 (Parachute Challenge 3)
+    0x2befed54 = Deathmatch1 (Deathmatch Challenge 1)
+    0x59ec1d1b = Deathmatch2 (Deathmatch Challenge 2)
+    0x9297c549 = Deathmatch3 (Deathmatch Challenge 3)
+    0xc96921d = Deathmatch4 (Deathmatch Challenge 4)
+    0x69a68f4b = Deathmatch5 (Deathmatch Challenge 5)
+    0xddfff265 = Deathmatch6 (Deathmatch Challenge 6)
+    0x7cfff16 = Deathmatch7 (Deathmatch Challenge 7)
+    0xeabd81c2 = Deathmatch8 (Deathmatch Challenge 8)
+    0xa2b8d30b = Deathmatch9 (Deathmatch Challenge 9)
+    0x2c80b4b2 = Deathmatch10 (Deathmatch Challenge 10)
+    0x12f25978 = stdvs (Multiplayer Game)
+    0x3be80eb5 = attract (Attract Mode)
+    """
+
     EU_INGAME_CURRENT_LUA_SCRIPT_NAME = (0x18005b0)
     """
     [16 bytes BE ASCII] (EU) Ingame | Current LUA Script Name
@@ -1158,6 +1401,165 @@ class Memory:
     "Deathmatch10" = Deathmatch Challenge 10
     "stdvs" = Multiplayer Game
     "attract" = Attract Mode
+    """
+
+    US_LUA_GLOBAL_TABLE_LSIZENODE = byte(0x180a4ff)
+    """
+    [8-bit] (US) Lua Global Table | LSizeNode
+    Log2 of the size of the vector
+    Most missions starts at 7 or 8 once initialized and never exceeds 8
+    0x0 = 0
+    0x1 = 1
+    0x2 = 2
+    0x3 = 4
+    0x4 = 8
+    0x5 = 16
+    0x6 = 32
+    0x7 = 64
+    0x8 = 128
+    0x9 = 256
+    0xa = 512
+    0xb = 1024
+    0xc = 2048
+    0xd = 4096 (Theoretical max before memory runs out)
+    """
+
+    US_LUA_GLOBAL_TABLE_NODE_VECTOR = dword(0x180a508)
+    """
+    [32-bit Pointer] (US) Lua Global Table | Node Vector
+    Hashmap of all global variables instanciated in the script, implemented as a chained scatter table.
+    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf (Page 4)
+    Source code: https://www.lua.org/source/5.0/ltable.c.html
+
+    Each node is 20 bytes long and follow this structure:
+    | +0x0 = [32-bit] Key type (always 4 for strings)
+    | +0x4 = [32-bit Pointer] Pointer to key string
+    | ++0x0 = [ASCII] Key string
+    | ++0xfffffffc = [32-bit] String length
+    | ++0xfffffff8 = [32-bit] String hash
+    | ++0x8 = [32-bit] = Value type (Always 3 for numbers)
+    | ++0xc = [32-bit Float] = Value
+    | --- Lua numbers are stored as float even if interpreted as integers
+    | ++0x10 = [32-bit Pointer] = Next node
+
+    The offset of a given node is calculated using the following formula:
+    (StringHash % (1 << LSize)) * 20
+    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x0180a4ff)
+    This means that the offset varies depending on the vector size (which is a power of two and can only grow as the script runs) but these offsets can be precalculated and checked against in alt groups for each LSize value.
+
+    The hashmap deals with hash clashes by creating a node in the next empty slot and by appending it to the linked list of it's actual slot. That means you are not guaranteed to find the variable you are looking for in the calculated slot directly, but you are guaranteed to find it if you follow the linked list.
+    Fortunately, clashes are rare by design and should never exceed a linked list of depth 2 for any given slot.
+
+    All pointer chains below are based on testing and are specific to each script being currently run.
+    Hopefully the chains are deterministic as these variables are initialized at the start of the script and should never be garbage collected.
+    Offsets are consistent between EU and USA versions.
+
+    +0x20 = [32-bit Float] Costa Del Danger | MineNumber (LSize 1-8)
+    -- "MineNumber" variable from "holiday.lua"
+    +0x268
+    ++0xc = [32-bit Float] Driving Range | TargetNumber (LSize 5-7)
+    --- "TargetNumber" variable from "driving.lua"
+    --- Ranges from 1.0 to 15.0
+    +0x740
+    ++0xc = [32-bit Float] School | Easter Egg (LSize 7-8)
+    --- "EasterEgg" variable from "SCHOOLS.lua"
+    --- 0.0 = No basket
+    --- 1.0 = First basket
+    --- 2.0 = Second basket
+    +0x920
+    ++0xc = [32-bit Float] A Quick Fix | Team17 Easter Egg (LSize 7-10)
+    --- "Team17" variable from "notpc.lua"
+    --- 0.0 = Default value
+    --- 100000.0 = T
+    --- 110000.0 = TE
+    --- 111000.0 = TEA
+    --- 111100.0 = TEAM
+    --- 111110.0 = TEAM1
+    --- 111111.0 = TEAM17
+    +0xb4c = [32-bit Float] Showdown | CrateNumber (LSize 8)
+    -- "CrateNumber" variable from "SHOWDOWN.lua"
+    -- 1.0 = Donkey Crate
+    -- 2.0 = Easter Egg
+    +0x1280
+    ++0xc = [32-bit Float] Nobody Rides For Free | TicketBoothDestroyed (LSize 8-12)
+    --- "TicketBoothDestroyed" variable from "funfair.lua"
+    --- 0.0 = False
+    --- 1.0 = True
+    +0x12e0 = [32-bit Float] Graveyard | TriggerIndex (LSize 8-12)
+    -- "TriggerIndex" variable from "graveyard.lua"
+    -- 9.0 = Easter Egg
+    """
+
+    US_INGAME_CURRENT_LUA_SCRIPT_HASH = dword(0x180c5f0)
+    """
+    [32-bit] (US) Ingame | Current LUA Script Hash
+    0x00000000 = Uninitialized
+    0xdddddddd = No script loaded
+    0x4d884e4d = tutorial1 (Atlantis Training Facility)
+    0xe059c1ce = tutorial2 (Down in the Dumps)
+    0x796efc55 = Tutorial3 (Return to Chateau Assassin)
+    0x9166854b = Tutorial4 (The Mighty Kong)
+    0x98d2e8ca = tutorial5 (Test Tubes)
+    0xf4a542f6 = driving (The Driving Range)
+    0x8c96ec = dday (D-Day)
+    0xa2c82545 = CrateBritain (Crate Britain)
+    0x665fe3f6 = graveyard (Grave Danger)
+    0x75cdd4 = leek (A Leek in a Vegetable Patch)
+    0x2a361 = ICE (Ice, Ice, Maybe)
+    0x1c37e844 = Collide (When Annelids Collide)
+    0x3417d = rum (Rum Deal)
+    0x11bd853a = crust (Earn Your Crust)
+    0x51aefa4a = applecore (Apple Core Island)
+    0x8be523b4 = helterskelter (Helter Skelter)
+    0xafe262f5 = cherry (Take My Cherry)
+    0x10530c6f = clean (In Space, No-One Can Hear You Clean)
+    0x99727cd0 = timbers (Shiver Me Timbers)
+    0xf95e9e91 = FALLING (Falling For You)
+    0xe52395ca = cropcircle (Crop Circle)
+    0x369832aa = treevillage (Tree Village Trouble)
+    0xf4a6179c = landing (Movie Mayhem)
+    0xad602956 = beanstalk (Worm and the Beanstalk)
+    0xbf359705 = SCHOOLS (School's in for Summer)
+    0x1e6dea78 = highstakes (High Stakes)
+    0x11cc0f09 = notpc (A Quick Fix)
+    0x76dc359c = cooped (All Cooped Up)
+    0xe9a91aa = TRIAL (Trial of the Damned)
+    0xab409627 = SHOWDOWN (Showdown at the OK Corale Reef)
+    0x4a099be8 = plaice (Plaice Holder)
+    0x751f79c9 = hookline (Hook, Line, and Skimmer)
+    0x4fc95563 = funfair (Nobody Rides For Free)
+    0x3709f4b1 = Pegasus (Hold Until Relieved)
+    0x9cf66df1 = boldly (To Boldly Go)
+    0x2ec3734 = balloon (Beautiful Balloon)
+    0xde191d7f = countingsheep (A Good Nights Sleep)
+    0xa4f675a = BREAKFAST (Beefcake Breakfast Brawl)
+    0xce3787ce = holiday (Costa Del Danger)
+    0x75fbb1 = pack (Ragnarok and Roll)
+    0xeb94d71 = ALIEN (Alien Juice Suckers)
+    0xc5b5cccd = TargetHunt (Shotgun Challenge 1)
+    0x4dd3575c = TargetHunt2 (Shotgun Challenge 2)
+    0x45c54185 = HOMING (Shotgun Challenge 3)
+    0xaeed8ea = Sheep1 (Super Sheep Challenge 1)
+    0xfc7259f8 = Sheep2 (Super Sheep Challenge 2)
+    0x9e1d76e5 = TargetHunt4 (Super Sheep Challenge 3)
+    0x3629ec94 = cratefun (Jet Pack Challenge 1)
+    0xab55da97 = jetpackchall2 (Jet Pack Challenge 2)
+    0xa43f4a1b = jetpackchall3 (Jet Pack Challenge 3)
+    0xba5e49c = Chute1 (Parachute Challenge 1)
+    0xfc6b191b = chute2 (Parachute Challenge 2)
+    0xe27338ed = chute3 (Parachute Challenge 3)
+    0x2befed54 = Deathmatch1 (Deathmatch Challenge 1)
+    0x59ec1d1b = Deathmatch2 (Deathmatch Challenge 2)
+    0x9297c549 = Deathmatch3 (Deathmatch Challenge 3)
+    0xc96921d = Deathmatch4 (Deathmatch Challenge 4)
+    0x69a68f4b = Deathmatch5 (Deathmatch Challenge 5)
+    0xddfff265 = Deathmatch6 (Deathmatch Challenge 6)
+    0x7cfff16 = Deathmatch7 (Deathmatch Challenge 7)
+    0xeabd81c2 = Deathmatch8 (Deathmatch Challenge 8)
+    0xa2b8d30b = Deathmatch9 (Deathmatch Challenge 9)
+    0x2c80b4b2 = Deathmatch10 (Deathmatch Challenge 10)
+    0x12f25978 = stdvs (Multiplayer Game)
+    0x3be80eb5 = attract (Attract Mode)
     """
 
     US_INGAME_CURRENT_LUA_SCRIPT_NAME = (0x180c5f8)
@@ -1233,16 +1635,16 @@ class Memory:
     "attract" = Attract Mode
     """
 
-    EU_LUA_SCRIPT_INIT_POINTER = dword(0x1b55290)
+    EU_MESSAGERELAY_POINTER = dword(0x1b55290)
     """
-    [32-bit Pointer] (EU) LUA Script Init Pointer
+    [32-bit Pointer] (EU) MessageRelay Pointer
     0x0 = Unloaded
     * = Loaded
     """
 
-    US_LUA_SCRIPT_INIT_POINTER = dword(0x1bacf10)
+    US_MESSAGERELAY_POINTER = dword(0x1bacf10)
     """
-    [32-bit Pointer] (US) LUA Script Init Pointer
+    [32-bit Pointer] (US) MessageRelay Pointer
     0x0 = Unloaded
     * = Loaded
     """
@@ -1295,6 +1697,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Nobody Rides For Free
+    """
+
+    EU_HASHMAP_WATERLEVEL = dword(0x1ce39b0)
+    """
+    [32-bit Pointer] (EU) Hashmap | Water.Level
+    +0x4
+    ++0x1c = [32-bit] Water Level
+    --- 0x0 = Default level
     """
 
     EU_HASHMAP_QHOT = dword(0x1ce3b00)
@@ -1497,6 +1907,14 @@ class Memory:
     --- 0x1 = Manual
     """
 
+    EU_HASHMAP_MCAGAMEAWARDED = dword(0x1ce41e0)
+    """
+    [32-bit Pointer] (EU) Hashmap | MCa.GameAwarded
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Awarded
+    --- Changes to 0x1 when entering the result screen if mission successful
+    """
+
     EU_HASHMAP_CURRENTTEAMINDEX = dword(0x1ce4240)
     """
     [32-bit Pointer] (EU) Hashmap | CurrentTeamIndex
@@ -1680,8 +2098,8 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | Trigger.Collector
     Used in various missions to detect triggers such as Tutorial1 secret and capture point index in Hold Until Relief
     +0x04
-    ++0x1C = [32-bit] Trigger.Collector
-    -- 0xffffffff = Untriggered
+    ++0x1c = [32-bit] Trigger.Collector
+    --- 0xffffffff = Untriggered
     """
 
     EU_HASHMAP_QWHEALTH = dword(0x1ce5110)
@@ -1931,9 +2349,9 @@ class Memory:
     ++0x1c = [32-bit] Crate Index used to spawn crates in missions
     """
 
-    HASHMAP_GAMELOGICCURRENTSCRIPT = dword(0x1ce5da0)
+    EU_HASHMAP_GAMELOGICCURRENTSCRIPT = dword(0x1ce5da0)
     """
-    [32-bit Pointer] Hashmap | GameLogic.CurrentScript
+    [32-bit Pointer] (EU) Hashmap | GameLogic.CurrentScript
     +0x4
     ++0x1c = [32-bit Pointer] Current Script Name String
     """
@@ -2305,17 +2723,24 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Showdown at the OK Corale Reef
     """
 
+    EU_HASHMAP_TRIGGERINDEX = dword(0x1ce6d00)
+    """
+    [32-bit Pointer] (EU) Hashmap | Trigger.Index
+    +0x4
+    ++0x1c = [32-bit] Last Triggered Index
+    """
+
     EU_HASHMAP_MCALASTGAMETIME = dword(0x1ce6de8)
     """
     [32-bit Pointer] (EU) Hashmap | MCa.LastGameTime
     +0x4
     ++0x1c = [32-bit] Received medal or challenge time
-    -- In Campaign:
-    -- 0x0 = None
-    -- 0x1 = Bronze
-    -- 0x2 = Silver
-    -- 0x3 = Gold
-    -- In Challenge: Time measured in milliseconds
+    --- In Campaign:
+    --- 0x0 = None
+    --- 0x1 = Bronze
+    --- 0x2 = Silver
+    --- 0x3 = Gold
+    --- In Challenge: Time measured in milliseconds
     """
 
     EU_HASHMAP_LCDM10 = dword(0x1ce6e10)
@@ -2496,6 +2921,7 @@ class Memory:
     ++0x1c = [32-bit Pointer] TeamDataColective
 
     +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+    ++++0x18 = [32-bit] Array Size
     ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
     +++++0x14 = [32-bit] Bronze Time in milliseconds
     +++++0x18 = [32-bit Pointer] Bronze Player Name
@@ -2542,7 +2968,10 @@ class Memory:
     ----- 0x4 = Completed The Mighty Kong
     ----- 0x5 = Completed Test Tubes
     ----- 0x6 = Completed The Driving Range (Not possible)
+
     +++++0x34 = [32-bit Pointer] XomContainerArray | Campaign Array
+    ------ Campaign array is populated as missions are unlocked, that means we need to check the array size before accessing certain missions otherwise the pointer will point to garbage data
+    ++++++0x18 = [32-bit] Array Size
     ++++++0x40 = [32-bit Pointer] CampaignData | D-Day
     +++++++0x14 = [32-bit] Retries
     +++++++0x18 = [32-bit] Medal
@@ -2658,6 +3087,13 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Grave Danger
+    """
+
+    US_HASHMAP_TRIGGERINDEX = dword(0x1cfb850)
+    """
+    [32-bit Pointer] (US) Hashmap | Trigger.Index
+    +0x4
+    ++0x1c = [32-bit] Last Triggered Index
     """
 
     US_HASHMAP_FELANDIND = dword(0x1cfb8dc)
@@ -2900,6 +3336,7 @@ class Memory:
     ++0x1c = [32-bit Pointer] TeamDataColective
 
     +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+    ++++0x18 = [32-bit] Array Size
     ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
     +++++0x14 = [32-bit] Bronze Time in milliseconds
     +++++0x18 = [32-bit Pointer] Bronze Player Name
@@ -2946,7 +3383,10 @@ class Memory:
     ----- 0x4 = Completed The Mighty Kong
     ----- 0x5 = Completed Test Tubes
     ----- 0x6 = Completed The Driving Range (Not possible)
+
     +++++0x34 = [32-bit Pointer] XomContainerArray | Campaign Array
+    ------ Campaign array is populated as missions are unlocked, that means we need to check the array size before accessing certain missions otherwise the pointer will point to garbage data
+    ++++++0x18 = [32-bit] Array Size
     ++++++0x40 = [32-bit Pointer] CampaignData | D-Day
     +++++++0x14 = [32-bit] Retries
     +++++++0x18 = [32-bit] Medal
@@ -3197,6 +3637,14 @@ class Memory:
     --- 0x3 = 100%
     """
 
+    US_HASHMAP_MCAGAMEAWARDED = dword(0x1cfd9c0)
+    """
+    [32-bit Pointer] (US) Hashmap | MCa.GameAwarded
+    +0x4
+    ++0x1c = [32-bit Boolean] Game Awarded
+    --- Changes to 0x1 when entering the result screen if mission successful
+    """
+
     US_HASHMAP_TURNTIME = dword(0x1cfdb4c)
     """
     [32-bit Pointer] (US) Hashmap | TurnTime
@@ -3436,12 +3884,12 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | MCa.LastGameTime
     +0x4
     ++0x1c = [32-bit] Received medal or challenge time
-    -- In Campaign:
-    -- 0x0 = None
-    -- 0x1 = Bronze
-    -- 0x2 = Silver
-    -- 0x3 = Gold
-    -- In Challenge: Time measured in milliseconds
+    --- In Campaign:
+    --- 0x0 = None
+    --- 0x1 = Bronze
+    --- 0x2 = Silver
+    --- 0x3 = Gold
+    --- In Challenge: Time measured in milliseconds
     """
 
     US_HASHMAP_LSGRAMPS = dword(0x1cfefc0)
@@ -3887,8 +4335,8 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | Trigger.Collector
     Used in various missions to detect triggers such as Tutorial1 secret and capture point index in Hold Until Relief
     +0x04
-    ++0x1C = [32-bit] Trigger.Collector
-    -- 0xffffffff = Untriggered
+    ++0x1c = [32-bit] Trigger.Collector
+    --- 0xffffffff = Untriggered
     """
 
     US_HASHMAP_QLRET = dword(0x1d00ac0)
@@ -3974,6 +4422,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Concrete Donkey
+    """
+
+    US_HASHMAP_WATERLEVEL = dword(0x1d011a0)
+    """
+    [32-bit Pointer] (US) Hashmap | Water.Level
+    +0x4
+    ++0x1c = [32-bit] Water Level
+    --- 0x0 = Default level
     """
 
     US_HASHMAP_LPFOOLS = dword(0x1d011bc)

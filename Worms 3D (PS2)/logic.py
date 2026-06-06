@@ -100,7 +100,7 @@ class Unlock:
     key: str
     type: int
 
-    def __init__(self, key: str, type: int):
+    def __init__(self, key: str, type: int = 0):
         self.key = key
         self.type = type
 
@@ -136,6 +136,7 @@ class Mission:
     mtype: int
     name: str
     filename: str
+    filehash: int
     gold: int
     land_maxheight: int | None
     teams: list
@@ -145,6 +146,7 @@ class Mission:
         self.mtype = mtype
         self.name = name
         self.filename = filename
+        self.filehash = Lua.string_hash(filename)
         self.gold = gold or 0
         self.land_maxheight = land_maxheight
         self.teams = teams
@@ -156,8 +158,16 @@ class Mission:
             "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_NAME,
         }[ctx.region]
 
+    @staticmethod
+    def current_hash(ctx: Context):
+        return {
+            "EU": Memory.EU_INGAME_CURRENT_LUA_SCRIPT_HASH,
+            "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_HASH,
+        }[ctx.region]
+
     def is_loaded(self, ctx: Context):
-        return string_equals(Mission.current_script(ctx), f"{self.filename}\0")
+        return Mission.current_hash(ctx) == self.filehash
+        # return string_equals(Mission.current_script(ctx), f"{self.filename}\0")
 
     @property
     def rp_hash(self):
@@ -166,9 +176,15 @@ class Mission:
         bytes = (int.from_bytes(self.filename.encode()[:4]))
         return (self.land_maxheight + bytes) & 0xffffffff
 
-    def on_complete(self, ctx: Context):
+    @staticmethod
+    def on_complete(ctx: Context):
         gametime = XData.get_value(ctx, "MCa.LastGameTime")
         return (delta(gametime) == 0) & (gametime != 0)
+
+    @staticmethod
+    def on_gold_medal(ctx: Context):
+        gametime = XData.get_value(ctx, "MCa.LastGameTime")
+        return (delta(gametime) == 0) & (gametime == 3)
 
     def generate_leaderboard(self, ctx: Context, lb: Leaderboard):
         for g in [lb.start]:
@@ -188,21 +204,51 @@ class Mission:
 
 
 class Lua:
+    NODESIZE = 20
+
+    class Node:
+        key: str
+        hashstr: int
+        address: MemoryExpression
+
+        def __init__(self, key: str, address: MemoryExpression) -> None:
+            self.key = key
+            self.hashstr = Lua.string_hash(key)
+            self.address = address
+
+        def get_hash(self):
+            return self.address >> dword(0x4) >> dword(0x8)
+
+        def get_value(self):
+            return self.address >> float32(0xc)
+
     @staticmethod
     def string_hash(s: str)-> int:
         l = len(s)
         h = l
-        step = (l>>5)+1
+        step = (l >> 5) + 1
         i = l
         while i >= step:
-            h = h ^ ((h<<5)+(h>>2)+ord(s[i-1]))
+            h = (h ^ ((h << 5) + (h >> 2) + ord(s[i-1]))) & 0xffffffff
             i -= step
-        return h & 0xffffffff
+        return h
 
     @staticmethod
-    def get_index(s: str, lsize: int):
-        return Lua.string_hash(s) % (1<<lsize)
+    def get_index(key: str, lsize: int):
+        return Lua.string_hash(key) % (1 << lsize)
 
+    @staticmethod
+    def get_node(ctx: Context, key: str, lsize: int, depth: int):
+        offset = Lua.get_index(key, lsize) * Lua.NODESIZE
+        address = {
+            "EU": Memory.EU_LUA_GLOBAL_TABLE_NODE_VECTOR,
+            "US": Memory.US_LUA_GLOBAL_TABLE_NODE_VECTOR,
+        }[ctx.region]
+        address = MemoryExpression(Condition(address, "+", value(offset)), start_flag=Flag.ADD_ADDRESS)
+        while depth > 0:
+            address >>= dword(0x10)
+            depth -= 1
+        return Lua.Node(key, address)
 
 class Worms3D:
     @staticmethod

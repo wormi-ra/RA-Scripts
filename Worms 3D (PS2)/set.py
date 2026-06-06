@@ -7,7 +7,7 @@ from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
 from framework import achievement, achievement_set, leaderboard
-from logic import Context, Controller, GameMode, Mission, Unlock, Worms3D, XData
+from logic import Context, Controller, GameMode, Lua, Mission, Unlock, Worms3D, XData
 from data import UNLOCKS, Missions
 from memory import Memory
 import assets
@@ -23,6 +23,10 @@ class Worms3DSet(AchievementSet):
             title="Worms 3D"
         )
         Worms3D.init()
+
+    #############################
+    # Misc                      #
+    #############################
 
     @achievement(610367)
     def wormpot(self, ctx: Context, ach: Achievement):
@@ -40,54 +44,268 @@ class Worms3DSet(AchievementSet):
             ],
         ))
 
-    @achievement(610362)
-    def unlock_mad_cow(self, ctx: Context, ach: Achievement):
-        unlock = next(filter(lambda e: e.key == "L.W.MadCow", UNLOCKS))
+    @achievement(612677)
+    def driving_range(self, ctx: Context, ach: Achievement):
+        node = Lua.get_node(ctx, "TargetNumber", 7, 1)
+        index = node.get_value()
+        # Use lua TargetNumber as primary source and Crate.Index as backup
+        for dtype, index in [
+            (int, XData.get_value(ctx, "Crate.Index")),
+            (float, node.get_value())
+        ]:
+            alt = group(
+                measured_if(Worms3D.check_serial(ctx)),
+                measured_if(Missions.DRIVING.is_loaded(ctx)),
+                pause_if(XData.get_value(ctx, "ElapsedRoundTime") == 0),
+                [
+                    add_hits(
+                        (delta(index) != dtype(i)) &
+                        (index == dtype(i))
+                    ).with_hits(1)
+                    for i in range(1, 16)
+                ],
+                measured(always_false()).with_hits(15),
+                reset_if(
+                    Worms3D.check_serial(ctx) & 
+                    ~string_equals(Mission.current_script(ctx), Missions.DRIVING.filename[:4])
+                )
+            )
+            if dtype is float:
+                alt.insert(2, measured_if(node.get_hash() == node.hashstr))
+            ach.add_alt(alt)
+
+    @achievement(612940)
+    def tutorial(self, ctx: Context, ach: Achievement):
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Worms3D.is_ingame(ctx),
-            ~Worms3D.is_in_attract(ctx),
-            unlock.on_unlock(ctx),
+            Missions.TUTORIAL5.is_loaded(ctx),
+            (XData.get_value(ctx, "GameOver.AwardMovie") >> delta(byte(0x0))) == 0x0,
+            XData.get_value(ctx, "GameOver.AwardMovie") >> dword_be(0x0) == int.from_bytes("Game".encode())
+        ))
+
+    @achievement(612941)
+    def mission_1(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.DDAY.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612942)
+    def mission_5(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.ICE.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612943)
+    def mission_10(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.HELTERSKELTER.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612944)
+    def mission_15(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.CROPCIRCLE.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612945)
+    def mission_20(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.HIGHSTAKES.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612946)
+    def mission_25(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.PLAICE.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612947)
+    def mission_30(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.BALLOON.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(612948)
+    def mission_35(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.ALIEN.is_loaded(ctx),
+            Mission.on_complete(ctx),
+        ))
+
+    #############################
+    # Secrets                   #
+    #############################
+
+    @achievement(614494)
+    def secret_atlantis(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.TUTORIAL1.is_loaded(ctx),
+            Unlock("L.L.Atlantis").on_unlock(ctx)
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.TUTORIAL1.is_loaded(ctx),
+            delta(XData.get_value(ctx, "Trigger.Collector")) == 0xffffffff,
+            XData.get_value(ctx, "Trigger.Collector") == 0x0,
+        ))
+
+    @achievement(614495)
+    def secret_grave(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.GRAVEYARD.is_loaded(ctx),
+            Unlock("L.S.Horror").on_unlock(ctx)
+        ))
+        node = Lua.get_node(ctx, "TriggerIndex", 8, 0)
+        index = node.get_value()
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.GRAVEYARD.is_loaded(ctx),
+            node.get_hash() == node.hashstr,
+            delta(index) != 9.0,
+            index == 9.0,
+        ))
+
+    @achievement(614496)
+    def secret_schools(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.SCHOOLS.is_loaded(ctx),
+            Unlock("L.S.Mad").on_unlock(ctx)
+        ))
+        node = Lua.get_node(ctx, "EasterEgg", 8, 1)
+        easter = node.get_value()
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.SCHOOLS.is_loaded(ctx),
+            node.get_hash() == node.hashstr,
+            delta(easter) == 1.0,
+            easter == 2.0,
+        ))
+
+    @achievement(614497)
+    def secret_quick_fix(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.NOTPC.is_loaded(ctx),
+            Unlock("L.S.Lover").on_unlock(ctx)
+        ))
+        node = Lua.get_node(ctx, "Team17", 8, 1)
+        easter = node.get_value()
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.NOTPC.is_loaded(ctx),
+            node.get_hash() == node.hashstr,
+            delta(easter) == 111110.0,
+            easter == 111111.0,
+        ))
+
+    @achievement(614498)
+    def secret_showdown(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.SHOWDOWN.is_loaded(ctx),
+            Unlock("L.P.Giraffe").on_unlock(ctx)
+        ))
+        node = Lua.get_node(ctx, "CrateNumber", 8, 0)
+        crate = node.get_value()
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.SHOWDOWN.is_loaded(ctx),
+            node.get_hash() == node.hashstr,
+            delta(crate) != 2.0,
+            crate == 2.0,
+        ))
+
+    @achievement(614499)
+    def secret_funfair(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.FUNFAIR.is_loaded(ctx),
+            Unlock("L.S.Gramps").on_unlock(ctx)
+        ))
+        node = Lua.get_node(ctx, "TicketBoothDestroyed", 8, 1)
+        booth_destroyed = node.get_value()
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.FUNFAIR.is_loaded(ctx),
+            node.get_hash() == node.hashstr,
+            booth_destroyed == 0.0,
+            Mission.on_complete(ctx),
+        ))
+
+    @achievement(614500)
+    def secret_breakfast(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.BREAKFAST.is_loaded(ctx),
+            Unlock("L.W.BridgeK").on_unlock(ctx)
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.BREAKFAST.is_loaded(ctx),
+            delta(XData.get_value(ctx, "Crate.Index")) != 4,
+            XData.get_value(ctx, "Crate.Index") == 4,
+        ))
+
+    #############################
+    # Unlocks                   #
+    #############################
+
+    @achievement(610362)
+    def unlock_mad_cow(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Missions.HOMING.is_loaded(ctx),
+            Unlock("L.W.MadCow").on_unlock(ctx),
         ))
 
     @achievement(610366)
     def unlock_ssheep(self, ctx: Context, ach: Achievement):
-        unlock = next(filter(lambda e: e.key == "L.W.SSheep", UNLOCKS))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Worms3D.is_ingame(ctx),
-            ~Worms3D.is_in_attract(ctx),
-            unlock.on_unlock(ctx),
+            Missions.TARGETHUNT4.is_loaded(ctx),
+            Unlock("L.W.SSheep").on_unlock(ctx),
         ))
 
     @achievement(610364)
     def unlock_earthquake(self, ctx: Context, ach: Achievement):
-        unlock = next(filter(lambda e: e.key == "L.W.EQuake", UNLOCKS))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Worms3D.is_ingame(ctx),
-            ~Worms3D.is_in_attract(ctx),
-            unlock.on_unlock(ctx),
+            Missions.JETPACKCHALL3.is_loaded(ctx),
+            Unlock("L.W.EQuake").on_unlock(ctx),
         ))
 
     @achievement(610363)
     def unlock_banana(self, ctx: Context, ach: Achievement):
-        unlock = next(filter(lambda e: e.key == "L.W.Banana", UNLOCKS))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Worms3D.is_ingame(ctx),
-            ~Worms3D.is_in_attract(ctx),
-            unlock.on_unlock(ctx),
+            Missions.CHUTE3.is_loaded(ctx),
+            Unlock("L.W.Banana").on_unlock(ctx),
         ))
 
     @achievement(610365)
     def unlock_nuke(self, ctx: Context, ach: Achievement):
-        unlock = next(filter(lambda e: e.key == "L.W.Nuke", UNLOCKS))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Worms3D.is_ingame(ctx),
-            ~Worms3D.is_in_attract(ctx),
-            unlock.on_unlock(ctx),
+            Missions.DEATHMATCH10.is_loaded(ctx),
+            Unlock("L.W.Nuke").on_unlock(ctx),
         ))
 
     @achievement(610358)
@@ -164,7 +382,7 @@ class Worms3DSet(AchievementSet):
             measured_if(Worms3D.check_serial(ctx)),
             measured_if(XData.get_value(ctx, "MCa.CurrentMissionType") == GameMode.CHALLENGE),
             measured_if(Worms3D.is_ingame(ctx)),
-            measured_if(~string_equals(Mission.current_script(ctx), "stdvs")),
+            measured_if(Mission.current_hash(ctx) != Lua.string_hash("stdvs")),
             measured_if(~Worms3D.is_in_attract(ctx)),
             sub_source(XData.get_value(ctx, "ElapsedRoundTime")),
             remember(XData.get_value(ctx, "MCa.BestGold")),
