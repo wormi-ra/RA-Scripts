@@ -1,6 +1,6 @@
 import csv
 import polars as pl
-from logic import Lua
+
 
 def unlock_notes():
     notes = {}
@@ -48,14 +48,23 @@ def land_maxheight():
                 print(f"-- {hex(int(height))} = {name}")
 
 def script_hash():
+    from logic import Lua
     with open("data/levels.csv") as file:
         for row in csv.DictReader(file):
             filename = row["Filename"]
             name = row["Name"]
             print(f"{hex(int(Lua.string_hash(filename)))} = {filename} ({name})")
 
+def landscapes():
+    df = pl.read_csv("data/landscapes.csv")
+    df = df.sort(pl.col("Land.InitialMaxHeight"))
+    for row in df.iter_rows(named=True):
+        name = row["Name"]
+        h = row["Land.InitialMaxHeight"]
+        print(f"--- {h} = {name}")
+
 if __name__=="__main__":
     # notes = unlock_notes()
     # for addr, note in dict(sorted(notes.items())).items():
     #     print(f'N0:{hex(addr)}:"{note}"')
-    script_hash()
+    landscapes()

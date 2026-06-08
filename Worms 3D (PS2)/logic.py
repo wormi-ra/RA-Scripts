@@ -203,6 +203,27 @@ class Mission:
         ))
 
 
+class Landscape:
+    LANDSCAPES: list["Landscape"] = []
+
+    filename: str
+    name: str
+    maxheight: int
+
+    def __init__(self, filename: str, name: str, maxheight: int) -> None:
+        self.filename = filename
+        self.name = name
+        self.maxheight = maxheight
+
+    @staticmethod
+    def init():
+        Landscape.LANDSCAPES = []
+        with open("data/landscapes.csv") as file:
+            for row in csv.DictReader(file):
+                h = int(row["Land.InitialMaxHeight"], 16)
+                Landscape.LANDSCAPES.append(Landscape(row["Filename"], row["Name"], h))
+
+
 class Lua:
     NODESIZE = 20
 
@@ -254,6 +275,7 @@ class Worms3D:
     @staticmethod
     def init():
         XData.init()
+        Landscape.init()
 
     @staticmethod
     def check_serial(ctx: Context):
