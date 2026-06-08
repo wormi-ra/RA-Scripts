@@ -4,18 +4,53 @@ from pycheevos.core.constants import AchievementType, LeaderboardFormat
 from collections import OrderedDict
 
 achievements = OrderedDict({
-    610367: Achievement(
-        id=610367,
-        title="""Let's Go Gambling!""",
-        description="""Spin the Wormpot slots machine""",
+    615304: Achievement(
+        id=615304,
+        title="""trophy_campaign_gold""",
+        description="""Earn a gold trophy in any campaign mission""",
         points=1,
         badge="00000",
     ),
-    612677: Achievement(
-        id=612677,
-        title="""Hole in One""",
-        description="""Destroy every target at least once in The Driving Range""",
-        points=2,
+    615305: Achievement(
+        id=615305,
+        title="""trophy_challenge_gold""",
+        description="""Earn a gold trophy in any challenge mission""",
+        points=1,
+        badge="00000",
+    ),
+    615306: Achievement(
+        id=615306,
+        title="""trophy_shotgun_gold""",
+        description="""Earn the gold trophy in all 3 Shotgun Challenges""",
+        points=10,
+        badge="00000",
+    ),
+    615307: Achievement(
+        id=615307,
+        title="""trophy_sheep_gold""",
+        description="""Earn the gold trophy in all 3 Super Sheep Challenges""",
+        points=10,
+        badge="00000",
+    ),
+    615308: Achievement(
+        id=615308,
+        title="""trophy_jetpack_gold""",
+        description="""Earn the gold trophy in all 3 Jetpack Challenges""",
+        points=10,
+        badge="00000",
+    ),
+    615309: Achievement(
+        id=615309,
+        title="""trophy_parachute_gold""",
+        description="""Earn the gold trophy in all 3 Parachute Challenges""",
+        points=10,
+        badge="00000",
+    ),
+    615310: Achievement(
+        id=615310,
+        title="""trophy_deathmatch_gold""",
+        description="""Earn the gold trophy in all 10 Deathmatch Challenges""",
+        points=25,
         badge="00000",
     ),
     612940: Achievement(
@@ -135,8 +170,8 @@ achievements = OrderedDict({
     614500: Achievement(
         id=614500,
         title="""secret_breakfast""",
-        description="""Discover the secret of Beefcake Breakfast brawl""",
-        points=0,
+        description="""Discover the secret of Beefcake Breakfast Brawl""",
+        points=1,
         badge="00000",
     ),
     610362: Achievement(
@@ -200,6 +235,20 @@ achievements = OrderedDict({
         title="""Globe Trotter""",
         description="""Unlock all 29 unlockable multiplayer landscapes""",
         points=50,
+        badge="00000",
+    ),
+    610367: Achievement(
+        id=610367,
+        title="""Let's Go Gambling!""",
+        description="""Spin the Wormpot slots machine""",
+        points=1,
+        badge="00000",
+    ),
+    612677: Achievement(
+        id=612677,
+        title="""Hole in One""",
+        description="""Destroy every target at least once in The Driving Range""",
+        points=2,
         badge="00000",
     ),
 })

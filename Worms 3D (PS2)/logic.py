@@ -45,6 +45,13 @@ class XData:
             "US": XData.DATA[key]["slus"],
         }[ctx.region]) >> dword(0x4) >> dword(0x1c)
 
+    @staticmethod
+    def on_value_changed(ctx: Context, key: str):
+        return dword({
+            "EU": XData.DATA[key]["sles"],
+            "US": XData.DATA[key]["slus"],
+        }[ctx.region]) >> dword(0x4) >> delta(dword(0x1c)) != dword(0x1c)
+
 
 class Controller:
     class Button(Enum):
@@ -182,7 +189,16 @@ class Mission:
         return (delta(gametime) == 0) & (gametime != 0)
 
     @staticmethod
-    def on_gold_medal(ctx: Context):
+    def on_gold_medal(ctx: Context, gamemode = GameMode.CAMPAIGN, is_deathmatch = False):
+        if gamemode == GameMode.CHALLENGE:
+            return group(
+                remember(XData.get_value(ctx, "MCa.LastGameTime")),
+                (delta(XData.get_value(ctx, "MCa.LastGameTime")) == 0) &
+                (
+                    XData.get_value(ctx, "MCa.BestGold") > recall() if is_deathmatch
+                    else XData.get_value(ctx, "MCa.BestGold") < recall()
+                )
+            )
         gametime = XData.get_value(ctx, "MCa.LastGameTime")
         return (delta(gametime) == 0) & (gametime == 3)
 
@@ -201,6 +217,40 @@ class Mission:
             measured_if(Worms3D.check_serial(ctx)),
             measured(XData.get_value(ctx, "ElapsedRoundTime") / 10),
         ))
+
+    def get_challenge_data(self, ctx: Context):
+        if self.mtype != GameMode.CHALLENGE:
+            raise ValueError(f"Mission is not a challenge: {self.name}")
+        return (
+            XData.get_value(ctx, "DATA.TeamBarracks")
+            >> MemoryExpression(dword(0x14))._build_conditions("+", value(self.index * 4))
+            >> dword(0x40) 
+        )
+
+    def get_challenge_goldtime(self, ctx: Context):
+        return (self.get_challenge_data(ctx) >> dword(0x24))
+
+    def has_challenge_goldtime(self, ctx: Context):
+        if self.name.startswith("Deathmatch"):
+            return self.get_challenge_goldtime(ctx) < self.gold
+        else:
+            return self.get_challenge_goldtime(ctx) > self.gold
+
+    @staticmethod
+    def generate_challenge_trophies(ctx: Context, challenges: list["Mission"]):
+        game_awarded = XData.get_value(ctx, "MCa.GameAwarded")
+        return group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            *(
+                add_hits(chall.has_challenge_goldtime(ctx)).with_hits(1)
+                for chall in challenges
+            ),
+            measured(always_false()).with_hits(len(challenges)),
+            XData.get_value(ctx, "GameOver.AwardMovie") >> dword_be(0x0) == int.from_bytes("gold".encode()),
+            delta(game_awarded) == 0,
+            game_awarded == 1,
+            reset_if(XData.on_value_changed(ctx, "PS2.CurrSlot")),
+        )
 
 
 class Landscape:
@@ -300,11 +350,15 @@ class Worms3D:
         }[ctx.region] == value(0x1)
 
     @staticmethod
-    def is_in_menu(ctx: Context):
+    def menu_state(ctx: Context):
         return {
-            "EU": Memory.EU_STATE_CHECK_IN_MENU == value(0x1),
-            "US": Memory.US_STATE_CHECK_IN_MENU == value(0x1),
+            "EU": Memory.EU_STATE_CHECK_IN_MENU,
+            "US": Memory.US_STATE_CHECK_IN_MENU,
         }[ctx.region]
+
+    @staticmethod
+    def is_in_menu(ctx: Context):
+        return Worms3D.menu_state(ctx) == value(0x1)
 
     @staticmethod
     def is_ingame(ctx: Context):

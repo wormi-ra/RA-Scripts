@@ -345,6 +345,65 @@ class Worms3DSet(AchievementSet):
         ))
 
     #############################
+    # Trophies                  #
+    #############################
+
+    @achievement(615304)
+    def trophy_campaign_gold(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Worms3D.is_ingame(ctx),
+            Worms3D.current_gamemode(ctx) == GameMode.CAMPAIGN,
+            Mission.on_gold_medal(ctx),
+        ))
+
+    @achievement(615305)
+    def trophy_challenge_gold(self, ctx: Context, ach: Achievement):
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Worms3D.is_ingame(ctx),
+            Worms3D.current_gamemode(ctx) == GameMode.CHALLENGE,
+            string_equals(Mission.current_script(ctx), "Deat"),
+            Mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE, is_deathmatch=True),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            Worms3D.is_ingame(ctx),
+            Worms3D.current_gamemode(ctx) == GameMode.CHALLENGE,
+            ~string_equals(Mission.current_script(ctx), "Deat"),
+            Mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE, is_deathmatch=False),
+        ))
+
+    @achievement(615306)
+    def trophy_shotgun_gold(self, ctx: Context, ach: Achievement):
+        challenges = [Missions.TARGETHUNT, Missions.TARGETHUNT2, Missions.HOMING]
+        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    @achievement(615307)
+    def trophy_sheep_gold(self, ctx: Context, ach: Achievement):
+        challenges = [Missions.SHEEP1, Missions.SHEEP2, Missions.TARGETHUNT4]
+        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    @achievement(615308)
+    def trophy_jetpack_gold(self, ctx: Context, ach: Achievement):
+        challenges = [Missions.CRATEFUN, Missions.JETPACKCHALL2, Missions.JETPACKCHALL3]
+        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    @achievement(615309)
+    def trophy_parachute_gold(self, ctx: Context, ach: Achievement):
+        challenges = [Missions.CHUTE1, Missions.CHUTE2, Missions.CHUTE3]
+        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    @achievement(615310)
+    def trophy_deathmatch_gold(self, ctx: Context, ach: Achievement):
+        challenges = [
+            Missions.DEATHMATCH1, Missions.DEATHMATCH2, Missions.DEATHMATCH3, Missions.DEATHMATCH4,
+            Missions.DEATHMATCH5, Missions.DEATHMATCH6, Missions.DEATHMATCH7, Missions.DEATHMATCH8,
+            Missions.DEATHMATCH9, Missions.DEATHMATCH10,
+        ]
+        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    #############################
     # Leaderboards              #
     #############################
 
