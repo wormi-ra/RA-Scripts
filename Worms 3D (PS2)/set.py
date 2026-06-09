@@ -7,7 +7,7 @@ from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
 from framework import achievement, achievement_set, leaderboard
-from logic import Context, Controller, GameMode, Lua, Mission, Unlock, Worms3D, XData
+from logic import Context, Controller, GameMode, Lua, Mission, Unlock, Weapons, Worm, Worms3D, XData
 from data import UNLOCKS, Missions
 from memory import Memory
 import assets
@@ -402,6 +402,65 @@ class Worms3DSet(AchievementSet):
             Missions.DEATHMATCH9, Missions.DEATHMATCH10,
         ]
         ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+
+    #############################
+    # Campaign Challenges       #
+    #############################
+
+    @achievement()
+    def campaign_challenge_dday(self, ctx: Context, ach: Achievement):
+        mission = Missions.DDAY
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_loaded(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(mission.on_leave(ctx)),
+            reset_if(
+                (Worms3D.current_team(ctx) == 0) &
+                XData.on_value_changed(ctx, "Jetpack.Fuel")
+            ),
+        ))
+
+    @achievement()
+    def campaign_challenge_cratebritain(self, ctx: Context, ach: Achievement):
+        mission = Missions.CRATEBRITAIN
+        allowed_weapons = [Weapons.BASEBALL_BAT, Weapons.FIRE_PUNCH, Weapons.PROD]
+        active_worm = Worm.Instance(MemoryExpression(recall()))
+        enemy_team = [2, 3, 4, 5, 6]
+        # Main logic
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            measured_if(XData.get_value(ctx, "ElapsedRoundTime") != 0),
+            measured_if(delta(XData.get_value(ctx, "FCS.GameOver")) == 0),
+            measured_if(mission.on_start(ctx)).with_hits(1),
+            mission.on_gold_medal(ctx),
+            *(
+                # Kill counter
+                add_hits(
+                    Worm(enemy).get_instance(ctx).on_death()
+                ).with_hits(1)
+                for enemy in enemy_team
+            ),
+            measured(always_false()).with_hits(len(enemy_team)),
+            remember(Worm.get_active_worm(ctx)),
+            reset_if(group(
+                and_next(Worms3D.current_team(ctx) == 0),
+                and_next(Worm.on_attack(ctx)),
+                *(
+                    and_next(active_worm.equipped_weapon != weapon)
+                    for weapon in allowed_weapons
+                )
+            )),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+        # Challenge indicator (never trigger)
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(always_false()),
+        ))
 
     #############################
     # Leaderboards              #

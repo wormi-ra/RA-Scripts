@@ -138,6 +138,34 @@ class Unlock:
         )
 
 
+class Weapons:
+    BAZOOKA = 0x0
+    GRANDE = 0x1
+    CLUSTER_BOMB = 0x2
+    DYNAMITE = 0x4
+    LAND_MINE = 0x7
+    SHOTGUN = 0x8
+    UZI = 0x9
+    BASEBALL_BAT = 0xa
+    PROD = 0xb
+    FIRE_PUNCH = 0xd
+    HOMING_MISSILE = 0xe
+    MORTAR = 0xf
+    SHEEP = 0x12
+    PETROL_BOMB = 0x14
+    GAS_CANISTER = 0x15
+    STICKY_BOMB = 0x22
+    BINOCULARS = 0x23
+    GIRDER = 0x27
+    NINJA_ROPE = 0x29
+    PARACHUTE = 0x2a
+    TELEPORT = 0x2f
+    JETPACK = 0x30
+    SKIP_GO = 0x31
+    SURRENDER = 0x32
+    WORM_SELECT = 0x33
+
+
 class Mission:
     index: int
     mtype: int
@@ -175,6 +203,32 @@ class Mission:
     def is_loaded(self, ctx: Context):
         return Mission.current_hash(ctx) == self.filehash
         # return string_equals(Mission.current_script(ctx), f"{self.filename}\0")
+
+    def on_start(self, ctx: Context):
+        return (
+            self.is_loaded(ctx) &
+            (delta(XData.get_value(ctx, "ElapsedRoundTime")) == 0) &
+            (XData.get_value(ctx, "ElapsedRoundTime") != 0)
+        )
+
+    def on_loaded(self, ctx: Context):
+        return (
+            (delta(Mission.current_hash(ctx)) != self.filehash) &
+            (Mission.current_hash(ctx) == self.filehash)
+        )
+
+    def on_leave(self, ctx: Context):
+        return (
+            (delta(Mission.current_hash(ctx)) == self.filehash) &
+            (Mission.current_hash(ctx) != self.filehash)
+        )
+
+    def gold_timer_on_pace(self, ctx: Context):
+        return (
+            # when time runs out
+            (XData.get_value(ctx, "MCa.LastGameTime") == 3) |
+            (XData.get_value(ctx, "ElapsedRoundTime") < self.gold)
+        )
 
     @property
     def rp_hash(self):
@@ -252,6 +306,9 @@ class Mission:
             reset_if(XData.on_value_changed(ctx, "PS2.CurrSlot")),
         )
 
+    @staticmethod
+    def on_hash_changed(ctx: Context):
+        return (delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx))
 
 class Landscape:
     LANDSCAPES: list["Landscape"] = []
@@ -272,6 +329,73 @@ class Landscape:
             for row in csv.DictReader(file):
                 h = int(row["Land.InitialMaxHeight"], 16)
                 Landscape.LANDSCAPES.append(Landscape(row["Filename"], row["Name"], h))
+
+
+class Worm:
+    id: int
+    team: int
+
+    class Instance(MemoryExpression):
+        def __init__(self, expression: MemoryExpression):
+            super().__init__(expression.terms[0][0], Flag.NONE)
+            self.terms = expression.terms[:]
+
+        @property
+        def team(self):
+            return self >> byte(0xd5)
+
+        @property
+        def health(self):
+            return self >> word(0xaa)
+
+        @property
+        def equipped_weapon(self):
+            return self >> dword(0x84)
+
+        @property
+        def pending_damage(self):
+            return self >> dword(0xa4)
+
+        @property
+        def animation_state(self):
+            return self >> dword(0x80)
+
+        def on_death(self):
+            return (
+                (delta(self.health) != 0) &
+                (self.health == 0)
+            )
+
+
+    def __init__(self, id: int = -1, team: int = -1) -> None:
+        self.id = id
+        self.team = team
+
+    @staticmethod
+    def get_worm_array(ctx: Context):
+        return {
+            "EU": Memory.EU_INGAME_WORM_DATA_INSTANCES_ARRAY,
+            "US": Memory.US_INGAME_WORM_DATA_INSTANCES_ARRAY,
+        }[ctx.region]
+
+    def get_instance(self, ctx: Context):
+        if self.id == -1:
+            raise ValueError("Cannot get instance of worm ID -1")
+        return Worm.Instance(
+            dword(Worm.get_worm_array(ctx).address + self.id * 4)
+            >> dword(0x4) >> dword(0x1c)
+        )
+
+    @staticmethod
+    def get_active_worm(ctx: Context):
+        return Worm.Instance(
+            (XData.get_value(ctx, "ActiveWormIndex") * value(4))
+            >> Worm.get_worm_array(ctx) >> dword(0x4) >> dword(0x1c)
+        )
+
+    @staticmethod
+    def on_attack(ctx: Context):
+        return (XData.on_value_changed(ctx, "Weapon.GraphicalLaunchLocation"))
 
 
 class Lua:
@@ -321,6 +445,7 @@ class Lua:
             depth -= 1
         return Lua.Node(key, address)
 
+
 class Worms3D:
     @staticmethod
     def init():
@@ -341,6 +466,10 @@ class Worms3D:
     @staticmethod
     def current_mission(ctx: Context):
         return XData.get_value(ctx, "MCa.CurrentMission")
+
+    @staticmethod
+    def current_team(ctx: Context):
+        return XData.get_value(ctx, "CurrentTeamIndex")
 
     @staticmethod
     def game_booted(ctx: Context):
