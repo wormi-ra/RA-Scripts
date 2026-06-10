@@ -142,7 +142,10 @@ class Weapons:
     BAZOOKA = 0x0
     GRENADE = 0x1
     CLUSTER_BOMB = 0x2
+    AIRSTRIKE = 0x3
     DYNAMITE = 0x4
+    HOLY_HAND_GRENADE = 0x5
+    BANANA_BOMB = 0x6
     LAND_MINE = 0x7
     SHOTGUN = 0x8
     UZI = 0x9
@@ -152,19 +155,36 @@ class Weapons:
     FIRE_PUNCH = 0xd
     HOMING_MISSILE = 0xe
     MORTAR = 0xf
+    HOMING_PIDGEON = 0x10
+    EARTHQUAKE = 0x11
     SHEEP = 0x12
     PETROL_BOMB = 0x14
     GAS_CANISTER = 0x15
+    MAD_COW = 0x17
+    OLD_WOMAN = 0x18
+    CONCRETE_DONKEY = 0x19
+    NUCLEAR_BOMB = 0x1a
+    SUPER_SHEEP = 0x1d
+    BLOWPIPE = 0x1e
+    LOTTERY_STRIKE = 0x1f
+    DOCTORS_STRIKE = 0x20
+    MEGA_MINE = 0x21
     STICKY_BOMB = 0x22
     BINOCULARS = 0x23
     GIRDER = 0x27
+    BRIDGE_KIT = 0x28
     NINJA_ROPE = 0x29
     PARACHUTE = 0x2a
+    SCALES_OF_JUSTICE = 0x2b
+    LOW_GRAVITY = 0x2c
+    QUICK_WALK = 0x2d
     TELEPORT = 0x2f
     JETPACK = 0x30
     SKIP_GO = 0x31
     SURRENDER = 0x32
     WORM_SELECT = 0x33
+    FREEZE = 0x34
+    REDBULL = 0x35
 
 
 class Inventory:
@@ -192,12 +212,58 @@ class Inventory:
         return dword(address) >> dword(0x4) >> dword(0x1c)
 
     @staticmethod
-    def get_ammo(ctx: Context, weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
-        ammo = {
+    def get_ammo_address(weapon: int):
+        return byte({
+            Weapons.OLD_WOMAN: 0x14,
+            Weapons.MAD_COW: 0x15,
+            Weapons.GAS_CANISTER: 0x17,
+            Weapons.PETROL_BOMB: 0x18,
+            Weapons.BRIDGE_KIT: 0x19,
+            Weapons.SHEEP: 0x1a,
+            Weapons.EARTHQUAKE: 0x1b,
+            Weapons.HOMING_PIDGEON: 0x1c,
+            Weapons.MORTAR: 0x1d,
+            Weapons.FIRE_PUNCH: 0x1f,
             Weapons.BAZOOKA: 0x20,
+            Weapons.PROD: 0x21,
+            Weapons.BASEBALL_BAT: 0x22,
+            Weapons.UZI: 0x23,
+            Weapons.SHOTGUN: 0x24,
+            Weapons.LAND_MINE: 0x25,
+            Weapons.BLOWPIPE: 0x26,
+            Weapons.HOLY_HAND_GRENADE: 0x27,
+            Weapons.DYNAMITE: 0x28,
+            Weapons.AIRSTRIKE: 0x29,
+            Weapons.CLUSTER_BOMB: 0x2a,
             Weapons.GRENADE: 0x2b,
-        }[weapon]
-        return Inventory.get_inventory(ctx, index, itype) >> byte(ammo)
+            Weapons.VIKING_AXE: 0x2c,
+            Weapons.CONCRETE_DONKEY: 0x2d,
+            Weapons.TELEPORT: 0x2e,
+            Weapons.BINOCULARS: 0x2f,
+            Weapons.STICKY_BOMB: 0x30,
+            Weapons.MEGA_MINE: 0x31,
+            Weapons.DOCTORS_STRIKE: 0x32,
+            Weapons.LOTTERY_STRIKE:0x33,
+            Weapons.BANANA_BOMB: 0x34,
+            Weapons.FREEZE: 0x35,
+            Weapons.WORM_SELECT: 0x36,
+            Weapons.SURRENDER: 0x37,
+            Weapons.SKIP_GO: 0x38,
+            Weapons.JETPACK: 0x39,
+            Weapons.REDBULL: 0x3a,
+            Weapons.QUICK_WALK: 0x3c,
+            Weapons.LOW_GRAVITY: 0x3d,
+            Weapons.SCALES_OF_JUSTICE: 0x3e,
+            Weapons.PARACHUTE: 0x3f,
+            Weapons.NINJA_ROPE: 0x40,
+            Weapons.GIRDER: 0x42,
+            Weapons.SUPER_SHEEP: 0x43,
+            Weapons.NUCLEAR_BOMB: 0x46,
+        }[weapon])
+
+    @staticmethod
+    def get_ammo(ctx: Context, weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
+        return Inventory.get_inventory(ctx, index, itype) >> Inventory.get_ammo_address(weapon)
 
 
 class Mission:
@@ -343,6 +409,7 @@ class Mission:
     @staticmethod
     def on_hash_changed(ctx: Context):
         return (delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx))
+
 
 class Landscape:
     LANDSCAPES: list["Landscape"] = []

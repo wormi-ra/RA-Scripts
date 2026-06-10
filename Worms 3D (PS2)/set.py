@@ -484,15 +484,12 @@ class Worms3DSet(AchievementSet):
             *(
                 group(
                     remember(Worm(id).get_instance(ctx)),
-                    # Drowning states
                     reset_if(
-                        (recall_worm.health == 0) &
-                        (recall_worm.animation_state == 0xd)
-                    ),
-                    reset_if(
-                        (recall_worm.health == 0) &
-                        (recall_worm.animation_state == 0x21)
-                    ),
+                        # Drowning states
+                        (recall_worm.animation_state == 0xd) |
+                        (recall_worm.animation_state == 0x21) &
+                        (recall_worm.health == 0)
+                    )
                 )
                 for id in player_worms
             ),
@@ -640,13 +637,13 @@ class Worms3DSet(AchievementSet):
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
             remember(Worm.get_active_worm(ctx)),
-            *(
-                reset_if(
-                    and_next(Worms3D.current_team(ctx) == 0) &
-                    and_next(active_worm.equipped_weapon == weapon) &
-                    and_next(Worm.on_attack(ctx))
-                )
-                for weapon in forbidden_weapons
+            reset_if(
+                group(*(
+                    or_next(active_worm.equipped_weapon == weapon)
+                    for weapon in forbidden_weapons
+                )) &
+                (Worms3D.current_team(ctx) == 0) &
+                Worm.on_attack(ctx)
             ),
             reset_if(
                 (Worms3D.current_team(ctx) == 0) &
@@ -703,6 +700,56 @@ class Worms3DSet(AchievementSet):
                 (Worms3D.current_team(ctx) == 0) &
                 XData.on_value_changed(ctx, "Crate.Index")
             )),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615689)
+    def campaign_challenge_treevillage(self, ctx: Context, ach: Achievement):
+        mission = Missions.TREEVILLAGE
+        weapons = [Weapons.GIRDER, Weapons.NINJA_ROPE]
+        inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(
+                # Using parachute
+                (Worms3D.current_team(ctx) == 0) &
+                (Worm.get_active_worm(ctx).animation_state == 0x13)
+            ),
+            *(
+                reset_if(
+                    # On ammo used
+                    inv >> delta(Inventory.get_ammo_address(weapon)) > Inventory.get_ammo_address(weapon)
+                )
+                for weapon in weapons
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615690)
+    def campaign_challenge_landing(self, ctx: Context, ach: Achievement):
+        mission = Missions.LANDING
+        weapons = [
+            Weapons.BAZOOKA, Weapons.GRENADE, Weapons.CLUSTER_BOMB, Weapons.LAND_MINE,
+            Weapons.HOMING_MISSILE, Weapons.SHEEP, Weapons.SHOTGUN, Weapons.FIRE_PUNCH, Weapons.PROD
+        ]
+        active_worm = Worm.Instance(MemoryExpression(recall()))
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            remember(Worm.get_active_worm(ctx)),
+            *(
+                reset_if(
+                    (Worms3D.current_team(ctx) == 0) &
+                    (active_worm.equipped_weapon == weapon) &
+                    Worm.on_attack(ctx)
+                ).with_hits(3 if weapon == Weapons.SHOTGUN else 2)
+                for weapon in weapons
+            ),
             reset_if(~mission.is_loaded(ctx)),
         ))
 
@@ -857,41 +904,165 @@ class Worms3DSet(AchievementSet):
     # Leaderboards: Missions    #
     #############################
 
+    @leaderboard(164779)
+    def leaderboard_tutorial1(self, ctx: Context, lb: Leaderboard):
+        return Missions.TUTORIAL1.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164780)
+    def leaderboard_tutorial2(self, ctx: Context, lb: Leaderboard):
+        return Missions.TUTORIAL2.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164781)
+    def leaderboard_tutorial3(self, ctx: Context, lb: Leaderboard):
+        return Missions.TUTORIAL3.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164782)
+    def leaderboard_tutorial4(self, ctx: Context, lb: Leaderboard):
+        return Missions.TUTORIAL4.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164783)
+    def leaderboard_tutorial5(self, ctx: Context, lb: Leaderboard):
+        return Missions.TUTORIAL5.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164784)
+    def leaderboard_dday(self, ctx: Context, lb: Leaderboard):
+        return Missions.DDAY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164785)
+    def leaderboard_cratebritain(self, ctx: Context, lb: Leaderboard):
+        return Missions.CRATEBRITAIN.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164786)
+    def leaderboard_graveyard(self, ctx: Context, lb: Leaderboard):
+        return Missions.GRAVEYARD.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164787)
+    def leaderboard_leek(self, ctx: Context, lb: Leaderboard):
+        return Missions.LEEK.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164788)
+    def leaderboard_ice(self, ctx: Context, lb: Leaderboard):
+        return Missions.ICE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164789)
+    def leaderboard_collide(self, ctx: Context, lb: Leaderboard):
+        return Missions.COLLIDE.generate_leaderboard(ctx, lb)
+
     @leaderboard(163430)
     def leaderboard_rum(self, ctx: Context, lb: Leaderboard):
         return Missions.RUM.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164790)
+    def leaderboard_crust(self, ctx: Context, lb: Leaderboard):
+        return Missions.CRUST.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164791)
+    def leaderboard_applecore(self, ctx: Context, lb: Leaderboard):
+        return Missions.APPLECORE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164792)
+    def leaderboard_helterskelter(self, ctx: Context, lb: Leaderboard):
+        return Missions.HELTERSKELTER.generate_leaderboard(ctx, lb)
 
     @leaderboard(163431)
     def leaderboard_cherry(self, ctx: Context, lb: Leaderboard):
         return Missions.CHERRY.generate_leaderboard(ctx, lb)
 
+    @leaderboard(164793)
+    def leaderboard_clean(self, ctx: Context, lb: Leaderboard):
+        return Missions.CLEAN.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164794)
+    def leaderboard_timbers(self, ctx: Context, lb: Leaderboard):
+        return Missions.TIMBERS.generate_leaderboard(ctx, lb)
+
     @leaderboard(163432)
     def leaderboard_falling(self, ctx: Context, lb: Leaderboard):
         return Missions.FALLING.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164795)
+    def leaderboard_cropcircle(self, ctx: Context, lb: Leaderboard):
+        return Missions.CROPCIRCLE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164796)
+    def leaderboard_treevillage(self, ctx: Context, lb: Leaderboard):
+        return Missions.TREEVILLAGE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164797)
+    def leaderboard_landing(self, ctx: Context, lb: Leaderboard):
+        return Missions.LANDING.generate_leaderboard(ctx, lb)
 
     @leaderboard(163433)
     def leaderboard_beanstalk(self, ctx: Context, lb: Leaderboard):
         return Missions.BEANSTALK.generate_leaderboard(ctx, lb)
 
+    @leaderboard(164798)
+    def leaderboard_schools(self, ctx: Context, lb: Leaderboard):
+        return Missions.SCHOOLS.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164799)
+    def leaderboard_highstakes(self, ctx: Context, lb: Leaderboard):
+        return Missions.HIGHSTAKES.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164800)
+    def leaderboard_notpc(self, ctx: Context, lb: Leaderboard):
+        return Missions.NOTPC.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164801)
+    def leaderboard_cooped(self, ctx: Context, lb: Leaderboard):
+        return Missions.COOPED.generate_leaderboard(ctx, lb)
+
     @leaderboard(163434)
     def leaderboard_trial(self, ctx: Context, lb: Leaderboard):
         return Missions.TRIAL.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164805)
+    def leaderboard_showdown(self, ctx: Context, lb: Leaderboard):
+        return Missions.SHOWDOWN.generate_leaderboard(ctx, lb)
 
     @leaderboard(163435)
     def leaderboard_plaice(self, ctx: Context, lb: Leaderboard):
         return Missions.PLAICE.generate_leaderboard(ctx, lb)
 
+    @leaderboard(164802)
+    def leaderboard_hookline(self, ctx: Context, lb: Leaderboard):
+        return Missions.HOOKLINE.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164806)
+    def leaderboard_funfair(self, ctx: Context, lb: Leaderboard):
+        return Missions.FUNFAIR.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164803)
+    def leaderboard_pegasus(self, ctx: Context, lb: Leaderboard):
+        return Missions.PEGASUS.generate_leaderboard(ctx, lb)
+
     @leaderboard(163436)
     def leaderboard_boldly(self, ctx: Context, lb: Leaderboard):
         return Missions.BOLDLY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164807)
+    def leaderboard_balloon(self, ctx: Context, lb: Leaderboard):
+        return Missions.BALLOON.generate_leaderboard(ctx, lb)
 
     @leaderboard(163437)
     def leaderboard_countingsheep(self, ctx: Context, lb: Leaderboard):
         return Missions.COUNTINGSHEEP.generate_leaderboard(ctx, lb)
 
+    @leaderboard(164808)
+    def leaderboard_breakfast(self, ctx: Context, lb: Leaderboard):
+        return Missions.BREAKFAST.generate_leaderboard(ctx, lb)
+
     @leaderboard(163438)
     def leaderboard_costa(self, ctx: Context, lb: Leaderboard):
         return Missions.HOLIDAY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164804)
+    def leaderboard_pack(self, ctx: Context, lb: Leaderboard):
+        return Missions.PACK.generate_leaderboard(ctx, lb)
+
+    @leaderboard(164809)
+    def leaderboard_alien(self, ctx: Context, lb: Leaderboard):
+        return Missions.ALIEN.generate_leaderboard(ctx, lb)
 
 
 if __name__=="__main__":
