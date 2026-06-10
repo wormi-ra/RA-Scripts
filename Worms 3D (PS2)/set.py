@@ -7,7 +7,7 @@ from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
 from framework import achievement, achievement_set, leaderboard
-from logic import Context, Controller, GameMode, Lua, Mission, Unlock, Weapons, Worm, Worms3D, XData
+from logic import Context, Controller, GameMode, Inventory, Lua, Mission, Unlock, Weapons, Worm, Worms3D, XData
 from data import UNLOCKS, Missions
 from memory import Memory
 import assets
@@ -407,9 +407,187 @@ class Worms3DSet(AchievementSet):
     # Campaign Challenges       #
     #############################
 
-    @achievement()
+    @achievement(615536)
     def campaign_challenge_dday(self, ctx: Context, ach: Achievement):
         mission = Missions.DDAY
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_loaded(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(
+                (Worms3D.current_team(ctx) == 0) &
+                XData.on_value_changed(ctx, "Jetpack.Fuel")
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615537)
+    def campaign_challenge_cratebritain(self, ctx: Context, ach: Achievement):
+        mission = Missions.CRATEBRITAIN
+        enemy_team = [2, 3, 4, 5, 6]
+        # Main logic
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            measured_if(delta(XData.get_value(ctx, "FCS.GameOver")) == 0),
+            measured_if(mission.on_start(ctx)).with_hits(1),
+            mission.on_gold_medal(ctx),
+            *(
+                # Kill counter
+                add_hits(
+                    Worm(enemy).get_instance(ctx).on_death()
+                ).with_hits(1)
+                for enemy in enemy_team
+            ),
+            measured(always_false()).with_hits(len(enemy_team)),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+        # Challenge indicator (never trigger)
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(always_false()),
+        ))
+
+    @achievement(615546)
+    def campaign_challenge_graveyard(self, ctx: Context, ach: Achievement):
+        mission = Missions.GRAVEYARD
+        inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
+        # Main logic
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            measured_if(mission.on_start(ctx).with_hits(1)),
+            # On grenade pickup
+            measured(inv >> delta(byte(0x2b)) < byte(0x2b)).with_hits(9),
+            mission.on_gold_medal(ctx),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+        # Challenge indicator (never trigger)
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(always_false()),
+        ))
+
+    @achievement(615547)
+    def campaign_challenge_leek(self, ctx: Context, ach: Achievement):
+        mission = Missions.LEEK
+        player_worms = [0, 1, 2 ,3]
+        recall_worm = Worm.Instance(MemoryExpression(recall()))
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            *(
+                group(
+                    remember(Worm(id).get_instance(ctx)),
+                    # Drowning states
+                    reset_if(
+                        (recall_worm.health == 0) &
+                        (recall_worm.animation_state == 0xd)
+                    ),
+                    reset_if(
+                        (recall_worm.health == 0) &
+                        (recall_worm.animation_state == 0x21)
+                    ),
+                )
+                for id in player_worms
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615548)
+    def campaign_challenge_ice(self, ctx: Context, ach: Achievement):
+        mission = Missions.ICE
+        team_index = XData.get_value(ctx, "CurrentTeamIndex")
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(
+                (delta(team_index) == 0) &
+                (team_index != 0)
+            ).with_hits(2),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615549)
+    def campaign_challenge_collide(self, ctx: Context, ach: Achievement):
+        mission = Missions.COLLIDE
+        allowed_weapons = [Weapons.FIRE_PUNCH, Weapons.PROD, Weapons.VIKING_AXE]
+        active_worm = Worm.Instance(MemoryExpression(recall()))
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            remember(Worm.get_active_worm(ctx)),
+            reset_if(group(
+                and_next(Worms3D.current_team(ctx) == 0),
+                and_next(Worm.on_attack(ctx)),
+                *(
+                    and_next(active_worm.equipped_weapon != weapon)
+                    for weapon in allowed_weapons
+                )
+            )),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615550)
+    def campaign_challenge_rum(self, ctx: Context, ach: Achievement):
+        mission = Missions.RUM
+        worm_index = XData.get_value(ctx, "ActiveWormIndex")
+        cdestroy_conds = group()
+        for lsize in [7, 8]:
+            for depth in [0]:
+                node = Lua.get_node(ctx, "cdestroy", lsize, depth)
+                cdestroy_conds.append(reset_if(
+                (node.get_hash() == node.hashstr) &
+                    (node.get_value() != 0.0)
+                ))
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(
+                (delta(worm_index) == 0) &
+                (worm_index != 0)
+            ),
+            cdestroy_conds,
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615551)
+    def campaign_challenge_crust(self, ctx: Context, ach: Achievement):
+        mission = Missions.CRUST
+        crate = XData.get_value(ctx, "Crate.Index")
+        enemy_team = [4, 5, 6, 7]
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(group(
+                *(
+                    add_source(Worm(id).get_instance(ctx).health)
+                    for id in enemy_team
+                ),
+                (value(0) != value(0)) &
+                XData.on_value_changed(ctx, "Crate.Index") &
+                (crate >= 1) &
+                (crate <= 3),
+            )),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615552)
+    def campaign_challenge_applecore(self, ctx: Context, ach: Achievement):
+        mission = Missions.APPLECORE
         ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
             mission.on_loaded(ctx).with_hits(1),
@@ -422,44 +600,110 @@ class Worms3DSet(AchievementSet):
             ),
         ))
 
-    @achievement()
-    def campaign_challenge_cratebritain(self, ctx: Context, ach: Achievement):
-        mission = Missions.CRATEBRITAIN
-        allowed_weapons = [Weapons.BASEBALL_BAT, Weapons.FIRE_PUNCH, Weapons.PROD]
+    @achievement(615553)
+    def campaign_challenge_helterskelter(self, ctx: Context, ach: Achievement):
+        mission = Missions.HELTERSKELTER
         active_worm = Worm.Instance(MemoryExpression(recall()))
-        enemy_team = [2, 3, 4, 5, 6]
-        # Main logic
         ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
-            measured_if(XData.get_value(ctx, "ElapsedRoundTime") != 0),
-            measured_if(delta(XData.get_value(ctx, "FCS.GameOver")) == 0),
-            measured_if(mission.on_start(ctx)).with_hits(1),
-            mission.on_gold_medal(ctx),
-            *(
-                # Kill counter
-                add_hits(
-                    Worm(enemy).get_instance(ctx).on_death()
-                ).with_hits(1)
-                for enemy in enemy_team
-            ),
-            measured(always_false()).with_hits(len(enemy_team)),
-            remember(Worm.get_active_worm(ctx)),
-            reset_if(group(
-                and_next(Worms3D.current_team(ctx) == 0),
-                and_next(Worm.on_attack(ctx)),
-                *(
-                    and_next(active_worm.equipped_weapon != weapon)
-                    for weapon in allowed_weapons
-                )
-            )),
-            reset_if(~mission.is_loaded(ctx)),
-        ))
-        # Challenge indicator (never trigger)
-        ach.add_alt(group(
-            Worms3D.check_serial(ctx),
             mission.on_start(ctx).with_hits(1),
             mission.gold_timer_on_pace(ctx),
-            trigger(always_false()),
+            trigger(mission.on_gold_medal(ctx)),
+            remember(Worm.get_active_worm(ctx)),
+            reset_if(
+                (Worms3D.current_team(ctx) == 0) &
+                (Worm.on_attack(ctx)) &
+                (active_worm.equipped_weapon == Weapons.BAZOOKA)
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615554)
+    def campaign_challenge_cherry(self, ctx: Context, ach: Achievement):
+        mission = Missions.CHERRY
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            # 2 mins in milliseconds
+            XData.get_value(ctx, "ElapsedRoundTime") < (2 * 60 * 1000),
+            trigger(mission.on_gold_medal(ctx)),
+        ))
+
+    @achievement(615555)
+    def campaign_challenge_clean(self, ctx: Context, ach: Achievement):
+        mission = Missions.CLEAN
+        forbidden_weapons = [Weapons.GRENADE, Weapons.BAZOOKA, Weapons.CLUSTER_BOMB]
+        active_worm = Worm.Instance(MemoryExpression(recall()))
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            remember(Worm.get_active_worm(ctx)),
+            *(
+                reset_if(
+                    and_next(Worms3D.current_team(ctx) == 0) &
+                    and_next(active_worm.equipped_weapon == weapon) &
+                    and_next(Worm.on_attack(ctx))
+                )
+                for weapon in forbidden_weapons
+            ),
+            reset_if(
+                (Worms3D.current_team(ctx) == 0) &
+                (delta(XData.get_value(ctx, "Jetpack.Fuel")) == 7500) &
+                (XData.get_value(ctx, "Jetpack.Fuel") < 7500)
+            ).with_hits(2),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615556)
+    def campaign_challenge_timbers(self, ctx: Context, ach: Achievement):
+        mission = Missions.TIMBERS
+        worm_index = XData.get_value(ctx, "ActiveWormIndex")
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(
+                # end of captain's turn
+                (delta(worm_index) == 3) &
+                (worm_index != 3)
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615557)
+    def campaign_challenge_falling(self, ctx: Context, ach: Achievement):
+        mission = Missions.FALLING
+        worm_index = XData.get_value(ctx, "ActiveWormIndex")
+        inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            # On grenade pickup
+            trigger(inv >> delta(byte(0x2b)) < byte(0x2b)),
+            reset_if(
+                # end of first worm's turn
+                (delta(worm_index) == 0) &
+                (worm_index != 0)
+            ),
+            reset_if(~mission.is_loaded(ctx)),
+        ))
+
+    @achievement(615558)
+    def campaign_challenge_cropcircle(self, ctx: Context, ach: Achievement):
+        mission = Missions.CROPCIRCLE
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            mission.on_start(ctx).with_hits(1),
+            mission.gold_timer_on_pace(ctx),
+            trigger(mission.on_gold_medal(ctx)),
+            reset_if(group(
+                (Worms3D.current_team(ctx) == 0) &
+                XData.on_value_changed(ctx, "Crate.Index")
+            )),
+            reset_if(~mission.is_loaded(ctx)),
         ))
 
     #############################

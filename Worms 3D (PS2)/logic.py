@@ -140,7 +140,7 @@ class Unlock:
 
 class Weapons:
     BAZOOKA = 0x0
-    GRANDE = 0x1
+    GRENADE = 0x1
     CLUSTER_BOMB = 0x2
     DYNAMITE = 0x4
     LAND_MINE = 0x7
@@ -148,6 +148,7 @@ class Weapons:
     UZI = 0x9
     BASEBALL_BAT = 0xa
     PROD = 0xb
+    VIKING_AXE = 0xc
     FIRE_PUNCH = 0xd
     HOMING_MISSILE = 0xe
     MORTAR = 0xf
@@ -164,6 +165,39 @@ class Weapons:
     SKIP_GO = 0x31
     SURRENDER = 0x32
     WORM_SELECT = 0x33
+
+
+class Inventory:
+    class InventoryType(Enum):
+        WORM = 0
+        TEAM = 1
+        ALLIANCE = 2
+
+    @staticmethod
+    def get_inventory(ctx: Context, index: int, itype: InventoryType = InventoryType.TEAM):
+        address = [
+            {
+                "US": Memory.US_INGAME_WORM_INVENTORY_INSTANCES_ARRAY,
+                "EU": Memory.EU_INGAME_WORM_INVENTORY_INSTANCES_ARRAY,
+            },
+            {
+                "US": Memory.US_TEAM_INSTANCES_INVENTORY_ARRAY,
+                "EU": Memory.EU_TEAM_INSTANCES_INVENTORY_ARRAY,
+            },
+            {
+                "US": Memory.US_ALLIANCE_INSTANCES_INVENTORY_ARRAY,
+                "EU": Memory.EU_ALLIANCE_INSTANCES_INVENTORY_ARRAY,
+            },
+        ][itype.value][ctx.region].address + (4 * index)
+        return dword(address) >> dword(0x4) >> dword(0x1c)
+
+    @staticmethod
+    def get_ammo(ctx: Context, weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
+        ammo = {
+            Weapons.BAZOOKA: 0x20,
+            Weapons.GRENADE: 0x2b,
+        }[weapon]
+        return Inventory.get_inventory(ctx, index, itype) >> byte(ammo)
 
 
 class Mission:
