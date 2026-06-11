@@ -39,18 +39,32 @@ class XData:
             }
 
     @staticmethod
-    def get_value(ctx: Context, key: str):
+    def get_value(ctx: Context, key: str, type_override = dword) -> MemoryExpression:
         return dword({
             "EU": XData.DATA[key]["sles"],
             "US": XData.DATA[key]["slus"],
-        }[ctx.region]) >> dword(0x4) >> dword(0x1c)
+        }[ctx.region]) >> dword(0x4) >> type_override(0x1c)
 
     @staticmethod
-    def on_value_changed(ctx: Context, key: str):
+    def on_value_changed(ctx: Context, key: str, type_override = dword) -> MemoryExpression:
         return dword({
             "EU": XData.DATA[key]["sles"],
             "US": XData.DATA[key]["slus"],
-        }[ctx.region]) >> dword(0x4) >> delta(dword(0x1c)) != dword(0x1c)
+        }[ctx.region]) >> dword(0x4) >> delta(type_override(0x1c)) != type_override(0x1c)
+
+    @staticmethod
+    def on_value_decreased(ctx: Context, key: str, type_override = dword)  -> MemoryExpression:
+        return dword({
+            "EU": XData.DATA[key]["sles"],
+            "US": XData.DATA[key]["slus"],
+        }[ctx.region]) >> dword(0x4) >> delta(type_override(0x1c)) > type_override(0x1c)
+
+    @staticmethod
+    def on_value_increased(ctx: Context, key: str, type_override = dword)  -> MemoryExpression:
+        return dword({
+            "EU": XData.DATA[key]["sles"],
+            "US": XData.DATA[key]["slus"],
+        }[ctx.region]) >> dword(0x4) >> delta(type_override(0x1c)) < type_override(0x1c)
 
 
 class Controller:
@@ -223,6 +237,7 @@ class Inventory:
             Weapons.EARTHQUAKE: 0x1b,
             Weapons.HOMING_PIDGEON: 0x1c,
             Weapons.MORTAR: 0x1d,
+            Weapons.HOMING_MISSILE: 0x1e,
             Weapons.FIRE_PUNCH: 0x1f,
             Weapons.BAZOOKA: 0x20,
             Weapons.PROD: 0x21,
@@ -461,10 +476,23 @@ class Worm:
         def animation_state(self):
             return self >> dword(0x80)
 
+        @property
+        def team_id(self):
+            return self >> byte(0xd5)
+
         def on_death(self):
             return (
                 (delta(self.health) != 0) &
                 (self.health == 0)
+            )
+
+        def on_jump(self):
+            return (
+                (self.animation_state == 0x3) | # Regular jump
+                (self.animation_state == 0x4) | # Straight jump
+                (self.animation_state == 0x6) | # Backflip
+                (self.animation_state == 0x24) & # Frontflip
+                (delta(self.animation_state) == 0x2) # About to jump
             )
 
 
