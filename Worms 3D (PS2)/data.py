@@ -655,6 +655,15 @@ class Missions:
         land_maxheight=0x440b9c29,
         teams=[],
     )
+    STDVS = Mission(
+        index=0,
+        mtype=-1,
+        name="Custom Game",
+        filename="stdvs",
+        gold=None,
+        land_maxheight=None,
+        teams=[],
+    )
 
     CAMPAIGN = [
         DDAY,

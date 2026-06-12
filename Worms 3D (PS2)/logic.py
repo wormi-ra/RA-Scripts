@@ -7,6 +7,7 @@ from pycheevos.core.constants import *
 from pycheevos.core.condition import Condition, ConditionList
 from pycheevos.core.value import MemoryExpression, MemoryValue
 from pycheevos.models.leaderboard import Leaderboard
+from pycheevos.models.set import Achievement
 from memory import Memory
 import polars as pl
 import csv
@@ -480,6 +481,10 @@ class Worm:
         def team_id(self):
             return self >> byte(0xd5)
 
+        @property
+        def is_active(self):
+            return self >> dword(0xdc)
+
         def on_death(self):
             return (
                 (delta(self.health) != 0) &
@@ -525,6 +530,105 @@ class Worm:
     @staticmethod
     def on_attack(ctx: Context):
         return (XData.on_value_changed(ctx, "Weapon.GraphicalLaunchLocation"))
+
+
+class Team:
+    id: int
+
+    class Instance(MemoryExpression):
+        def __init__(self, expression: MemoryExpression):
+            super().__init__(expression.terms[0][0], Flag.NONE)
+            self.terms = expression.terms[:]
+
+        @property
+        def is_local(self):
+            return self >> dword(0x20)
+
+        @property
+        def is_ai_controlled(self):
+            return self >> dword(0x34)
+
+        @property
+        def skill(self):
+            return self >> byte(0x24)
+
+        @property
+        def allied_group(self):
+            return self >> byte(0x3c)
+
+
+    def __init__(self, id: int = -1) -> None:
+        self.id = id
+
+    @staticmethod
+    def get_team_array(ctx: Context):
+        return {
+            "EU": Memory.EU_INGAME_TEAM_DATA_INSTANCES_ARRAY,
+            "US": Memory.US_INGAME_TEAM_DATA_INSTANCES_ARRAY,
+        }[ctx.region]
+
+    def get_instance(self, ctx: Context):
+        if self.id == -1:
+            raise ValueError("Cannot get instance of team ID -1")
+        return Team.Instance(
+            dword(Team.get_team_array(ctx).address + self.id * 4)
+            >> dword(0x4) >> dword(0x1c)
+        )
+
+    @staticmethod
+    def get_active_team(ctx: Context):
+        return Team.Instance(
+            (XData.get_value(ctx, "CurrentTeamIndex") * value(4))
+            >> Team.get_team_array(ctx) >> dword(0x4) >> dword(0x1c)
+        )
+
+    @staticmethod
+    def get_starting_worm_count(ctx: Context, team_id: int):
+        return (
+            XData.get_value(ctx, "GM.GameInitData") 
+            >> dword([
+                0x38, 0x88, 0xd0, 0x11c
+            ][team_id])
+        )
+
+
+class TeamPersist:
+    id: int
+
+    class Instance(MemoryExpression):
+        def __init__(self, expression: MemoryExpression):
+            super().__init__(expression.terms[0][0], Flag.NONE)
+            self.terms = expression.terms[:]
+
+        @property
+        def rounds_won(self):
+            return self >> dword(0x14)
+
+
+    def __init__(self, id: int = -1) -> None:
+        self.id = id
+
+    @staticmethod
+    def get_team_array(ctx: Context):
+        return {
+            "EU": Memory.EU_TEAM_PERSIST_INSTANCES_ARRAY,
+            "US": Memory.US_TEAM_PERSIST_INSTANCES_ARRAY,
+        }[ctx.region]
+
+    def get_instance(self, ctx: Context):
+        if self.id == -1:
+            raise ValueError("Cannot get instance of team ID -1")
+        return TeamPersist.Instance(
+            dword(TeamPersist.get_team_array(ctx).address + self.id * 4)
+            >> dword(0x4) >> dword(0x1c)
+        )
+
+    @staticmethod
+    def get_active_team(ctx: Context):
+        return Team.Instance(
+            (XData.get_value(ctx, "CurrentTeamIndex") * value(4))
+            >> Team.get_team_array(ctx) >> dword(0x4) >> dword(0x1c)
+        )
 
 
 class Lua:
@@ -668,3 +772,40 @@ class Worms3D:
         #     "EU": Memory.EU_STATE_CHECK_IS_LOADING == value(0x1),
         #     "US": Memory.US_STATE_CHECK_IS_LOADING == value(0x1),
         # }[ctx.region]
+
+    @staticmethod
+    def number_of_teams(ctx: Context):
+        return (
+            XData.get_value(ctx, "GM.GameInitData") 
+            >> dword(0x5c)
+        )
+
+    @staticmethod
+    def generate_multiplayer_challenge(ctx: Context, ach: Achievement, scheme_name: str, land_name: str, skill = 5, player_worms = 4, enemy_worms = 4):
+        from data import Missions
+        mission = Missions.STDVS
+        scheme = XData.get_value(ctx, "GM.SchemeData") >> dword(0x14)
+        land = XData.get_value(ctx, "Land.File")
+        for team_id in range(2):
+            team_persist = TeamPersist(team_id).get_instance(ctx)
+            team = Team(team_id).get_instance(ctx)
+            enemy_team = Team(team_id ^ 1).get_instance(ctx)
+            ach.add_alt(group(
+                Worms3D.check_serial(ctx),
+                mission.is_loaded(ctx),
+                Worms3D.number_of_teams(ctx) == 2,
+                Team.get_starting_worm_count(ctx, team_id) == player_worms,
+                Team.get_starting_worm_count(ctx, team_id ^ 1) == enemy_worms,
+                team.is_ai_controlled == 0,
+                enemy_team.skill == skill,
+                remember(scheme),
+                string_equals(0x0, f"{scheme_name}\0", transform=lambda val: recall() >> val),
+                remember(land),
+                string_equals(0x0, f"{land_name}\0", transform=lambda val: recall() >> val),
+                # No Wormpot
+                XData.get_value(ctx, "FE.Wormpot.Reel1") == 0x11,
+                XData.get_value(ctx, "FE.Wormpot.Reel2") == 0x11,
+                XData.get_value(ctx, "FE.Wormpot.Reel3") == 0x11,
+                # On round won
+                trigger(team_persist >> delta(dword(0x14)) < dword(0x14)),
+            ))

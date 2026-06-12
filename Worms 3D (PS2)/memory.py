@@ -3,6 +3,25 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Memory:
+    SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000000)
+    """
+    [Notes] Set created with the help of PyCheevos scripts
+    See github below for source code and further information
+    https://github.com/wormi-ra/RA-Scripts/tree/main/Worms%203D%20(PS2)
+
+    The EU version of this game has been compiled in debug mode, which makes RAM digging much easier because of the exposed symbols in the debugger.
+
+    This game uses LUA scripts during missions.
+    LUA memory is documented at $0x17f31d0 (EU) or $0x180a508 (US)
+    Scripts can be extracted from the game ROM and serve as a great resource to develop achievements.
+
+    Most of the time, using LUA memory in achievement logic is unnecessary as the game stores most infos in a global hashmap called XDataResourceManager that is used to communicate between the game engine and  LUA scripts through the use of GetData(), SetData() or *Container() LUA functions.
+    This hashmap is documented at $0x5da42c (EU) or $0x6ad854 (US)
+
+    All hashmap entries for both versions have been dumped in the following CSV file:
+    https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%203D%20(PS2)/data/xdata.csv
+    """
+
     EU_STATE_CHECK_IS_LOADING = dword(0x53359c)
     """
     [32-bit Boolean] (EU) State Check | Is Loading
@@ -163,7 +182,8 @@ class Memory:
     ---- 0x00 = Waiting (End of turn?)
     ---- 0x01 = Walking
     ---- 0x02 = About to jump
-    ---- 0x03 = Jump
+    ---- 0x03 = Regular jump
+    ---- 0x04 = Straight jump
     ---- 0x06 = Backflip
     ---- 0x07 = Bonk
     ---- 0x08 = Explosion recoil
@@ -177,6 +197,7 @@ class Memory:
     ---- 0x15 = Waiting (Own team turn?)
     ---- 0x16 = Waiting (Enemy team turn?)
     ---- 0x1b = Stunned
+    ---- 0x21 = Drowning (low water)
     ---- 0x22 = Waiting (During projectile launch)?
     ---- 0x24 = Frontflip
     ---- 0x25 = Using teleporter
@@ -185,28 +206,49 @@ class Memory:
     ---- 0x00 = Bazooka
     ---- 0x01 = Grenade
     ---- 0x02 = Cluster Bomb
+    ---- 0x03 = Air Strike
     ---- 0x04 = Dynamite
+    ---- 0x05 = Holy Hand Grenade
+    ---- 0x06 = Banana Bomb
     ---- 0x07 = Land Mine
     ---- 0x08 = Shotgun
     ---- 0x09 = Uzi
     ---- 0x0a = Baseball Bat
     ---- 0x0b = Prod
+    ---- 0x0c = Viking Axe
     ---- 0x0d = Fire Punch
     ---- 0x0e = Homing Missile
     ---- 0x0f = Mortar
+    ---- 0x10 = Homing Pidgeon
+    ---- 0x11 = Earthquake
     ---- 0x12 = Sheep
     ---- 0x14 = Petrol Bomb
     ---- 0x15 = Gas Canister
+    ---- 0x17 = Mad Cow
+    ---- 0x18 = Old Woman
+    ---- 0x19 = Concrete Donkey
+    ---- 0x1a = Nuclear Bomb
+    ---- 0x1d = Super Sheep
+    ---- 0x1e = Blowpipe
+    ---- 0x1f = Lottery Strike
+    ---- 0x20 = Doctor's Strike
+    ---- 0x21 = Mega Mine
     ---- 0x22 = Sticky Bomb
     ---- 0x23 = Binoculars
     ---- 0x27 = Girder
+    ---- 0x28 = Bridge Kit
     ---- 0x29 = Ninja Rope
     ---- 0x2a = Parachute
+    ---- 0x2b = Scales of Justice
+    ---- 0x2c = Low Gravity
+    ---- 0x2d = Fast Walk
     ---- 0x2f = Teleport
     ---- 0x30 = Jet Pack
     ---- 0x31 = Skip Go
     ---- 0x32 = Surrender
     ---- 0x33 = Worm Select
+    ---- 0x34 = Freeze
+    ---- 0x35 = Redbull
     +++0x88 = [32-bit] Poison Rate
     +++0x8c = [32-bit Pointer] Name
     +++0x90 = [32-bit Float] Gun Wobble Yaw
@@ -312,9 +354,13 @@ class Memory:
     """
     [32-bit Pointer] (EU) Ingame | Worm Inventory Instances Array [0]
     (DRM::g_pWormInventoryInstances)
+    Worm specific inventory, only used on CPU-controlled worms in some missions.
+    Note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
     +0x4
     ++0x1c = [32-bit Pointer] WeaponInventory
-    +++0x14 = [50 bytes] Weapon Ammo Data (See 0x6ce0e8)
+    +++0x14 = [50 bytes] Weapon Ammo Data
+    ---- Refer to $0x6ce108
     """
 
     EU_INGAME_WORM_INVENTORY_INSTANCES_ARRAY_1 = dword(0x6ce05c)
@@ -402,7 +448,13 @@ class Memory:
     +++0x18 = [32-bit] Score Points
     +++0x1c = [32-bit Pointer] Team Name
     +++0x20 = [32-bit Boolean] Is Local
-    +++0x24 = [8-bit] Skill
+    +++0x24 = [8-bit] Skill (Difficulty)
+    ---- 0x0 = Human
+    ---- 0x1 = Bad
+    ---- 0x2 = OK
+    ---- 0x3 = Good
+    ---- 0x4 = Very Good
+    ---- 0x5 = Perfect
     +++0x28 = [32-bit Boolean] Is Crate Spy Active
     +++0x2c = [32-bit Boolean] Team Surrendered
     +++0x30 = [8-bit] Worms Count End
@@ -441,11 +493,66 @@ class Memory:
     """
     [32-bit Pointer] (EU) Team Instances Inventory Array [0]
     (DRM::g_pTeamInventoryInstances)
-    This is the most commonly used inventory in missions, note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
+    This is the default starting inventory in missions.
+    Note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
     Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
     +0x4
     ++0x1c = [32-bit Pointer] WeaponInventory
-    --- An ammo value of 0xff means infinite ammo
+    +++0x14 = [50 bytes] Weapon Ammo Data
+    ---- Refer to $0x6ce108
+    """
+
+    EU_TEAM_INSTANCES_INVENTORY_ARRAY_1 = dword(0x6ce0ec)
+    """
+    [32-bit Pointer] (EU) Team Instances Inventory Array [1]
+    """
+
+    EU_TEAM_INSTANCES_INVENTORY_ARRAY_2 = dword(0x6ce0f0)
+    """
+    [32-bit Pointer] (EU) Team Instances Inventory Array [2]
+    """
+
+    EU_TEAM_INSTANCES_INVENTORY_ARRAY_3 = dword(0x6ce0f4)
+    """
+    [32-bit Pointer] (EU) Team Instances Inventory Array [3]
+    """
+
+    EU_TEAM_PERSIST_INSTANCES_ARRAY = dword(0x6ce0f8)
+    """
+    [32-bit Pointer] (EU) Team Persist Instances Array [0]
+    (DRM::g_pTeamPersistInstances)
+    Most likely used for storing scores between rounds in multiplayer games
+    +0x4
+    ++0x1c = [32-bit Pointer] TeamPersistDataContainer
+    +++0x14 = [32-bit] Rounds Won
+    """
+
+    EU_TEAM_PERSIST_INSTANCES_ARRAY_1 = dword(0x6ce0fc)
+    """
+    [32-bit Pointer] (EU) Team Persist Instances Array [1]
+    """
+
+    EU_TEAM_PERSIST_INSTANCES_ARRAY_2 = dword(0x6ce100)
+    """
+    [32-bit Pointer] (EU) Team Persist Instances Array [2]
+    """
+
+    EU_TEAM_PERSIST_INSTANCES_ARRAY_3 = dword(0x6ce104)
+    """
+    [32-bit Pointer] (EU) Team Persist Instances Array [3]
+    """
+
+    EU_ALLIANCE_INSTANCES_INVENTORY_ARRAY = dword(0x6ce108)
+    """
+    [32-bit Pointer] (EU) Alliance Instances Inventory Array [0]
+    (DRM::g_pAllianceInventoryInstances)
+    Shared inventory between teams of the same color.
+    This is the default inventory when receiving ammo from crates in missions.
+    All inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
+    +0x4
+    ++0x1c = [32-bit Pointer] WeaponInventory
+     --- An ammo value of 0xff means infinite ammo
     +++0x14 = [8-bit] Ammo | Old Woman
     +++0x15 = [8-bit] Ammo | Mad Cow
     +++0x16 = [8-bit] Ammo | Sheep Strike (Unused)
@@ -497,56 +604,6 @@ class Memory:
     +++0x44 = [8-bit] Ammo | Magic Bullet (Unused)
     +++0x45 = [8-bit] Ammo | Armageddon (Unused)
     +++0x46 = [8-bit] Ammo | Nuclear Bomb
-    """
-
-    EU_TEAM_INSTANCES_INVENTORY_ARRAY_1 = dword(0x6ce0ec)
-    """
-    [32-bit Pointer] (EU) Team Instances Inventory Array [1]
-    """
-
-    EU_TEAM_INSTANCES_INVENTORY_ARRAY_2 = dword(0x6ce0f0)
-    """
-    [32-bit Pointer] (EU) Team Instances Inventory Array [2]
-    """
-
-    EU_TEAM_INSTANCES_INVENTORY_ARRAY_3 = dword(0x6ce0f4)
-    """
-    [32-bit Pointer] (EU) Team Instances Inventory Array [3]
-    """
-
-    EU_TEAM_PERSIST_INSTANCES_ARRAY = dword(0x6ce0f8)
-    """
-    [32-bit Pointer] (EU) Team Persist Instances Array [0]
-    (DRM::g_pTeamPersistInstances)
-    Most likely used for storing scores between rounds in multiplayer games
-    +0x4
-    ++0x1c = [32-bit Pointer] TeamPersistDataContainer
-    +++0x14 = [32-bit] Rounds Won
-    """
-
-    EU_TEAM_PERSIST_INSTANCES_ARRAY_1 = dword(0x6ce0fc)
-    """
-    [32-bit Pointer] (EU) Team Persist Instances Array [1]
-    """
-
-    EU_TEAM_PERSIST_INSTANCES_ARRAY_2 = dword(0x6ce100)
-    """
-    [32-bit Pointer] (EU) Team Persist Instances Array [2]
-    """
-
-    EU_TEAM_PERSIST_INSTANCES_ARRAY_3 = dword(0x6ce104)
-    """
-    [32-bit Pointer] (EU) Team Persist Instances Array [3]
-    """
-
-    EU_ALLIANCE_INSTANCES_INVENTORY_ARRAY = dword(0x6ce108)
-    """
-    [32-bit Pointer] (EU) Alliance Instances Inventory Array [0]
-    (DRM::g_pAllianceInventoryInstances)
-    Shared inventory between teams of the same color, mostly used for multiplayer
-    +0x4
-    ++0x1c = [32-bit Pointer] WeaponInventory
-    +++0x14 = [50 bytes] Weapon Ammo Data (See 0x6ce0e8)
     """
 
     EU_ALLIANCE_INSTANCES_INVENTORY_ARRAY_1 = dword(0x6ce10c)
@@ -638,7 +695,8 @@ class Memory:
     ---- 0x00 = Waiting (End of turn?)
     ---- 0x01 = Walking
     ---- 0x02 = About to jump
-    ---- 0x03 = Jump
+    ---- 0x03 = Regular jump
+    ---- 0x04 = Straight jump
     ---- 0x06 = Backflip
     ---- 0x07 = Bonk
     ---- 0x08 = Explosion recoil
@@ -652,6 +710,7 @@ class Memory:
     ---- 0x15 = Waiting (Own team turn?)
     ---- 0x16 = Waiting (Enemy team turn?)
     ---- 0x1b = Stunned
+    ---- 0x21 = Drowning (low water)
     ---- 0x22 = Waiting (During projectile launch)?
     ---- 0x24 = Frontflip
     ---- 0x25 = Using teleporter
@@ -660,28 +719,49 @@ class Memory:
     ---- 0x00 = Bazooka
     ---- 0x01 = Grenade
     ---- 0x02 = Cluster Bomb
+    ---- 0x03 = Air Strike
     ---- 0x04 = Dynamite
+    ---- 0x05 = Holy Hand Grenade
+    ---- 0x06 = Banana Bomb
     ---- 0x07 = Land Mine
     ---- 0x08 = Shotgun
     ---- 0x09 = Uzi
     ---- 0x0a = Baseball Bat
     ---- 0x0b = Prod
+    ---- 0x0c = Viking Axe
     ---- 0x0d = Fire Punch
     ---- 0x0e = Homing Missile
     ---- 0x0f = Mortar
+    ---- 0x10 = Homing Pidgeon
+    ---- 0x11 = Earthquake
     ---- 0x12 = Sheep
     ---- 0x14 = Petrol Bomb
     ---- 0x15 = Gas Canister
+    ---- 0x17 = Mad Cow
+    ---- 0x18 = Old Woman
+    ---- 0x19 = Concrete Donkey
+    ---- 0x1a = Nuclear Bomb
+    ---- 0x1d = Super Sheep
+    ---- 0x1e = Blowpipe
+    ---- 0x1f = Lottery Strike
+    ---- 0x20 = Doctor's Strike
+    ---- 0x21 = Mega Mine
     ---- 0x22 = Sticky Bomb
     ---- 0x23 = Binoculars
     ---- 0x27 = Girder
+    ---- 0x28 = Bridge Kit
     ---- 0x29 = Ninja Rope
     ---- 0x2a = Parachute
+    ---- 0x2b = Scales of Justice
+    ---- 0x2c = Low Gravity
+    ---- 0x2d = Fast Walk
     ---- 0x2f = Teleport
     ---- 0x30 = Jet Pack
     ---- 0x31 = Skip Go
     ---- 0x32 = Surrender
     ---- 0x33 = Worm Select
+    ---- 0x34 = Freeze
+    ---- 0x35 = Redbull
     +++0x88 = [32-bit] Poison Rate
     +++0x8c = [32-bit Pointer] Name
     +++0x90 = [32-bit Float] Gun Wobble Yaw
@@ -787,9 +867,13 @@ class Memory:
     """
     [32-bit Pointer] (US) Ingame | Worm Inventory Instances Array [0]
     (DRM::g_pWormInventoryInstances)
+    Worm specific inventory, only used on CPU-controlled worms in some missions.
+    Note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
     +0x4
     ++0x1c = [32-bit Pointer] WeaponInventory
-    +++0x14 = [50 bytes] Weapon Ammo Data (See 0x79dcd0)
+    +++0x14 = [50 bytes] Weapon Ammo Data
+    ---- Refer to $0x79dcf0
     """
 
     US_INGAME_WORM_INVENTORY_INSTANCES_ARRAY_1 = dword(0x79dc44)
@@ -877,7 +961,13 @@ class Memory:
     +++0x18 = [32-bit] Score Points
     +++0x1c = [32-bit Pointer] Team Name
     +++0x20 = [32-bit Boolean] Is Local
-    +++0x24 = [8-bit] Skill
+    +++0x24 = [8-bit] Skill (Difficulty)
+    ---- 0x0 = Human
+    ---- 0x1 = Bad
+    ---- 0x2 = OK
+    ---- 0x3 = Good
+    ---- 0x4 = Very Good
+    ---- 0x5 = Perfect
     +++0x28 = [32-bit Boolean] Is Crate Spy Active
     +++0x2c = [32-bit Boolean] Team Surrendered
     +++0x30 = [8-bit] Worms Count End
@@ -916,11 +1006,66 @@ class Memory:
     """
     [32-bit Pointer] (US) Team Instances Inventory Array [0]
     (DRM::g_pTeamInventoryInstances)
-    This is the most commonly used inventory in missions, note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
+    This is the default starting inventory in missions.
+    Note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
     Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
     +0x4
     ++0x1c = [32-bit Pointer] WeaponInventory
-    --- An ammo value of 0xff means infinite ammo
+    +++0x14 = [50 bytes] Weapon Ammo Data
+    ---- Refer to $0x79dcf0
+    """
+
+    US_TEAM_INSTANCES_INVENTORY_ARRAY_1 = dword(0x79dcd4)
+    """
+    [32-bit Pointer] (US) Team Instances Inventory Array [1]
+    """
+
+    US_TEAM_INSTANCES_INVENTORY_ARRAY_2 = dword(0x79dcd8)
+    """
+    [32-bit Pointer] (US) Team Instances Inventory Array [2]
+    """
+
+    US_TEAM_INSTANCES_INVENTORY_ARRAY_3 = dword(0x79dcdc)
+    """
+    [32-bit Pointer] (US) Team Instances Inventory Array [3]
+    """
+
+    US_TEAM_PERSIST_INSTANCES_ARRAY = dword(0x79dce0)
+    """
+    [32-bit Pointer] (US) Team Persist Instances Array [0]
+    (DRM::g_pTeamPersistInstances)
+    Most likely used for storing scores between rounds in multiplayer games
+    +0x4
+    ++0x1c = [32-bit Pointer] TeamPersistDataContainer
+    +++0x14 = [32-bit] Rounds Won
+    """
+
+    US_TEAM_PERSIST_INSTANCES_ARRAY_1 = dword(0x79dce4)
+    """
+    [32-bit Pointer] (US) Team Persist Instances Array [1]
+    """
+
+    US_TEAM_PERSIST_INSTANCES_ARRAY_2 = dword(0x79dce8)
+    """
+    [32-bit Pointer] (US) Team Persist Instances Array [2]
+    """
+
+    US_TEAM_PERSIST_INSTANCES_ARRAY_3 = dword(0x79dcec)
+    """
+    [32-bit Pointer] (US) Team Persist Instances Array [3]
+    """
+
+    US_ALLIANCE_INSTANCES_INVENTORY_ARRAY = dword(0x79dcf0)
+    """
+    [32-bit Pointer] (US) Alliance Instances Inventory Array [0]
+    (DRM::g_pAllianceInventoryInstances)
+    Shared inventory between teams of the same color.
+    This is the default inventory when receiving ammo from crates in missions.
+    All inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
+    +0x4
+    ++0x1c = [32-bit Pointer] WeaponInventory
+     --- An ammo value of 0xff means infinite ammo
     +++0x14 = [8-bit] Ammo | Old Woman
     +++0x15 = [8-bit] Ammo | Mad Cow
     +++0x16 = [8-bit] Ammo | Sheep Strike (Unused)
@@ -972,56 +1117,6 @@ class Memory:
     +++0x44 = [8-bit] Ammo | Magic Bullet (Unused)
     +++0x45 = [8-bit] Ammo | Armageddon (Unused)
     +++0x46 = [8-bit] Ammo | Nuclear Bomb
-    """
-
-    US_TEAM_INSTANCES_INVENTORY_ARRAY_1 = dword(0x79dcd4)
-    """
-    [32-bit Pointer] (US) Team Instances Inventory Array [1]
-    """
-
-    US_TEAM_INSTANCES_INVENTORY_ARRAY_2 = dword(0x79dcd8)
-    """
-    [32-bit Pointer] (US) Team Instances Inventory Array [2]
-    """
-
-    US_TEAM_INSTANCES_INVENTORY_ARRAY_3 = dword(0x79dcdc)
-    """
-    [32-bit Pointer] (US) Team Instances Inventory Array [3]
-    """
-
-    US_TEAM_PERSIST_INSTANCES_POINTER_ARRAY = dword(0x79dce0)
-    """
-    [32-bit Pointer] (US) Team Persist Instances Pointer Array [0]
-    (DRM::g_pTeamPersistInstances)
-    Most likely used for storing scores between rounds in multiplayer games
-    +0x4
-    ++0x1c = [32-bit Pointer] TeamPersistDataContainer
-    +++0x14 = [32-bit] Rounds Won
-    """
-
-    US_TEAM_PERSIST_INSTANCES_POINTER_ARRAY_1 = dword(0x79dce4)
-    """
-    [32-bit Pointer] (US) Team Persist Instances Pointer Array [1]
-    """
-
-    US_TEAM_PERSIST_INSTANCES_POINTER_ARRAY_2 = dword(0x79dce8)
-    """
-    [32-bit Pointer] (US) Team Persist Instances Pointer Array [2]
-    """
-
-    US_TEAM_PERSIST_INSTANCES_POINTER_ARRAY_3 = dword(0x79dcec)
-    """
-    [32-bit Pointer] (US) Team Persist Instances Pointer Array [3]
-    """
-
-    US_ALLIANCE_INSTANCES_INVENTORY_ARRAY = dword(0x79dcf0)
-    """
-    [32-bit Pointer] (US) Alliance Instances Inventory Array [0]
-    (DRM::g_pAllianceInventoryInstances)
-    Shared inventory between teams of the same color, mostly used for multiplayer
-    +0x4
-    ++0x1c = [32-bit Pointer] WeaponInventory
-    +++0x14 = [50 bytes] Weapon Ammo Data (See 0x79dcd0)
     """
 
     US_ALLIANCE_INSTANCES_INVENTORY_ARRAY_1 = dword(0x79dcf4)
@@ -1078,13 +1173,6 @@ class Memory:
     bit5 = D-Pad Right
     bit6 = D-Pad Down
     bit7 = D-Pad Left
-    """
-
-    US_GAME_STATUS_IS_IN_INGAME_CUTSCENE = dword(0x15703bc)
-    """
-    [32-bit] (US) Game Status | Is in ingame cutscene
-    0x0 = False
-    0x1 = True
     """
 
     EU_LUA_STATE_STACK_TOP = dword(0x17f2e18)
@@ -1161,7 +1249,7 @@ class Memory:
     Always point to 0x17f31c0
     +0x0 = [32-bit Pointer] Next Element
     +0x7 = [8-bit] LSizeNode
-    -- Refer to $0x017f31c7
+    -- Refer to $0x17f31c7
     +0x8 = [32-bit Pointer] Meta Table
     +0xc = [32-bit Pointer] Array Part
     +0x10 = [32-bit Pointer] Global Node Vector
@@ -1196,23 +1284,31 @@ class Memory:
     """
     [32-bit Pointer] (EU) Lua Global Table | Node Vector
     Hashmap of all global variables instanciated in the script, implemented as a chained scatter table.
-    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf (Page 4)
+    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf
     Source code: https://www.lua.org/source/5.0/ltable.c.html
 
     Each node is 20 bytes long and follow this structure:
-    | +0x0 = [32-bit] Key type (always 4 for strings)
-    | +0x4 = [32-bit Pointer] Pointer to key string
-    | ++0x0 = [ASCII] Key string
-    | ++0xfffffffc = [32-bit] String length
-    | ++0xfffffff8 = [32-bit] String hash
-    | ++0x8 = [32-bit] = Value type (Always 3 for numbers)
-    | ++0xc = [32-bit Float] = Value
-    | --- Lua numbers are stored as float even if interpreted as integers
-    | ++0x10 = [32-bit Pointer] = Next node
+    +0x0 = [32-bit] Key type (always 4 for strings)
+    +0x4 = [32-bit Pointer] Pointer to key string
+    ++0x8 = [32-bit] String hash
+    ++0xc = [32-bit] String length
+    ++0x10 = [ASCII] Key string
+    +0x8 = [32-bit] = Value type (Always 3 for numbers)
+    +0xc = [32-bit Float] = Value
+    -- Lua numbers are stored as float even if interpreted as integers
+    +0x10 = [32-bit Pointer] = Second node
+    ++0x4
+    +++0x8 = [32-bit] Second node hash
+    ++0xc = [32-bit Float] Second node value
+    ++0x10 = [32-bit Pointer] Third node
+    +++0x4
+    ++++0x8 = [32-bit] Third node hash
+    +++0xc = [32-bit Float] Third node value
+    ---- And so on...
 
     The offset of a given node is calculated using the following formula:
     (StringHash % (1 << LSize)) * 20
-    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x017f31c7)
+    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x17f31c7)
     This means that the offset varies depending on the vector size (which is a power of two and can only grow as the script runs) but these offsets can be precalculated and checked against in alt groups for each LSize value.
 
     The hashmap deals with hash clashes by creating a node in the next empty slot and by appending it to the linked list of it's actual slot. That means you are not guaranteed to find the variable you are looking for in the calculated slot directly, but you are guaranteed to find it if you follow the linked list.
@@ -1224,6 +1320,8 @@ class Memory:
 
     +0x20 = [32-bit Float] Costa Del Danger | MineNumber (LSize 1-8)
     -- "MineNumber" variable from "holiday.lua"
+    +0x40 = [32-bit Float] Rum Deal | cdestroy (LSize 7)
+    -- "cdestroy" variable from "rum.lua"
     +0x268
     ++0xc = [32-bit Float] Driving Range | TargetNumber (LSize 5-7)
     --- "TargetNumber" variable from "driving.lua"
@@ -1244,6 +1342,8 @@ class Memory:
     --- 111100.0 = TEAM
     --- 111110.0 = TEAM1
     --- 111111.0 = TEAM17
+    +0xa40 = [32-bit Float] Rum Deal | cdestroy (LSize 8)
+    -- "cdestroy" variable from "rum.lua"
     +0xb4c = [32-bit Float] Showdown | CrateNumber (LSize 8)
     -- "CrateNumber" variable from "SHOWDOWN.lua"
     -- 1.0 = Donkey Crate
@@ -1403,6 +1503,22 @@ class Memory:
     "attract" = Attract Mode
     """
 
+    US_LUA_STATE_TABLE_OF_GLOBALS = dword(0x180a1c4)
+    """
+    [32-bit Pointer] (US) Lua State | Table of Globals
+    Always point to 0x180a4f8
+    +0x0 = [32-bit Pointer] Next Element
+    +0x7 = [8-bit] LSizeNode
+    -- Refer to $0x180a4ff
+    +0x8 = [32-bit Pointer] Meta Table
+    +0xc = [32-bit Pointer] Array Part
+    +0x10 = [32-bit Pointer] Global Node Vector
+    -- Refer to $0x180a508
+    +0x14 = [32-bit Pointer] First Free Node
+    +0x18 = [32-bit Pointer] GCList
+    +0x1c = [32-bit Pointer] Size of Array Part
+    """
+
     US_LUA_GLOBAL_TABLE_LSIZENODE = byte(0x180a4ff)
     """
     [8-bit] (US) Lua Global Table | LSizeNode
@@ -1428,23 +1544,31 @@ class Memory:
     """
     [32-bit Pointer] (US) Lua Global Table | Node Vector
     Hashmap of all global variables instanciated in the script, implemented as a chained scatter table.
-    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf (Page 4)
+    Read more about the implementation at https://www.lua.org/doc/jucs05.pdf
     Source code: https://www.lua.org/source/5.0/ltable.c.html
 
     Each node is 20 bytes long and follow this structure:
-    | +0x0 = [32-bit] Key type (always 4 for strings)
-    | +0x4 = [32-bit Pointer] Pointer to key string
-    | ++0x0 = [ASCII] Key string
-    | ++0xfffffffc = [32-bit] String length
-    | ++0xfffffff8 = [32-bit] String hash
-    | ++0x8 = [32-bit] = Value type (Always 3 for numbers)
-    | ++0xc = [32-bit Float] = Value
-    | --- Lua numbers are stored as float even if interpreted as integers
-    | ++0x10 = [32-bit Pointer] = Next node
+    +0x0 = [32-bit] Key type (always 4 for strings)
+    +0x4 = [32-bit Pointer] Pointer to key string
+    ++0x8 = [32-bit] String hash
+    ++0xc = [32-bit] String length
+    ++0x10 = [ASCII] Key string
+    +0x8 = [32-bit] = Value type (Always 3 for numbers)
+    +0xc = [32-bit Float] = Value
+    -- Lua numbers are stored as float even if interpreted as integers
+    +0x10 = [32-bit Pointer] = Second node
+    ++0x4
+    +++0x8 = [32-bit] Second node hash
+    ++0xc = [32-bit Float] Second node value
+    ++0x10 = [32-bit Pointer] Third node
+    +++0x4
+    ++++0x8 = [32-bit] Third node hash
+    +++0xc = [32-bit Float] Third node value
+    ---- And so on...
 
     The offset of a given node is calculated using the following formula:
     (StringHash % (1 << LSize)) * 20
-    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x0180a4ff)
+    StringHash being the precomputed Lua string hash of said variable and LSize being the Log2 size of the vector (see $0x180a4ff)
     This means that the offset varies depending on the vector size (which is a power of two and can only grow as the script runs) but these offsets can be precalculated and checked against in alt groups for each LSize value.
 
     The hashmap deals with hash clashes by creating a node in the next empty slot and by appending it to the linked list of it's actual slot. That means you are not guaranteed to find the variable you are looking for in the calculated slot directly, but you are guaranteed to find it if you follow the linked list.
@@ -1456,6 +1580,8 @@ class Memory:
 
     +0x20 = [32-bit Float] Costa Del Danger | MineNumber (LSize 1-8)
     -- "MineNumber" variable from "holiday.lua"
+    +0x40 = [32-bit Float] Rum Deal | cdestroy (LSize 7)
+    -- "cdestroy" variable from "rum.lua"
     +0x268
     ++0xc = [32-bit Float] Driving Range | TargetNumber (LSize 5-7)
     --- "TargetNumber" variable from "driving.lua"
@@ -1476,6 +1602,8 @@ class Memory:
     --- 111100.0 = TEAM
     --- 111110.0 = TEAM1
     --- 111111.0 = TEAM17
+    +0xa40 = [32-bit Float] Rum Deal | cdestroy (LSize 8)
+    -- "cdestroy" variable from "rum.lua"
     +0xb4c = [32-bit Float] Showdown | CrateNumber (LSize 8)
     -- "CrateNumber" variable from "SHOWDOWN.lua"
     -- 1.0 = Donkey Crate
@@ -1655,12 +1783,12 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x14 = [32-bit] Unlock Type
-    --- 0x0 = Voice
-    --- 0x1 = Scheme
-    --- 0x2 = Weapon
-    --- 0x3 = Challenge
-    --- 0x4 = Wormapedia
-    --- 0x5 = Landscape
+    ---- 0x0 = Voice
+    ---- 0x1 = Scheme
+    ---- 0x2 = Weapon
+    ---- 0x3 = Challenge
+    ---- 0x4 = Wormapedia
+    ---- 0x5 = Landscape
     +++0x18 = [32-bit Pointer ASCII] Unlock Text
     +++0x1c = [32-bit Boolean] Is Locked | Scheme: Sticky Wars
     """
@@ -1703,8 +1831,8 @@ class Memory:
     """
     [32-bit Pointer] (EU) Hashmap | Water.Level
     +0x4
-    ++0x1c = [32-bit] Water Level
-    --- 0x0 = Default level
+    ++0x1c = [32-bit Float] Water Level
+    --- 0.0 = Default level
     """
 
     EU_HASHMAP_QHOT = dword(0x1ce3b00)
@@ -1731,29 +1859,40 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | Land.InitialMaxHeight
     +0x4
     ++0x1c = [32-bit Float] Current map's initial max height
-    -- Unique value to each map, used in conjunction with the script name to determine the current challenge in the RP
-    -- 0x44113984 = Shotgun Challenge 1
-    -- 0x452b799b = Shotgun Challenge 2
-    -- 0x444731d8 = Shotgun Challenge 3
-    -- 0x453f9645 = Super Sheep Challenge 1
-    -- 0x4415ee12 = Super Sheep Challenge 2
-    -- 0x440b8bdc = Super Sheep Challenge 3
-    -- 0x43e75e17 = Jet Pack Challenge 1
-    -- 0x44082017 = Jet Pack Challenge 2
-    -- 0x447aa8dc = Jet Pack Challenge 3
-    -- 0x452b799b = Parachute Challenge 1
-    -- 0x44ab25d0 = Parachute Challenge 2
-    -- 0x4507f262 = Parachute Challenge 3
-    -- 0x43d8a364 = Deathmatch Challenge 1
-    -- 0x43c9ceab = Deathmatch Challenge 2
-    -- 0x44074e83 = Deathmatch Challenge 3
-    -- 0x43fa352b = Deathmatch Challenge 4
-    -- 0x43cff6eb = Deathmatch Challenge 5
-    -- 0x43c0b331 = Deathmatch Challenge 6
-    -- 0x43f0dfac = Deathmatch Challenge 7
-    -- 0x442bd166 = Deathmatch Challenge 8
-    -- 0x43d4fde2 = Deathmatch Challenge 9
-    -- 0x440b9c29 = Deathmatch Challenge 10
+    --- Unique value specific to each map, can be used to detect current map for custom multiplayer matches in RP
+    --- 0x43822a22 = Apple Core Island
+    --- 0x43b22a15 = Schools in for Summer
+    --- 0x43bd0980 = Please No More Islands
+    --- 0x43c05e93 = Atlantis
+    --- 0x43c0b331 = Hold Until Relieved
+    --- 0x43c3a46a = All Cooped Up
+    --- 0x43c5019c = Movie Mayhem
+    --- 0x43cff6eb = Ice, Ice, Maybe
+    --- 0x43d4fde2 = Submission
+    --- 0x43d8a364 = Plaice Holder
+    --- 0x43e1ad42 = Showdown at the OK Corale Reef
+    --- 0x43e471ff = D-Day
+    --- 0x43e75e17 = Jetpack Challenge 1
+    --- 0x43ef06e9 = Grave Danger
+    --- 0x43f0dfac = A Good Nights Sleep
+    --- 0x43f8dadf = Test Tubes
+    --- 0x43fba71a = Costa Del Danger
+    --- 0x4400a0c3 = Crate Britain
+    --- 0x4400ee13 = Shiver Me Timbers
+    --- 0x44074e83 = Nobody Rides For Free
+    --- 0x440b9c29 = Helter Skelter
+    --- 0x440c4796 = Return to Chateau Assassin
+    --- 0x44101fa1 = Crop Circle
+    --- 0x44113984 = Take My Cherry
+    --- 0x44138e9d = The Driving Range
+    --- 0x441512e1 = Earn Your Crust
+    --- 0x44193c59 = When Annelids Collide
+    --- 0x441b6e1b = Tree Village Trouble
+    --- 0x442a3332 = A Leek in a Vegetable Patch
+    --- 0x442fb21e = High Stakes
+    --- 0x444eaecc = Ragnarok and Roll
+    --- 0x4457ab59 = Alien Juice Suckers
+    --- 0x449f0a36 = The Mighty Kong
     """
 
     EU_HASHMAP_LWNUKE = dword(0x1ce3c08)
@@ -1787,6 +1926,14 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Helter Skelter
     """
 
+    EU_HASHMAP_PS2CURRSLOT = dword(0x1ce3db4)
+    """
+    [32-bit Pointer] (EU) Hashmap | PS2.CurrSlot
+    +0x4
+    ++0x1c = [32-bit Pointer] PS2.CurrSlot
+    +++0x0 = [ASCII] Current Save Slot String
+    """
+
     EU_HASHMAP_QHCHANCE = dword(0x1ce3e04)
     """
     [32-bit Pointer] (EU) Hashmap | Q.HChance
@@ -1810,11 +1957,28 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Tree Village Trouble
     """
 
+    EU_HASHMAP_GMGAMEINITDATA = dword(0x1ce3eb4)
+    """
+    [32-bit Pointer] (EU) Hashmap | GM.GameInitData
+    +0x4
+    ++0x1c = [32-bit Pointer] GameInitData
+    +++0x38 = [32-bit] Team1 Worm Count
+    +++0x88 = [32-bit] Team2 Worm Count
+    +++0xd0 = [32-bit] Team3 Worm Count
+    +++0x11c = [32-bit] Team4 Worm Count
+    """
+
     EU_HASHMAP_ACTIVEWORMINDEX = dword(0x1ce3ef0)
     """
     [32-bit Pointer] (EU) Hashmap | ActiveWormIndex
     +0x4
     ++0x1c = [32-bit] Current Active Worm ID
+    --- Multiply by 4 to get the correct worm array offset
+    +++0x6ce018 = [32-bit Pointer] Active Worm Hashmap Pointer
+    ++++0x4
+    +++++0x1c
+    ++++++0x0 = [264 bytes] Active Worm Data
+    -------- Refer to $0x6ce018
     """
 
     EU_HASHMAP_FELANDSPACE = dword(0x1ce3f74)
@@ -1851,11 +2015,11 @@ class Memory:
     +0x4
     ++0x1c [32-bit Pointer] Game.Type
     +++0x0 [32-bit BE ASCII] Game Type String
-    --- 0x5475746f = Tutorial
-    --- 0x43616d70 = Campaign
-    --- 0x4368616c = Challenge
-    --- 0x51756963 = Quick
-    --- 0x4d756c74 = Multiplayer
+    ---- 0x5475746f = Tutorial
+    ---- 0x43616d70 = Campaign
+    ---- 0x4368616c = Challenge
+    ---- 0x51756963 = Quick
+    ---- 0x4d756c74 = Multiplayer
     """
 
     EU_HASHMAP_LLDDAY = dword(0x1ce40a4)
@@ -1920,6 +2084,12 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | CurrentTeamIndex
     +0x4
     ++0x1c = [32-bit] Index of the currently playing team
+     --- Multiply by 4 to get the correct team array offset
+    +++0x6ce0d8 = [32-bit Pointer] Active Team Hashmap Pointer
+    ++++0x4
+    +++++0x1c
+    ++++++0x0 = [76 bytes] Active Team Data
+    -------- Refer to $0x6ce0d8
     """
 
     EU_HASHMAP_LLGRAVEYARD = dword(0x1ce4418)
@@ -1995,6 +2165,14 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Spadge and Music
     """
 
+    EU_HASHMAP_GAMEOVERAWARDMOVIE = dword(0x1ce4714)
+    """
+    [32-bit Pointer] (EU) Hashmap | GameOver.AwardMovie
+    +0x4
+    ++0x1c = [32-bit Pointer] GameOver.AwardMovie
+    +++0x0 = [ASCII] GameOver.AwardMovie String
+    """
+
     EU_HASHMAP_LPPROTO = dword(0x1ce473c)
     """
     [32-bit Pointer] (EU) Hashmap | L.P.Proto
@@ -2032,6 +2210,30 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | Audio.Vol.Music
     +0x4
     ++0x1c = [32-bit Float] Settings | Music Volume
+    """
+
+    EU_HASHMAP_GMSCHEMEDATA = dword(0x1ce4c44)
+    """
+    [32-bit Pointer] (EU) Hashmap | GM.SchemeData
+    +0x4
+    ++0x1c = [32-bit Pointer] SchemeData
+    +++0x14 = [32-bit Pointer] Selected Scheme
+    ++++0x0 = [ASCII] Selected Scheme Name
+    ----- "FE.Scheme.Allaction" = All Action
+    ----- "FE.Scheme.Beginner" = Beginner
+    ----- "FE.Scheme.Bng" = BnG
+    ----- "FE.Scheme.Close" = Close (Unused)
+    ----- "FE.Scheme.Fruity" = Fruity (Unused)
+    ----- "FE.Scheme.Pro" = Pro
+    ----- "FE.Scheme.Shopping" = Shopping
+    ----- "FE.Scheme.Sinking" = Sinking
+    ----- "FE.Scheme.Sniper" = Sniper
+    ----- "FE.Scheme.Standard" = Standard
+    ----- "FE.Scheme.Standdeliver" = Stand and Deliver
+    ----- "FE.Scheme.Sticky" = Sticky
+    ----- "FE.Scheme.Strategy" = Strategy
+    ----- "FE.Scheme.Suddensink" = Sudden Sinking
+    ----- "FE.Scheme.WeaponTest" = WeaponTest (Unused)
     """
 
     EU_HASHMAP_LPLOST = dword(0x1ce4c60)
@@ -2078,10 +2280,10 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | MCa.CurrentMissionType
     +0x4
     ++0x1c = [32-bit] Selected Mission Type
-    -- 0x0 = Campaign
-    -- 0x3 = Tutorial
-    -- 0x4 = Challenge
-    -- Cannot be used alone to distinguish actual missions and quick/multiplayer games
+    --- 0x0 = Campaign
+    --- 0x3 = Tutorial
+    --- 0x4 = Challenge
+    --- Cannot be used alone to distinguish actual missions and quick/multiplayer games
     """
 
     EU_HASHMAP_MCACURRENTMISSION = dword(0x1ce4f50)
@@ -2089,8 +2291,8 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | MCa.CurrentMission
     +0x4
     ++0x1c = [32-bit] Selected Mission Index
-    -- Current mission in order from the menu, starts at 0, relative to the game type (Tutorial, Mission, Challenge)
-    -- Not reliable for Challenges as they can be unlocked in any order
+    --- Current mission in order from the menu, starts at 0, relative to the game type (Tutorial, Mission, Challenge)
+    --- Not reliable for Challenges as they can be unlocked in any order
     """
 
     EU_HASHMAP_TRIGGERCOLLECTOR = dword(0x1ce4fb8)
@@ -2100,6 +2302,16 @@ class Memory:
     +0x04
     ++0x1c = [32-bit] Trigger.Collector
     --- 0xffffffff = Untriggered
+    """
+
+    EU_HASHMAP_WEAPONGRAPHICALLAUNCHLOCATION = dword(0x1ce5108)
+    """
+    [32-bit Pointer] (EU) Hashmap | Weapon.GraphicalLaunchLocation
+    Changes when the current active worm attacks with most weapons, including melee ones
+    +0x4
+    ++0x1c = [32-bit Float] Weapon.GraphicalLaunchLocation X
+    ++0x20 = [32-bit Float] Weapon.GraphicalLaunchLocation Y
+    ++0x24 = [32-bit Float] Weapon.GraphicalLaunchLocation Z
     """
 
     EU_HASHMAP_QWHEALTH = dword(0x1ce5110)
@@ -2223,8 +2435,8 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | Game.NextLevel
     +0x4
     ++0x1c = [32-bit Pointer] Next Level ID
-    +++0x0 = [9 bytes BE ASCII] Level ID String
-    ---  0x46452e4c6576656c2e = "FE.Level."
+    +++0x0 = [ASCII] Level ID String
+    ----  0x46452e4c6576656c2e = "FE.Level."
     +++0x9 = [ASCII] Level ID Discriminator
     """
 
@@ -2255,11 +2467,11 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | SAVE.Language
     +0x4
     ++0x1c = [32-bit] Selected Language
-    -- 0x0 = English
-    -- 0x3 = French
-    -- 0x4 = German
-    -- 0x5 = Italian
-    -- 0x9 = Spanish
+    --- 0x0 = English
+    --- 0x3 = French
+    --- 0x4 = German
+    --- 0x5 = Italian
+    --- 0x9 = Spanish
     """
 
     EU_HASHMAP_LSLOVER = dword(0x1ce5858)
@@ -2321,6 +2533,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Chatter
+    """
+
+    EU_HASHMAP_SHOTPOWER = dword(0x1ce5c68)
+    """
+    [32-bit Pointer] (EU) Hashmap | ShotPower
+    +0x4
+    ++0x1c = [32-bit Float] ShotPower
+    --- Float value ranging between 0.0 and 1.0 as the currently active worm shots with a charging weapon
     """
 
     EU_HASHMAP_LLALIEN = dword(0x1ce5cb8)
@@ -2439,7 +2659,8 @@ class Memory:
     """
     [32-bit Pointer] (EU) Hashmap | Land.File
     +0x4
-    ++0x1c = [32-bit Pointer] Loaded .XOM Land Filename
+    ++0x1c = [32-bit Pointer] Land.File
+    +++0x0 = [ASCII] Loaded .XOM Land Filename String
     """
 
     EU_HASHMAP_FEWORMPOTREEL3 = dword(0x1ce60f0)
@@ -2560,6 +2781,13 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: A Leek in a Vegetable Patch
+    """
+
+    EU_HASHMAP_TEAMCOUNT = dword(0x1ce6754)
+    """
+    [32-bit Pointer] (EU) Hashmap | TeamCount
+    +0x4
+    ++0x1c = [32-bit] Team Count
     """
 
     EU_HASHMAP_LLRAGNA = dword(0x1ce6794)
@@ -2775,6 +3003,31 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Voice: Super Villain
     """
 
+    EU_HASHMAP_QNAME = dword(0x1ce6ee4)
+    """
+    [32-bit Pointer] (EU) Hashmap | Q.Name
+    +0x4
+    ++0x1c = [32-bit Pointer] Selected Scheme
+    --- Scheme selected in the multiplayer game menu
+    --- String is deallocated on game start but can be checked against using Prior
+    +++0x0 = [ASCII] Scheme Name
+    ---- "FE.Scheme.Allaction" = All Action
+    ---- "FE.Scheme.Beginner" = Beginner
+    ---- "FE.Scheme.Bng" = BnG
+    ---- "FE.Scheme.Close" = Close (Unused)
+    ---- "FE.Scheme.Fruity" = Fruity (Unused)
+    ---- "FE.Scheme.Pro" = Pro
+    ---- "FE.Scheme.Shopping" = Shopping
+    ---- "FE.Scheme.Sinking" = Sinking
+    ---- "FE.Scheme.Sniper" = Sniper
+    ---- "FE.Scheme.Standard" = Standard
+    ---- "FE.Scheme.Standdeliver" = Stand and Deliver
+    ---- "FE.Scheme.Sticky" = Sticky
+    ---- "FE.Scheme.Strategy" = Strategy
+    ---- "FE.Scheme.Suddensink" = Sudden Sinking
+    ---- "FE.Scheme.WeaponTest" = WeaponTest (Unused)
+    """
+
     EU_HASHMAP_FELANDREALSEED = dword(0x1ce6f00)
     """
     [32-bit Pointer] (EU) Hashmap | FE.Land.RealSeed
@@ -2919,40 +3172,44 @@ class Memory:
     [32-bit Pointer] (EU) Hashmap | DATA.TeamBarracks
     +0x4
     ++0x1c = [32-bit Pointer] TeamDataColective
-
     +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+    ---- Storage of global high scores regardless of selected team
+    ---- Array of size 27 (5 last slots unused)
     ++++0x18 = [32-bit] Array Size
-    ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
+    ++++0x40 = [32-bit Pointer] HighScoreData [0] | Shotgun Challenge 1
     +++++0x14 = [32-bit] Bronze Time in milliseconds
     +++++0x18 = [32-bit Pointer] Bronze Player Name
     +++++0x1c = [32-bit] Silver Time in milliseconds
     +++++0x20 = [32-bit Pointer] Silver Player Name
     +++++0x24 = [32-bit] Gold Time in milliseconds
     +++++0x28 = [32-bit Pointer] Gold Player Name
-    ++++0x44 = [32-bit Pointer] HighScoreData | Shotgun Challenge 2
-    ++++0x48 = [32-bit Pointer] HighScoreData | Shotgun Challenge 3
-    ++++0x4c = [32-bit Pointer] HighScoreData | Super Sheep Challenge 1
-    ++++0x50 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 2
-    ++++0x54 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 3
-    ++++0x58 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 1
-    ++++0x5c = [32-bit Pointer] HighScoreData | Jet Pack Challenge 2
-    ++++0x60 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 3
-    ++++0x64 = [32-bit Pointer] HighScoreData | Parachute Challenge 1
-    ++++0x68 = [32-bit Pointer] HighScoreData | Parachute Challenge 2
-    ++++0x6c = [32-bit Pointer] HighScoreData | Parachute Challenge 3
-    ++++0x70 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 1
-    ++++0x74 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 2
-    ++++0x78 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 3
-    ++++0x7c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 4
-    ++++0x80 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 5
-    ++++0x84 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 6
-    ++++0x88 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 7
-    ++++0x8c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 8
-    ++++0x90 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 9
-    ++++0x94 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 10
+    ++++0x44 = [32-bit Pointer] HighScoreData [1] | Shotgun Challenge 2
+    ++++0x48 = [32-bit Pointer] HighScoreData [2] | Shotgun Challenge 3
+    ++++0x4c = [32-bit Pointer] HighScoreData [3] | Super Sheep Challenge 1
+    ++++0x50 = [32-bit Pointer] HighScoreData [4] | Super Sheep Challenge 2
+    ++++0x54 = [32-bit Pointer] HighScoreData [5] | Super Sheep Challenge 3
+    ++++0x58 = [32-bit Pointer] HighScoreData [6] | Jet Pack Challenge 1
+    ++++0x5c = [32-bit Pointer] HighScoreData [7] | Jet Pack Challenge 2
+    ++++0x60 = [32-bit Pointer] HighScoreData [8] | Jet Pack Challenge 3
+    ++++0x64 = [32-bit Pointer] HighScoreData [9] | Parachute Challenge 1
+    ++++0x68 = [32-bit Pointer] HighScoreData [10] | Parachute Challenge 2
+    ++++0x6c = [32-bit Pointer] HighScoreData [11] | Parachute Challenge 3
+    ++++0x70 = [32-bit Pointer] HighScoreData [12] | Deathmatch Challenge 1
+    ++++0x74 = [32-bit Pointer] HighScoreData [13] | Deathmatch Challenge 2
+    ++++0x78 = [32-bit Pointer] HighScoreData [14] | Deathmatch Challenge 3
+    ++++0x7c = [32-bit Pointer] HighScoreData [15] | Deathmatch Challenge 4
+    ++++0x80 = [32-bit Pointer] HighScoreData [16] | Deathmatch Challenge 5
+    ++++0x84 = [32-bit Pointer] HighScoreData [17] | Deathmatch Challenge 6
+    ++++0x88 = [32-bit Pointer] HighScoreData [18] | Deathmatch Challenge 7
+    ++++0x8c = [32-bit Pointer] HighScoreData [19] | Deathmatch Challenge 8
+    ++++0x90 = [32-bit Pointer] HighScoreData [20] | Deathmatch Challenge 9
+    ++++0x94 = [32-bit Pointer] HighScoreData [21] | Deathmatch Challenge 10
 
     +++0x18 = [32-bit Pointer] XomContainerArray | Teams Array
-    ++++0x40 = [32-bit Pointer] StoredTeamData | Team 1
+    ---- Teams array is populated as teams are created, that means we need to check the array size before accessing certain teams otherwise the pointer will point to garbage data.
+    ---- Max array size is 20
+    ++++0x18 = [32-bit] Array Size
+    ++++0x40 = [32-bit Pointer] StoredTeamData [0] | Team 1
     +++++0x14 = [32-bit Pointer] Player ID (String)
     +++++0x18 = [32-bit Pointer] Speech ID (String)
     +++++0x1c = [32-bit Pointer] Flag ID (String)
@@ -2961,81 +3218,84 @@ class Memory:
     +++++0x28 = [32-bit] Skill ID
     +++++0x2c = [32-bit] New Team?
     +++++0x30 = [32-bit] Tutorial Progression
-    ----- 0x0 = None
-    ----- 0x1 = Completed Atlantis Training Facility
-    ----- 0x2 = Completed Down in the Dumps
-    ----- 0x3 = Completed Return to Chateau Assassin
-    ----- 0x4 = Completed The Mighty Kong
-    ----- 0x5 = Completed Test Tubes
-    ----- 0x6 = Completed The Driving Range (Not possible)
-
+    ------ 0x0 = None
+    ------ 0x1 = Completed Atlantis Training Facility
+    ------ 0x2 = Completed Down in the Dumps
+    ------ 0x3 = Completed Return to Chateau Assassin
+    ------ 0x4 = Completed The Mighty Kong
+    ------ 0x5 = Completed Test Tubes
+    ------ 0x6 = Completed The Driving Range (Not possible)
     +++++0x34 = [32-bit Pointer] XomContainerArray | Campaign Array
+    ------ Campaign progression data per team.
     ------ Campaign array is populated as missions are unlocked, that means we need to check the array size before accessing certain missions otherwise the pointer will point to garbage data
+    ------ Max array size is 35
     ++++++0x18 = [32-bit] Array Size
-    ++++++0x40 = [32-bit Pointer] CampaignData | D-Day
+    ++++++0x40 = [32-bit Pointer] CampaignData [0] | D-Day
     +++++++0x14 = [32-bit] Retries
     +++++++0x18 = [32-bit] Medal
     ------- 0x0 = None
     ------- 0x1 = Bronze
     ------- 0x2 = Silver
     ------- 0x3 = Gold
-    ++++++0x44 = [32-bit Pointer] CampaignData | Crate Britain
-    ++++++0x48 = [32-bit Pointer] CampaignData | Grave Danger
-    ++++++0x4c = [32-bit Pointer] CampaignData | A Leek in a Vegetable Patch
-    ++++++0x50 = [32-bit Pointer] CampaignData | Ice, Ice, Maybe
-    ++++++0x54 = [32-bit Pointer] CampaignData | When Annelids Collide
-    ++++++0x58 = [32-bit Pointer] CampaignData | Rum Deal
-    ++++++0x5c = [32-bit Pointer] CampaignData | Earn Your Crust
-    ++++++0x60 = [32-bit Pointer] CampaignData | Apple Core Island
-    ++++++0x64 = [32-bit Pointer] CampaignData | Helter Skelter
-    ++++++0x68 = [32-bit Pointer] CampaignData | Take My Cherry
-    ++++++0x6c = [32-bit Pointer] CampaignData | In Space, No-One Can Hear You Clean
-    ++++++0x70 = [32-bit Pointer] CampaignData | Shiver Me Timbers
-    ++++++0x74 = [32-bit Pointer] CampaignData | Falling For You
-    ++++++0x78 = [32-bit Pointer] CampaignData | Crop Circle
-    ++++++0x7c = [32-bit Pointer] CampaignData | Tree Village Trouble
-    ++++++0x80 = [32-bit Pointer] CampaignData | Movie Mayhem
-    ++++++0x84 = [32-bit Pointer] CampaignData | Worm and the Beanstalk
-    ++++++0x88 = [32-bit Pointer] CampaignData | School's in for Summer
-    ++++++0x8c = [32-bit Pointer] CampaignData | High Stakes
-    ++++++0x90 = [32-bit Pointer] CampaignData | A Quick Fix
-    ++++++0x94 = [32-bit Pointer] CampaignData | All Cooped Up
-    ++++++0x98 = [32-bit Pointer] CampaignData | Trial of the Damned
-    ++++++0x9c = [32-bit Pointer] CampaignData | Showdown at the OK Corale Reef
-    ++++++0xa0 = [32-bit Pointer] CampaignData | Plaice Holder
-    ++++++0xa4 = [32-bit Pointer] CampaignData | Hook, Line, and Skimmer
-    ++++++0xa8 = [32-bit Pointer] CampaignData | Nobody Rides For Free
-    ++++++0xac = [32-bit Pointer] CampaignData | Hold Until Relieved
-    ++++++0xb0 = [32-bit Pointer] CampaignData | To Boldly Go
-    ++++++0xb4 = [32-bit Pointer] CampaignData | Beautiful Balloon
-    ++++++0xb8 = [32-bit Pointer] CampaignData | A Good Nights Sleep
-    ++++++0xbc = [32-bit Pointer] CampaignData | Beefcake Breakfast Brawl
-    ++++++0xc0 = [32-bit Pointer] CampaignData | Costa Del Danger
-    ++++++0xc4 = [32-bit Pointer] CampaignData | Ragnarok and Roll
-    ++++++0xc8 = [32-bit Pointer] CampaignData | Alien Juice Suckers
+    ++++++0x44 = [32-bit Pointer] CampaignData [1] | Crate Britain
+    ++++++0x48 = [32-bit Pointer] CampaignData [2] | Grave Danger
+    ++++++0x4c = [32-bit Pointer] CampaignData [3] | A Leek in a Vegetable Patch
+    ++++++0x50 = [32-bit Pointer] CampaignData [4] | Ice, Ice, Maybe
+    ++++++0x54 = [32-bit Pointer] CampaignData [5] | When Annelids Collide
+    ++++++0x58 = [32-bit Pointer] CampaignData [6] | Rum Deal
+    ++++++0x5c = [32-bit Pointer] CampaignData [7] | Earn Your Crust
+    ++++++0x60 = [32-bit Pointer] CampaignData [8] | Apple Core Island
+    ++++++0x64 = [32-bit Pointer] CampaignData [9] | Helter Skelter
+    ++++++0x68 = [32-bit Pointer] CampaignData [10] | Take My Cherry
+    ++++++0x6c = [32-bit Pointer] CampaignData [11] | In Space, No-One Can Hear You Clean
+    ++++++0x70 = [32-bit Pointer] CampaignData [12] | Shiver Me Timbers
+    ++++++0x74 = [32-bit Pointer] CampaignData [13] | Falling For You
+    ++++++0x78 = [32-bit Pointer] CampaignData [14] | Crop Circle
+    ++++++0x7c = [32-bit Pointer] CampaignData [15] | Tree Village Trouble
+    ++++++0x80 = [32-bit Pointer] CampaignData [16] | Movie Mayhem
+    ++++++0x84 = [32-bit Pointer] CampaignData [17] | Worm and the Beanstalk
+    ++++++0x88 = [32-bit Pointer] CampaignData [18] | School's in for Summer
+    ++++++0x8c = [32-bit Pointer] CampaignData [19] | High Stakes
+    ++++++0x90 = [32-bit Pointer] CampaignData [20] | A Quick Fix
+    ++++++0x94 = [32-bit Pointer] CampaignData [21] | All Cooped Up
+    ++++++0x98 = [32-bit Pointer] CampaignData [22] | Trial of the Damned
+    ++++++0x9c = [32-bit Pointer] CampaignData [23] | Showdown at the OK Corale Reef
+    ++++++0xa0 = [32-bit Pointer] CampaignData [24] | Plaice Holder
+    ++++++0xa4 = [32-bit Pointer] CampaignData [25] | Hook, Line, and Skimmer
+    ++++++0xa8 = [32-bit Pointer] CampaignData [26] | Nobody Rides For Free
+    ++++++0xac = [32-bit Pointer] CampaignData [27] | Hold Until Relieved
+    ++++++0xb0 = [32-bit Pointer] CampaignData [28] | To Boldly Go
+    ++++++0xb4 = [32-bit Pointer] CampaignData [29] | Beautiful Balloon
+    ++++++0xb8 = [32-bit Pointer] CampaignData [30] | A Good Nights Sleep
+    ++++++0xbc = [32-bit Pointer] CampaignData [31] | Beefcake Breakfast Brawl
+    ++++++0xc0 = [32-bit Pointer] CampaignData [32] | Costa Del Danger
+    ++++++0xc4 = [32-bit Pointer] CampaignData [33] | Ragnarok and Roll
+    ++++++0xc8 = [32-bit Pointer] CampaignData [34] | Alien Juice Suckers
     +++++0x38 = [32-bit Pointer] Worms Array
     +++++0x3c = [32-bit Pointer] Team Name
+    ++++++0x0 = [ASCII] Team Name String
     +++++0x40 = [32-bit Boolean] Profile Selected
+    ------ Only way to check if the team is currently selected
 
-    ++++0x44 = [32-bit Pointer] StoredTeamData | Team 2
-    ++++0x48 = [32-bit Pointer] StoredTeamData | Team 3
-    ++++0x4c = [32-bit Pointer] StoredTeamData | Team 4
-    ++++0x50 = [32-bit Pointer] StoredTeamData | Team 5
-    ++++0x54 = [32-bit Pointer] StoredTeamData | Team 6
-    ++++0x58 = [32-bit Pointer] StoredTeamData | Team 7
-    ++++0x5c = [32-bit Pointer] StoredTeamData | Team 8
-    ++++0x60 = [32-bit Pointer] StoredTeamData | Team 9
-    ++++0x64 = [32-bit Pointer] StoredTeamData | Team 10
-    ++++0x68 = [32-bit Pointer] StoredTeamData | Team 11
-    ++++0x6c = [32-bit Pointer] StoredTeamData | Team 12
-    ++++0x70 = [32-bit Pointer] StoredTeamData | Team 13
-    ++++0x74 = [32-bit Pointer] StoredTeamData | Team 14
-    ++++0x78 = [32-bit Pointer] StoredTeamData | Team 15
-    ++++0x7c = [32-bit Pointer] StoredTeamData | Team 16
-    ++++0x80 = [32-bit Pointer] StoredTeamData | Team 17
-    ++++0x84 = [32-bit Pointer] StoredTeamData | Team 18
-    ++++0x88 = [32-bit Pointer] StoredTeamData | Team 19
-    ++++0x8c = [32-bit Pointer] StoredTeamData | Team 20
+    ++++0x44 = [32-bit Pointer] StoredTeamData [1] | Team 2
+    ++++0x48 = [32-bit Pointer] StoredTeamData [2] | Team 3
+    ++++0x4c = [32-bit Pointer] StoredTeamData [3] | Team 4
+    ++++0x50 = [32-bit Pointer] StoredTeamData [4] | Team 5
+    ++++0x54 = [32-bit Pointer] StoredTeamData [5] | Team 6
+    ++++0x58 = [32-bit Pointer] StoredTeamData [6] | Team 7
+    ++++0x5c = [32-bit Pointer] StoredTeamData [7] | Team 8
+    ++++0x60 = [32-bit Pointer] StoredTeamData [8] | Team 9
+    ++++0x64 = [32-bit Pointer] StoredTeamData [9] | Team 10
+    ++++0x68 = [32-bit Pointer] StoredTeamData [10] | Team 11
+    ++++0x6c = [32-bit Pointer] StoredTeamData [11] | Team 12
+    ++++0x70 = [32-bit Pointer] StoredTeamData [12] | Team 13
+    ++++0x74 = [32-bit Pointer] StoredTeamData [13] | Team 14
+    ++++0x78 = [32-bit Pointer] StoredTeamData [14] | Team 15
+    ++++0x7c = [32-bit Pointer] StoredTeamData [15] | Team 16
+    ++++0x80 = [32-bit Pointer] StoredTeamData [16] | Team 17
+    ++++0x84 = [32-bit Pointer] StoredTeamData [17] | Team 18
+    ++++0x88 = [32-bit Pointer] StoredTeamData [18] | Team 19
+    ++++0x8c = [32-bit Pointer] StoredTeamData [19] | Team 20
     """
 
     EU_HASHMAP_LLSCHOOLS = dword(0x1ce787c)
@@ -3202,6 +3462,12 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | CurrentTeamIndex
     +0x4
     ++0x1c = [32-bit] Index of the currently playing team
+     --- Multiply by 4 to get the correct team array offset
+    +++0x79dcc0 = [32-bit Pointer] Active Team Hashmap Pointer
+    ++++0x4
+    +++++0x1c
+    ++++++0x0 = [76 bytes] Active Team Data
+    -------- Refer to $0x79dcc0
     """
 
     US_HASHMAP_LLKONG = dword(0x1cfc04c)
@@ -3280,6 +3546,12 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | ActiveWormIndex
     +0x4
     ++0x1c = [32-bit] Current Active Worm ID
+    --- Multiply by 4 to get the correct worm array offset
+    +++0x79dc00 = [32-bit Pointer] Active Worm Hashmap Pointer
+    ++++0x4
+    +++++0x1c
+    ++++++0x0 = [264 bytes] Active Worm Data
+    -------- Refer to $0x79dc00
     """
 
     US_HASHMAP_ROUNDTIMEREMAINING = dword(0x1cfc458)
@@ -3334,40 +3606,44 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | DATA.TeamBarracks
     +0x4
     ++0x1c = [32-bit Pointer] TeamDataColective
-
     +++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+    ---- Storage of global high scores regardless of selected team
+    ---- Array of size 27 (5 last slots unused)
     ++++0x18 = [32-bit] Array Size
-    ++++0x40 = [32-bit Pointer] HighScoreData | Shotgun Challenge 1
+    ++++0x40 = [32-bit Pointer] HighScoreData [0] | Shotgun Challenge 1
     +++++0x14 = [32-bit] Bronze Time in milliseconds
     +++++0x18 = [32-bit Pointer] Bronze Player Name
     +++++0x1c = [32-bit] Silver Time in milliseconds
     +++++0x20 = [32-bit Pointer] Silver Player Name
     +++++0x24 = [32-bit] Gold Time in milliseconds
     +++++0x28 = [32-bit Pointer] Gold Player Name
-    ++++0x44 = [32-bit Pointer] HighScoreData | Shotgun Challenge 2
-    ++++0x48 = [32-bit Pointer] HighScoreData | Shotgun Challenge 3
-    ++++0x4c = [32-bit Pointer] HighScoreData | Super Sheep Challenge 1
-    ++++0x50 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 2
-    ++++0x54 = [32-bit Pointer] HighScoreData | Super Sheep Challenge 3
-    ++++0x58 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 1
-    ++++0x5c = [32-bit Pointer] HighScoreData | Jet Pack Challenge 2
-    ++++0x60 = [32-bit Pointer] HighScoreData | Jet Pack Challenge 3
-    ++++0x64 = [32-bit Pointer] HighScoreData | Parachute Challenge 1
-    ++++0x68 = [32-bit Pointer] HighScoreData | Parachute Challenge 2
-    ++++0x6c = [32-bit Pointer] HighScoreData | Parachute Challenge 3
-    ++++0x70 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 1
-    ++++0x74 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 2
-    ++++0x78 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 3
-    ++++0x7c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 4
-    ++++0x80 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 5
-    ++++0x84 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 6
-    ++++0x88 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 7
-    ++++0x8c = [32-bit Pointer] HighScoreData | Deathmatch Challenge 8
-    ++++0x90 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 9
-    ++++0x94 = [32-bit Pointer] HighScoreData | Deathmatch Challenge 10
+    ++++0x44 = [32-bit Pointer] HighScoreData [1] | Shotgun Challenge 2
+    ++++0x48 = [32-bit Pointer] HighScoreData [2] | Shotgun Challenge 3
+    ++++0x4c = [32-bit Pointer] HighScoreData [3] | Super Sheep Challenge 1
+    ++++0x50 = [32-bit Pointer] HighScoreData [4] | Super Sheep Challenge 2
+    ++++0x54 = [32-bit Pointer] HighScoreData [5] | Super Sheep Challenge 3
+    ++++0x58 = [32-bit Pointer] HighScoreData [6] | Jet Pack Challenge 1
+    ++++0x5c = [32-bit Pointer] HighScoreData [7] | Jet Pack Challenge 2
+    ++++0x60 = [32-bit Pointer] HighScoreData [8] | Jet Pack Challenge 3
+    ++++0x64 = [32-bit Pointer] HighScoreData [9] | Parachute Challenge 1
+    ++++0x68 = [32-bit Pointer] HighScoreData [10] | Parachute Challenge 2
+    ++++0x6c = [32-bit Pointer] HighScoreData [11] | Parachute Challenge 3
+    ++++0x70 = [32-bit Pointer] HighScoreData [12] | Deathmatch Challenge 1
+    ++++0x74 = [32-bit Pointer] HighScoreData [13] | Deathmatch Challenge 2
+    ++++0x78 = [32-bit Pointer] HighScoreData [14] | Deathmatch Challenge 3
+    ++++0x7c = [32-bit Pointer] HighScoreData [15] | Deathmatch Challenge 4
+    ++++0x80 = [32-bit Pointer] HighScoreData [16] | Deathmatch Challenge 5
+    ++++0x84 = [32-bit Pointer] HighScoreData [17] | Deathmatch Challenge 6
+    ++++0x88 = [32-bit Pointer] HighScoreData [18] | Deathmatch Challenge 7
+    ++++0x8c = [32-bit Pointer] HighScoreData [19] | Deathmatch Challenge 8
+    ++++0x90 = [32-bit Pointer] HighScoreData [20] | Deathmatch Challenge 9
+    ++++0x94 = [32-bit Pointer] HighScoreData [21] | Deathmatch Challenge 10
 
     +++0x18 = [32-bit Pointer] XomContainerArray | Teams Array
-    ++++0x40 = [32-bit Pointer] StoredTeamData | Team 1
+    ---- Teams array is populated as teams are created, that means we need to check the array size before accessing certain teams otherwise the pointer will point to garbage data.
+    ---- Max array size is 20
+    ++++0x18 = [32-bit] Array Size
+    ++++0x40 = [32-bit Pointer] StoredTeamData [0] | Team 1
     +++++0x14 = [32-bit Pointer] Player ID (String)
     +++++0x18 = [32-bit Pointer] Speech ID (String)
     +++++0x1c = [32-bit Pointer] Flag ID (String)
@@ -3376,81 +3652,108 @@ class Memory:
     +++++0x28 = [32-bit] Skill ID
     +++++0x2c = [32-bit] New Team?
     +++++0x30 = [32-bit] Tutorial Progression
-    ----- 0x0 = None
-    ----- 0x1 = Completed Atlantis Training Facility
-    ----- 0x2 = Completed Down in the Dumps
-    ----- 0x3 = Completed Return to Chateau Assassin
-    ----- 0x4 = Completed The Mighty Kong
-    ----- 0x5 = Completed Test Tubes
-    ----- 0x6 = Completed The Driving Range (Not possible)
-
+    ------ 0x0 = None
+    ------ 0x1 = Completed Atlantis Training Facility
+    ------ 0x2 = Completed Down in the Dumps
+    ------ 0x3 = Completed Return to Chateau Assassin
+    ------ 0x4 = Completed The Mighty Kong
+    ------ 0x5 = Completed Test Tubes
+    ------ 0x6 = Completed The Driving Range (Not possible)
     +++++0x34 = [32-bit Pointer] XomContainerArray | Campaign Array
+    ------ Campaign progression data per team.
     ------ Campaign array is populated as missions are unlocked, that means we need to check the array size before accessing certain missions otherwise the pointer will point to garbage data
+    ------ Max array size is 35
     ++++++0x18 = [32-bit] Array Size
-    ++++++0x40 = [32-bit Pointer] CampaignData | D-Day
+    ++++++0x40 = [32-bit Pointer] CampaignData [0] | D-Day
     +++++++0x14 = [32-bit] Retries
     +++++++0x18 = [32-bit] Medal
     ------- 0x0 = None
     ------- 0x1 = Bronze
     ------- 0x2 = Silver
     ------- 0x3 = Gold
-    ++++++0x44 = [32-bit Pointer] CampaignData | Crate Britain
-    ++++++0x48 = [32-bit Pointer] CampaignData | Grave Danger
-    ++++++0x4c = [32-bit Pointer] CampaignData | A Leek in a Vegetable Patch
-    ++++++0x50 = [32-bit Pointer] CampaignData | Ice, Ice, Maybe
-    ++++++0x54 = [32-bit Pointer] CampaignData | When Annelids Collide
-    ++++++0x58 = [32-bit Pointer] CampaignData | Rum Deal
-    ++++++0x5c = [32-bit Pointer] CampaignData | Earn Your Crust
-    ++++++0x60 = [32-bit Pointer] CampaignData | Apple Core Island
-    ++++++0x64 = [32-bit Pointer] CampaignData | Helter Skelter
-    ++++++0x68 = [32-bit Pointer] CampaignData | Take My Cherry
-    ++++++0x6c = [32-bit Pointer] CampaignData | In Space, No-One Can Hear You Clean
-    ++++++0x70 = [32-bit Pointer] CampaignData | Shiver Me Timbers
-    ++++++0x74 = [32-bit Pointer] CampaignData | Falling For You
-    ++++++0x78 = [32-bit Pointer] CampaignData | Crop Circle
-    ++++++0x7c = [32-bit Pointer] CampaignData | Tree Village Trouble
-    ++++++0x80 = [32-bit Pointer] CampaignData | Movie Mayhem
-    ++++++0x84 = [32-bit Pointer] CampaignData | Worm and the Beanstalk
-    ++++++0x88 = [32-bit Pointer] CampaignData | School's in for Summer
-    ++++++0x8c = [32-bit Pointer] CampaignData | High Stakes
-    ++++++0x90 = [32-bit Pointer] CampaignData | A Quick Fix
-    ++++++0x94 = [32-bit Pointer] CampaignData | All Cooped Up
-    ++++++0x98 = [32-bit Pointer] CampaignData | Trial of the Damned
-    ++++++0x9c = [32-bit Pointer] CampaignData | Showdown at the OK Corale Reef
-    ++++++0xa0 = [32-bit Pointer] CampaignData | Plaice Holder
-    ++++++0xa4 = [32-bit Pointer] CampaignData | Hook, Line, and Skimmer
-    ++++++0xa8 = [32-bit Pointer] CampaignData | Nobody Rides For Free
-    ++++++0xac = [32-bit Pointer] CampaignData | Hold Until Relieved
-    ++++++0xb0 = [32-bit Pointer] CampaignData | To Boldly Go
-    ++++++0xb4 = [32-bit Pointer] CampaignData | Beautiful Balloon
-    ++++++0xb8 = [32-bit Pointer] CampaignData | A Good Nights Sleep
-    ++++++0xbc = [32-bit Pointer] CampaignData | Beefcake Breakfast Brawl
-    ++++++0xc0 = [32-bit Pointer] CampaignData | Costa Del Danger
-    ++++++0xc4 = [32-bit Pointer] CampaignData | Ragnarok and Roll
-    ++++++0xc8 = [32-bit Pointer] CampaignData | Alien Juice Suckers
+    ++++++0x44 = [32-bit Pointer] CampaignData [1] | Crate Britain
+    ++++++0x48 = [32-bit Pointer] CampaignData [2] | Grave Danger
+    ++++++0x4c = [32-bit Pointer] CampaignData [3] | A Leek in a Vegetable Patch
+    ++++++0x50 = [32-bit Pointer] CampaignData [4] | Ice, Ice, Maybe
+    ++++++0x54 = [32-bit Pointer] CampaignData [5] | When Annelids Collide
+    ++++++0x58 = [32-bit Pointer] CampaignData [6] | Rum Deal
+    ++++++0x5c = [32-bit Pointer] CampaignData [7] | Earn Your Crust
+    ++++++0x60 = [32-bit Pointer] CampaignData [8] | Apple Core Island
+    ++++++0x64 = [32-bit Pointer] CampaignData [9] | Helter Skelter
+    ++++++0x68 = [32-bit Pointer] CampaignData [10] | Take My Cherry
+    ++++++0x6c = [32-bit Pointer] CampaignData [11] | In Space, No-One Can Hear You Clean
+    ++++++0x70 = [32-bit Pointer] CampaignData [12] | Shiver Me Timbers
+    ++++++0x74 = [32-bit Pointer] CampaignData [13] | Falling For You
+    ++++++0x78 = [32-bit Pointer] CampaignData [14] | Crop Circle
+    ++++++0x7c = [32-bit Pointer] CampaignData [15] | Tree Village Trouble
+    ++++++0x80 = [32-bit Pointer] CampaignData [16] | Movie Mayhem
+    ++++++0x84 = [32-bit Pointer] CampaignData [17] | Worm and the Beanstalk
+    ++++++0x88 = [32-bit Pointer] CampaignData [18] | School's in for Summer
+    ++++++0x8c = [32-bit Pointer] CampaignData [19] | High Stakes
+    ++++++0x90 = [32-bit Pointer] CampaignData [20] | A Quick Fix
+    ++++++0x94 = [32-bit Pointer] CampaignData [21] | All Cooped Up
+    ++++++0x98 = [32-bit Pointer] CampaignData [22] | Trial of the Damned
+    ++++++0x9c = [32-bit Pointer] CampaignData [23] | Showdown at the OK Corale Reef
+    ++++++0xa0 = [32-bit Pointer] CampaignData [24] | Plaice Holder
+    ++++++0xa4 = [32-bit Pointer] CampaignData [25] | Hook, Line, and Skimmer
+    ++++++0xa8 = [32-bit Pointer] CampaignData [26] | Nobody Rides For Free
+    ++++++0xac = [32-bit Pointer] CampaignData [27] | Hold Until Relieved
+    ++++++0xb0 = [32-bit Pointer] CampaignData [28] | To Boldly Go
+    ++++++0xb4 = [32-bit Pointer] CampaignData [29] | Beautiful Balloon
+    ++++++0xb8 = [32-bit Pointer] CampaignData [30] | A Good Nights Sleep
+    ++++++0xbc = [32-bit Pointer] CampaignData [31] | Beefcake Breakfast Brawl
+    ++++++0xc0 = [32-bit Pointer] CampaignData [32] | Costa Del Danger
+    ++++++0xc4 = [32-bit Pointer] CampaignData [33] | Ragnarok and Roll
+    ++++++0xc8 = [32-bit Pointer] CampaignData [34] | Alien Juice Suckers
     +++++0x38 = [32-bit Pointer] Worms Array
     +++++0x3c = [32-bit Pointer] Team Name
+    ++++++0x0 = [ASCII] Team Name String
     +++++0x40 = [32-bit Boolean] Profile Selected
+    ------ Only way to check if the team is currently selected
 
-    ++++0x44 = [32-bit Pointer] StoredTeamData | Team 2
-    ++++0x48 = [32-bit Pointer] StoredTeamData | Team 3
-    ++++0x4c = [32-bit Pointer] StoredTeamData | Team 4
-    ++++0x50 = [32-bit Pointer] StoredTeamData | Team 5
-    ++++0x54 = [32-bit Pointer] StoredTeamData | Team 6
-    ++++0x58 = [32-bit Pointer] StoredTeamData | Team 7
-    ++++0x5c = [32-bit Pointer] StoredTeamData | Team 8
-    ++++0x60 = [32-bit Pointer] StoredTeamData | Team 9
-    ++++0x64 = [32-bit Pointer] StoredTeamData | Team 10
-    ++++0x68 = [32-bit Pointer] StoredTeamData | Team 11
-    ++++0x6c = [32-bit Pointer] StoredTeamData | Team 12
-    ++++0x70 = [32-bit Pointer] StoredTeamData | Team 13
-    ++++0x74 = [32-bit Pointer] StoredTeamData | Team 14
-    ++++0x78 = [32-bit Pointer] StoredTeamData | Team 15
-    ++++0x7c = [32-bit Pointer] StoredTeamData | Team 16
-    ++++0x80 = [32-bit Pointer] StoredTeamData | Team 17
-    ++++0x84 = [32-bit Pointer] StoredTeamData | Team 18
-    ++++0x88 = [32-bit Pointer] StoredTeamData | Team 19
-    ++++0x8c = [32-bit Pointer] StoredTeamData | Team 20
+    ++++0x44 = [32-bit Pointer] StoredTeamData [1] | Team 2
+    ++++0x48 = [32-bit Pointer] StoredTeamData [2] | Team 3
+    ++++0x4c = [32-bit Pointer] StoredTeamData [3] | Team 4
+    ++++0x50 = [32-bit Pointer] StoredTeamData [4] | Team 5
+    ++++0x54 = [32-bit Pointer] StoredTeamData [5] | Team 6
+    ++++0x58 = [32-bit Pointer] StoredTeamData [6] | Team 7
+    ++++0x5c = [32-bit Pointer] StoredTeamData [7] | Team 8
+    ++++0x60 = [32-bit Pointer] StoredTeamData [8] | Team 9
+    ++++0x64 = [32-bit Pointer] StoredTeamData [9] | Team 10
+    ++++0x68 = [32-bit Pointer] StoredTeamData [10] | Team 11
+    ++++0x6c = [32-bit Pointer] StoredTeamData [11] | Team 12
+    ++++0x70 = [32-bit Pointer] StoredTeamData [12] | Team 13
+    ++++0x74 = [32-bit Pointer] StoredTeamData [13] | Team 14
+    ++++0x78 = [32-bit Pointer] StoredTeamData [14] | Team 15
+    ++++0x7c = [32-bit Pointer] StoredTeamData [15] | Team 16
+    ++++0x80 = [32-bit Pointer] StoredTeamData [16] | Team 17
+    ++++0x84 = [32-bit Pointer] StoredTeamData [17] | Team 18
+    ++++0x88 = [32-bit Pointer] StoredTeamData [18] | Team 19
+    ++++0x8c = [32-bit Pointer] StoredTeamData [19] | Team 20
+    """
+
+    US_HASHMAP_GMSCHEMEDATA = dword(0x1cfccb4)
+    """
+    [32-bit Pointer] (US) Hashmap | GM.SchemeData
+    +0x4
+    ++0x1c = [32-bit Pointer] SchemeData
+    +++0x14 = [32-bit Pointer] Selected Scheme
+    ++++0x0 = [ASCII] Selected Scheme Name
+    ----- "FE.Scheme.Allaction" = All Action
+    ----- "FE.Scheme.Beginner" = Beginner
+    ----- "FE.Scheme.Bng" = BnG
+    ----- "FE.Scheme.Close" = Close (Unused)
+    ----- "FE.Scheme.Fruity" = Fruity (Unused)
+    ----- "FE.Scheme.Pro" = Pro
+    ----- "FE.Scheme.Shopping" = Shopping
+    ----- "FE.Scheme.Sinking" = Sinking
+    ----- "FE.Scheme.Sniper" = Sniper
+    ----- "FE.Scheme.Standard" = Standard
+    ----- "FE.Scheme.Standdeliver" = Stand and Deliver
+    ----- "FE.Scheme.Sticky" = Sticky
+    ----- "FE.Scheme.Strategy" = Strategy
+    ----- "FE.Scheme.Suddensink" = Sudden Sinking
+    ----- "FE.Scheme.WeaponTest" = WeaponTest (Unused)
     """
 
     US_HASHMAP_LLTIMBERS = dword(0x1cfcd3c)
@@ -3459,6 +3762,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Shiver Me Timbers
+    """
+
+    US_HASHMAP_GAMEOVERAWARDMOVIE = dword(0x1cfcdc8)
+    """
+    [32-bit Pointer] (US) Hashmap | GameOver.AwardMovie
+    +0x4
+    ++0x1c = [32-bit Pointer] GameOver.AwardMovie
+    +++0x0 = [ASCII] GameOver.AwardMovie String
     """
 
     US_HASHMAP_LPPINBALL = dword(0x1cfce60)
@@ -3482,8 +3793,8 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | MCa.CurrentMission
     +0x4
     ++0x1c = [32-bit] Selected Mission Index
-    -- Current mission in order from the menu, starts at 0, relative to the game type (Tutorial, Mission, Challenge)
-    -- Not reliable for Challenges as they can be unlocked in any order
+    --- Current mission in order from the menu, starts at 0, relative to the game type (Tutorial, Mission, Challenge)
+    --- Not reliable for Challenges as they can be unlocked in any order
     """
 
     US_HASHMAP_LSVILLAIN = dword(0x1cfcfe8)
@@ -3720,29 +4031,40 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | Land.InitialMaxHeight
     +0x4
     ++0x1c = [32-bit Float] Current map's initial max height
-    -- Unique value to each map, used in conjunction with the script name to determine the current challenge in the RP
-    -- 0x44113984 = Shotgun Challenge 1
-    -- 0x452b799b = Shotgun Challenge 2
-    -- 0x444731d8 = Shotgun Challenge 3
-    -- 0x453f9645 = Super Sheep Challenge 1
-    -- 0x4415ee12 = Super Sheep Challenge 2
-    -- 0x440b8bdc = Super Sheep Challenge 3
-    -- 0x43e75e17 = Jet Pack Challenge 1
-    -- 0x44082017 = Jet Pack Challenge 2
-    -- 0x447aa8dc = Jet Pack Challenge 3
-    -- 0x452b799b = Parachute Challenge 1
-    -- 0x44ab25d0 = Parachute Challenge 2
-    -- 0x4507f262 = Parachute Challenge 3
-    -- 0x43d8a364 = Deathmatch Challenge 1
-    -- 0x43c9ceab = Deathmatch Challenge 2
-    -- 0x44074e83 = Deathmatch Challenge 3
-    -- 0x43fa352b = Deathmatch Challenge 4
-    -- 0x43cff6eb = Deathmatch Challenge 5
-    -- 0x43c0b331 = Deathmatch Challenge 6
-    -- 0x43f0dfac = Deathmatch Challenge 7
-    -- 0x442bd166 = Deathmatch Challenge 8
-    -- 0x43d4fde2 = Deathmatch Challenge 9
-    -- 0x440b9c29 = Deathmatch Challenge 10
+    --- Unique value specific to each map, can be used to detect current map for custom multiplayer matches in RP
+    --- 0x43822a22 = Apple Core Island
+    --- 0x43b22a15 = Schools in for Summer
+    --- 0x43bd0980 = Please No More Islands
+    --- 0x43c05e93 = Atlantis
+    --- 0x43c0b331 = Hold Until Relieved
+    --- 0x43c3a46a = All Cooped Up
+    --- 0x43c5019c = Movie Mayhem
+    --- 0x43cff6eb = Ice, Ice, Maybe
+    --- 0x43d4fde2 = Submission
+    --- 0x43d8a364 = Plaice Holder
+    --- 0x43e1ad42 = Showdown at the OK Corale Reef
+    --- 0x43e471ff = D-Day
+    --- 0x43e75e17 = Jetpack Challenge 1
+    --- 0x43ef06e9 = Grave Danger
+    --- 0x43f0dfac = A Good Nights Sleep
+    --- 0x43f8dadf = Test Tubes
+    --- 0x43fba71a = Costa Del Danger
+    --- 0x4400a0c3 = Crate Britain
+    --- 0x4400ee13 = Shiver Me Timbers
+    --- 0x44074e83 = Nobody Rides For Free
+    --- 0x440b9c29 = Helter Skelter
+    --- 0x440c4796 = Return to Chateau Assassin
+    --- 0x44101fa1 = Crop Circle
+    --- 0x44113984 = Take My Cherry
+    --- 0x44138e9d = The Driving Range
+    --- 0x441512e1 = Earn Your Crust
+    --- 0x44193c59 = When Annelids Collide
+    --- 0x441b6e1b = Tree Village Trouble
+    --- 0x442a3332 = A Leek in a Vegetable Patch
+    --- 0x442fb21e = High Stakes
+    --- 0x444eaecc = Ragnarok and Roll
+    --- 0x4457ab59 = Alien Juice Suckers
+    --- 0x449f0a36 = The Mighty Kong
     """
 
     US_HASHMAP_LWBRIDGEK = dword(0x1cfe19c)
@@ -3929,10 +4251,10 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | MCa.CurrentMissionType
     +0x4
     ++0x1c = [32-bit] Selected Mission Type
-    -- 0x0 = Campaign
-    -- 0x3 = Tutorial
-    -- 0x4 = Challenge
-    -- Cannot be used to distinguish actual missions and quick/multiplayer games
+    --- 0x0 = Campaign
+    --- 0x3 = Tutorial
+    --- 0x4 = Challenge
+    --- Cannot be used to distinguish actual missions and quick/multiplayer games
     """
 
     US_HASHMAP_SAVELANGUAGE = dword(0x1cff5c8)
@@ -3940,9 +4262,9 @@ class Memory:
     [32-bit Pointer] (US) Hashmap | SAVE.Language
     +0x4
     ++0x1c = [32-bit] Selected Language
-    -- 0x0 = Unselected
-    -- 0x1 = US English
-    -- 0x3 = French
+    --- 0x0 = Unselected
+    --- 0x1 = US English
+    --- 0x3 = French
     """
 
     US_HASHMAP_LLHOLIDAY = dword(0x1cff6d4)
@@ -4050,7 +4372,16 @@ class Memory:
     """
     [32-bit Pointer] (US) Hashmap | Land.File
     +0x4
-    ++0x1c = [32-bit Pointer] Loaded .XOM Land Filename
+    ++0x1c = [32-bit Pointer] Land.File
+    +++0x0 = [ASCII] Loaded .XOM Land Filename String
+    """
+
+    US_HASHMAP_SHOTPOWER = dword(0x1cfff38)
+    """
+    [32-bit Pointer] (US) Hashmap | ShotPower
+    +0x4
+    ++0x1c = [32-bit Float] ShotPower
+    --- Float value ranging between 0.0 and 1.0 as the currently active worm shots with a charging weapon
     """
 
     US_HASHMAP_GAMEOVERGAMETYPE = dword(0x1cfff84)
@@ -4061,11 +4392,11 @@ class Memory:
     +0x4
     ++0x1c [32-bit Pointer] Game.Type
     +++0x0 [32-bit BE ASCII] Game Type String
-    --- 0x5475746f = Tutorial
-    --- 0x43616d70 = Campaign
-    --- 0x4368616c = Challenge
-    --- 0x51756963 = Quick
-    --- 0x4d756c74 = Multiplayer
+    ---- 0x5475746f = Tutorial
+    ---- 0x43616d70 = Campaign
+    ---- 0x4368616c = Challenge
+    ---- 0x51756963 = Quick
+    ---- 0x4d756c74 = Multiplayer
     """
 
     US_HASHMAP_LLDDAY = dword(0x1cfff94)
@@ -4106,6 +4437,13 @@ class Memory:
     --- 0x7 = 100%
     """
 
+    US_HASHMAP_TEAMCOUNT = dword(0x1d000c0)
+    """
+    [32-bit Pointer] (US) Hashmap | TeamCount
+    +0x4
+    ++0x1c = [32-bit] Team Count
+    """
+
     US_HASHMAP_QOBJ = dword(0x1d00158)
     """
     [32-bit Pointer] (US) Hashmap | Q.Obj
@@ -4123,6 +4461,16 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Chatter
+    """
+
+    US_HASHMAP_WEAPONGRAPHICALLAUNCHLOCATION = dword(0x1d001e8)
+    """
+    [32-bit Pointer] (US) Hashmap | Weapon.GraphicalLaunchLocation
+    Changes when the current active worm attacks with most weapons, including melee ones
+    +0x4
+    ++0x1c = [32-bit Float] Weapon.GraphicalLaunchLocation X
+    ++0x20 = [32-bit Float] Weapon.GraphicalLaunchLocation Y
+    ++0x24 = [32-bit Float] Weapon.GraphicalLaunchLocation Z
     """
 
     US_HASHMAP_LSLOVER = dword(0x1d002f8)
@@ -4149,6 +4497,17 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Earn Your Crust
     """
 
+    US_HASHMAP_GMGAMEINITDATA = dword(0x1d00574)
+    """
+    [32-bit Pointer] (US) Hashmap | GM.GameInitData
+    +0x4
+    ++0x1c = [32-bit Pointer] GameInitData
+    +++0x38 = [32-bit] Team1 Worm Count
+    +++0x88 = [32-bit] Team2 Worm Count
+    +++0xd0 = [32-bit] Team3 Worm Count
+    +++0x11c = [32-bit] Team4 Worm Count
+    """
+
     US_HASHMAP_FELANDTIME = dword(0x1d005c4)
     """
     [32-bit Pointer] (US) Hashmap | FE.Land.Time
@@ -4172,6 +4531,14 @@ class Memory:
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
     +++0x1c = [32-bit Boolean] Is Locked | Wormapedia: Darkside
+    """
+
+    US_HASHMAP_PS2CURRSLOT = dword(0x1d00724)
+    """
+    [32-bit Pointer] (US) Hashmap | PS2.CurrSlot
+    +0x4
+    ++0x1c = [32-bit Pointer] PS2.CurrSlot
+    +++0x0 = [ASCII] Current Save Slot String
     """
 
     US_HASHMAP_LCDM1 = dword(0x1d00834)
@@ -4359,6 +4726,31 @@ class Memory:
     +++0x1c = [32-bit Boolean] Is Locked | Landscape: Ragnarok and Roll
     """
 
+    US_HASHMAP_QNAME = dword(0x1d00d04)
+    """
+    [32-bit Pointer] (US) Hashmap | Q.Name
+    +0x4
+    ++0x1c = [32-bit Pointer] Scheme Name
+    --- Scheme selected in the multiplayer game menu
+    --- String is deallocated on game start but can be checked against using Prior
+    +++0x0 = [ASCII] Scheme Name String
+    ---- "FE.Scheme.Allaction" = All Action
+    ---- "FE.Scheme.Beginner" = Beginner
+    ---- "FE.Scheme.Bng" = BnG
+    ---- "FE.Scheme.Close" = Close (Unused)
+    ---- "FE.Scheme.Fruity" = Fruity (Unused)
+    ---- "FE.Scheme.Pro" = Pro
+    ---- "FE.Scheme.Shopping" = Shopping
+    ---- "FE.Scheme.Sinking" = Sinking
+    ---- "FE.Scheme.Sniper" = Sniper
+    ---- "FE.Scheme.Standard" = Standard
+    ---- "FE.Scheme.Standdeliver" = Stand and Deliver
+    ---- "FE.Scheme.Sticky" = Sticky
+    ---- "FE.Scheme.Strategy" = Strategy
+    ---- "FE.Scheme.Suddensink" = Sudden Sinking
+    ---- "FE.Scheme.WeaponTest" = WeaponTest (Unused)
+    """
+
     US_HASHMAP_QTTIME = dword(0x1d00e84)
     """
     [32-bit Pointer] (US) Hashmap | Q.TTime
@@ -4428,8 +4820,8 @@ class Memory:
     """
     [32-bit Pointer] (US) Hashmap | Water.Level
     +0x4
-    ++0x1c = [32-bit] Water Level
-    --- 0x0 = Default level
+    ++0x1c = [32-bit Float] Water Level
+    --- 0.0 = Default level
     """
 
     US_HASHMAP_LPFOOLS = dword(0x1d011bc)
@@ -4468,7 +4860,7 @@ class Memory:
     """
     [8-bit] (US) FlowControlService | Game State
     bit0 = ?
-    bit1 = Ingame
+    bit1 = ?
     bit2 = Fade In/Out
     bit3 = Loading (Phase 2)
     bit4 = Loading (Phase 1)
@@ -4477,7 +4869,6 @@ class Memory:
     bit7 = ?
 
     Useful masks:
-    - Is Ingame: & 0x4e == 0x2
     - Is Loading: & 0x1c > 0x0
     - Is In Menu: & 0x5e == 0x0
     """
@@ -4502,7 +4893,7 @@ class Memory:
     """
     [8-bit] (EU) FlowControlService | Game State
     bit0 = ?
-    bit1 = Ingame
+    bit1 = ?
     bit2 = Fade In/Out
     bit3 = Loading (Phase 2)
     bit4 = Loading (Phase 1)
@@ -4511,7 +4902,6 @@ class Memory:
     bit7 = ?
 
     Useful masks:
-    - Is Ingame: & 0x4e == 0x2
     - Is Loading: & 0x1c > 0x0
     - Is In Menu: & 0x5e == 0x0
     """

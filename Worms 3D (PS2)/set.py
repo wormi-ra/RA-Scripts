@@ -7,7 +7,7 @@ from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
 from framework import achievement, achievement_set, leaderboard
-from logic import Context, Controller, GameMode, Inventory, Lua, Mission, Unlock, Weapons, Worm, Worms3D, XData
+from logic import Context, Controller, GameMode, Inventory, Landscape, Lua, Mission, Team, TeamPersist, Unlock, Weapons, Worm, Worms3D, XData
 from data import UNLOCKS, Missions
 from memory import Memory
 import assets
@@ -73,6 +73,64 @@ class Worms3DSet(AchievementSet):
             if dtype is float:
                 alt.insert(2, measured_if(node.get_hash() == node.hashstr))
             ach.add_alt(alt)
+
+    @achievement(615951)
+    def the_worminator(self, ctx: Context, ach: Achievement):
+        # Main logic
+        ach.add_alt(group(
+            pause_if(~Worms3D.check_serial(ctx)),
+            Worms3D.is_ingame(ctx),
+            ~Worms3D.is_in_attract(ctx),
+            XData.get_value(ctx, "FCS.GameOver") == 0,
+            Team.get_active_team(ctx).is_ai_controlled == 0,
+            *(
+                # Kill counter
+                group(
+                    remember(XData.get_value(ctx, "CurrentTeamIndex")),
+                    reset_next_if(XData.on_value_changed(ctx, "CurrentTeamIndex")),
+                    add_hits(
+                        (Worm(id).get_instance(ctx).team_id != recall()) &
+                        Worm(id).get_instance(ctx).on_death()
+                    ).with_hits(1)
+                )
+                for id in range(16)
+            ),
+            always_false().with_hits(3),
+            reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)),
+        ))
+
+    @achievement(615956)
+    def kamikaze(self, ctx: Context, ach: Achievement):
+        recall_worm = Worm.Instance(MemoryExpression(recall()))
+        for id in range(16):
+            worm = Worm(id).get_instance(ctx)
+            ach.add_alt(group(
+                pause_if(~Worms3D.check_serial(ctx)),
+                Worms3D.is_ingame(ctx),
+                ~Worms3D.is_in_attract(ctx),
+                XData.get_value(ctx, "FCS.GameOver") == 0,
+                Team.get_active_team(ctx).is_ai_controlled == 0,
+                remember(XData.get_value(ctx, "CurrentTeamIndex")),
+                (worm.team_id != recall()),
+                remember(worm),
+                # Checkpoint 1: Active worm dies
+                (delta(Worm.get_active_worm(ctx).is_active) == 1) &
+                reset_next_if(Worm.get_active_worm(ctx).is_active == 0).with_hits(1),
+                reset_next_if(always_true()),
+                # Checkpoint 2: Target worm receives damage
+                (delta(recall_worm.pending_damage) == 0) &
+                reset_next_if(recall_worm.pending_damage != 0).with_hits(1),
+                reset_next_if(always_true()),
+                # Checkpoint 3: Target worm dies
+                (delta(recall_worm.is_active) == 1) &
+                (recall_worm.is_active == 0).with_hits(1),
+                reset_if(XData.on_value_changed(ctx, "CurrentTeamIndex")),
+                reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)),
+            ))
+
+    #############################
+    # Progression               #
+    #############################
 
     @achievement(612940)
     def tutorial(self, ctx: Context, ach: Achievement):
@@ -764,7 +822,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615919)
     def campaign_challenge_beanstalk(self, ctx: Context, ach: Achievement):
         mission = Missions.BEANSTALK
         index = XData.get_value(ctx, "Trigger.Index")
@@ -782,7 +840,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615920)
     def campaign_challenge_schools(self, ctx: Context, ach: Achievement):
         mission = Missions.SCHOOLS
         player_team = [0, 1, 2]
@@ -800,7 +858,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615921)
     def campaign_challenge_highstakes(self, ctx: Context, ach: Achievement):
         mission = Missions.HIGHSTAKES
         ach.add_alt(group(
@@ -817,7 +875,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615922)
     def campaign_challenge_notpc(self, ctx: Context, ach: Achievement):
         mission = Missions.NOTPC
         inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
@@ -850,7 +908,7 @@ class Worms3DSet(AchievementSet):
             always_false(),
         ))
 
-    @achievement()
+    @achievement(615923)
     def campaign_challenge_cooped(self, ctx: Context, ach: Achievement):
         mission = Missions.COOPED
         forbidden_weapons = [Weapons.GRENADE, Weapons.BAZOOKA]
@@ -872,7 +930,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615924)
     def campaign_challenge_trial(self, ctx: Context, ach: Achievement):
         mission = Missions.TRIAL
         index = XData.get_value(ctx, "Trigger.Index")
@@ -892,7 +950,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615925)
     def campaign_challenge_showdown(self, ctx: Context, ach: Achievement):
         mission = Missions.SHOWDOWN
         team_index = XData.get_value(ctx, "CurrentTeamIndex")
@@ -919,7 +977,7 @@ class Worms3DSet(AchievementSet):
             always_false(),
         ))
 
-    @achievement()
+    @achievement(615926)
     def campaign_challenge_plaice(self, ctx: Context, ach: Achievement):
         mission = Missions.PLAICE
         inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
@@ -935,7 +993,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615927)
     def campaign_challenge_hookline(self, ctx: Context, ach: Achievement):
         mission = Missions.HOOKLINE
         inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
@@ -962,7 +1020,7 @@ class Worms3DSet(AchievementSet):
             always_false(),
         ))
 
-    @achievement()
+    @achievement(615928)
     def campaign_challenge_funfair(self, ctx: Context, ach: Achievement):
         mission = Missions.FUNFAIR
         enemy_team = [1, 2, 3]
@@ -987,7 +1045,7 @@ class Worms3DSet(AchievementSet):
             trigger(always_false()),
         ))
 
-    @achievement()
+    @achievement(615929)
     def campaign_challenge_pegasus(self, ctx: Context, ach: Achievement):
         mission = Missions.PEGASUS
         enemy_team = [6, 7, 8, 9]
@@ -1005,7 +1063,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615930)
     def campaign_challenge_boldly(self, ctx: Context, ach: Achievement):
         mission = Missions.BOLDLY
         active_worm = Worm.Instance(MemoryExpression(recall()))
@@ -1033,7 +1091,7 @@ class Worms3DSet(AchievementSet):
             always_false(),
         ))
 
-    @achievement()
+    @achievement(615931)
     def campaign_challenge_balloon(self, ctx: Context, ach: Achievement):
         mission = Missions.BALLOON
         inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.TEAM)
@@ -1052,7 +1110,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615932)
     def campaign_challenge_countingsheep(self, ctx: Context, ach: Achievement):
         mission = Missions.COUNTINGSHEEP
         max_turns = 3
@@ -1076,7 +1134,7 @@ class Worms3DSet(AchievementSet):
             always_false(),
         ))
 
-    @achievement()
+    @achievement(615933)
     def campaign_challenge_breakfast(self, ctx: Context, ach: Achievement):
         mission = Missions.BREAKFAST
         enemy_team = [1, 3, 4, 5]
@@ -1112,7 +1170,7 @@ class Worms3DSet(AchievementSet):
             trigger(always_false()),
         ))
 
-    @achievement()
+    @achievement(615934)
     def campaign_challenge_holiday(self, ctx: Context, ach: Achievement):
         mission = Missions.HOLIDAY
         ach.add_alt(group(
@@ -1124,7 +1182,7 @@ class Worms3DSet(AchievementSet):
             trigger(mission.on_gold_medal(ctx)),
         ))
 
-    @achievement()
+    @achievement(615935)
     def campaign_challenge_pack(self, ctx: Context, ach: Achievement):
         mission = Missions.PACK
         allowed_weapons = [Weapons.FIRE_PUNCH, Weapons.PROD, Weapons.BASEBALL_BAT]
@@ -1146,7 +1204,7 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
 
-    @achievement()
+    @achievement(615936)
     def campaign_challenge_alien(self, ctx: Context, ach: Achievement):
         mission = Missions.ALIEN
         forbidden_weapons = [Weapons.TELEPORT, Weapons.HOMING_MISSILE]
@@ -1171,6 +1229,50 @@ class Worms3DSet(AchievementSet):
             ),
             reset_if(~mission.is_loaded(ctx)),
         ))
+
+    #############################
+    # Multiplayer               #
+    #############################
+
+    @achievement(616025)
+    def multiplayer_sinking(self, ctx: Context, ach: Achievement):
+        return Worms3D.generate_multiplayer_challenge(
+            ctx, ach,
+            scheme_name="FE.Scheme.Suddensink",
+            land_name="holiday.xom",
+        )
+
+    @achievement(616026)
+    def multiplayer_bng(self, ctx: Context, ach: Achievement):
+        return Worms3D.generate_multiplayer_challenge(
+            ctx, ach,
+            scheme_name="FE.Scheme.Bng",
+            land_name="pleasenomoreislands.xom",
+        )
+
+    @achievement(616027)
+    def multiplayer_shopping(self, ctx: Context, ach: Achievement):
+        return Worms3D.generate_multiplayer_challenge(
+            ctx, ach,
+            scheme_name="FE.Scheme.Shopping",
+            land_name="cratefun.xom",
+        )
+
+    @achievement(616028)
+    def multiplayer_sniper(self, ctx: Context, ach: Achievement):
+        return Worms3D.generate_multiplayer_challenge(
+            ctx, ach,
+            scheme_name="FE.Scheme.Sniper",
+            land_name="Tutorial3.xom",
+        )
+
+    @achievement(616029)
+    def multiplayer_stand(self, ctx: Context, ach: Achievement):
+        return Worms3D.generate_multiplayer_challenge(
+            ctx, ach,
+            scheme_name="FE.Scheme.Standdeliver",
+            land_name="Tutorial4.xom",
+        )
 
     #############################
     # Leaderboards              #
