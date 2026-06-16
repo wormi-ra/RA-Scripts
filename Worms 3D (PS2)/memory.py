@@ -22,6 +22,10 @@ class Memory:
     https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%203D%20(PS2)/data/xdata.csv
     """
 
+    EU_GLOBAL_FRAME_COUNTER = dword(0x00533540)
+
+    US_GLOBAL_FRAME_COUNTER = dword(0x005f2640)
+
     EU_STATE_CHECK_IS_LOADING = dword(0x53359c)
     """
     [32-bit Boolean] (EU) State Check | Is Loading

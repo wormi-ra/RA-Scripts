@@ -302,6 +302,9 @@ class Mission:
         self.land_maxheight = land_maxheight
         self.teams = teams
 
+    def is_deathmatch(self):
+        return self.mtype == GameMode.CHALLENGE and self.filename.startswith("Deathmatch")
+
     @staticmethod
     def current_script(ctx: Context):
         return {
@@ -316,11 +319,21 @@ class Mission:
             "US": Memory.US_INGAME_CURRENT_LUA_SCRIPT_HASH,
         }[ctx.region]
 
+    def was_loaded(self, ctx: Context):
+        return prior(Mission.current_hash(ctx)) == self.filehash
+
     def is_loaded(self, ctx: Context):
         return Mission.current_hash(ctx) == self.filehash
         # return string_equals(Mission.current_script(ctx), f"{self.filename}\0")
 
     def on_start(self, ctx: Context):
+        if self.filename == "Pegasus":
+            # Exception for Hold Until Relieved because of a bug with ElapsedRoundTime
+            return (
+                self.is_loaded(ctx) &
+                (delta(XData.get_value(ctx, "ActiveWormIndex")) == 0xffffffff) &
+                (XData.get_value(ctx, "ActiveWormIndex") == 0)
+            )
         return (
             self.is_loaded(ctx) &
             (delta(XData.get_value(ctx, "ElapsedRoundTime")) == 0) &
@@ -353,10 +366,19 @@ class Mission:
         bytes = (int.from_bytes(self.filename.encode()[:4]))
         return (self.land_maxheight + bytes) & 0xffffffff
 
-    @staticmethod
-    def on_complete(ctx: Context):
+    def on_complete(self, ctx: Context):
+        if self.mtype == GameMode.TUTORIAL:
+            return (
+                ((XData.get_value(ctx, "GameOver.AwardMovie") >> delta(byte(0x0))) == 0x0) &
+                (XData.get_value(ctx, "GameOver.AwardMovie") >> byte(0x0) != 0x0)
+            )
         gametime = XData.get_value(ctx, "MCa.LastGameTime")
         return (delta(gametime) == 0) & (gametime != 0)
+
+    # @staticmethod
+    # def on_complete(ctx: Context):
+    #     gametime = XData.get_value(ctx, "MCa.LastGameTime")
+    #     return (delta(gametime) == 0) & (gametime != 0)
 
     @staticmethod
     def on_gold_medal(ctx: Context, gamemode = GameMode.CAMPAIGN, is_deathmatch = False):
@@ -407,20 +429,31 @@ class Mission:
             return self.get_challenge_goldtime(ctx) > self.gold
 
     @staticmethod
-    def generate_challenge_trophies(ctx: Context, challenges: list["Mission"]):
+    def generate_challenge_trophies(ctx: Context, ach: Achievement, challenges: list["Mission"]):
+        is_deathmatch = challenges[0].is_deathmatch()
         game_awarded = XData.get_value(ctx, "MCa.GameAwarded")
-        return group(
+        ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
             *(
                 add_hits(chall.has_challenge_goldtime(ctx)).with_hits(1)
                 for chall in challenges
             ),
             measured(always_false()).with_hits(len(challenges)),
-            XData.get_value(ctx, "GameOver.AwardMovie") >> dword_be(0x0) == int.from_bytes("gold".encode()),
+            group(*(
+                or_next(chall.was_loaded(ctx))
+                for chall in challenges
+            )).with_flag(Flag.NONE),
+            group(
+                remember(XData.get_value(ctx, "MCa.LastGameTime")),
+                (
+                    XData.get_value(ctx, "MCa.BestGold") > recall() if is_deathmatch
+                    else XData.get_value(ctx, "MCa.BestGold") < recall()
+                )
+            ),
             delta(game_awarded) == 0,
             game_awarded == 1,
             reset_if(XData.on_value_changed(ctx, "PS2.CurrSlot")),
-        )
+        ))
 
     @staticmethod
     def on_hash_changed(ctx: Context):
@@ -781,6 +814,21 @@ class Worms3D:
         )
 
     @staticmethod
+    def frame_counter(ctx: Context):
+        counter = {
+            "EU": Memory.EU_GLOBAL_FRAME_COUNTER,
+            "US": Memory.US_GLOBAL_FRAME_COUNTER,
+        }[ctx.region]
+        if ctx.region == "EU":
+            return group(
+                remember(counter % value(5)),
+                add_hits(recall() == 0),
+                (delta(counter) != counter),
+            )
+        else:
+            return (delta(counter) != counter)
+
+    @staticmethod
     def generate_multiplayer_challenge(ctx: Context, ach: Achievement, scheme_name: str, land_name: str, skill = 5, player_worms = 4, enemy_worms = 4):
         from data import Missions
         mission = Missions.STDVS
@@ -797,7 +845,7 @@ class Worms3D:
                 Team.get_starting_worm_count(ctx, team_id) == player_worms,
                 Team.get_starting_worm_count(ctx, team_id ^ 1) == enemy_worms,
                 team.is_ai_controlled == 0,
-                enemy_team.skill == skill,
+                enemy_team.skill >= skill,
                 remember(scheme),
                 string_equals(0x0, f"{scheme_name}\0", transform=lambda val: recall() >> val),
                 remember(land),

@@ -81,6 +81,7 @@ class Worms3DSet(AchievementSet):
             pause_if(~Worms3D.check_serial(ctx)),
             Worms3D.is_ingame(ctx),
             ~Worms3D.is_in_attract(ctx),
+            ~Missions.TUTORIAL2.is_loaded(ctx),
             XData.get_value(ctx, "FCS.GameOver") == 0,
             Team.get_active_team(ctx).is_ai_controlled == 0,
             *(
@@ -134,75 +135,83 @@ class Worms3DSet(AchievementSet):
 
     @achievement(612940)
     def tutorial(self, ctx: Context, ach: Achievement):
+        mission = Missions.TUTORIAL5
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.TUTORIAL5.is_loaded(ctx),
-            (XData.get_value(ctx, "GameOver.AwardMovie") >> delta(byte(0x0))) == 0x0,
-            XData.get_value(ctx, "GameOver.AwardMovie") >> dword_be(0x0) == int.from_bytes("Game".encode())
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612941)
     def mission_1(self, ctx: Context, ach: Achievement):
+        mission = Missions.DDAY
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.DDAY.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612942)
     def mission_5(self, ctx: Context, ach: Achievement):
+        mission = Missions.ICE
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.ICE.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612943)
     def mission_10(self, ctx: Context, ach: Achievement):
+        mission = Missions.HELTERSKELTER
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.HELTERSKELTER.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612944)
     def mission_15(self, ctx: Context, ach: Achievement):
+        mission = Missions.CROPCIRCLE
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.CROPCIRCLE.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612945)
     def mission_20(self, ctx: Context, ach: Achievement):
+        mission = Missions.HIGHSTAKES
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.HIGHSTAKES.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612946)
     def mission_25(self, ctx: Context, ach: Achievement):
+        mission = Missions.PLAICE
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.PLAICE.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612947)
     def mission_30(self, ctx: Context, ach: Achievement):
+        mission = Missions.BALLOON
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.BALLOON.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(612948)
     def mission_35(self, ctx: Context, ach: Achievement):
+        mission = Missions.ALIEN
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.ALIEN.is_loaded(ctx),
-            Mission.on_complete(ctx),
+            mission.is_loaded(ctx),
+            mission.on_complete(ctx),
         ))
 
     #############################
@@ -211,30 +220,33 @@ class Worms3DSet(AchievementSet):
 
     @achievement(614494)
     def secret_atlantis(self, ctx: Context, ach: Achievement):
+        mission = Missions.TUTORIAL1
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.TUTORIAL1.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.L.Atlantis").on_unlock(ctx)
         ))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.TUTORIAL1.is_loaded(ctx),
+            mission.is_loaded(ctx),
+            XData.get_value(ctx, "Trigger.Index") == 0x2,
             delta(XData.get_value(ctx, "Trigger.Collector")) == 0xffffffff,
             XData.get_value(ctx, "Trigger.Collector") == 0x0,
         ))
 
     @achievement(614495)
     def secret_grave(self, ctx: Context, ach: Achievement):
+        mission = Missions.GRAVEYARD
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.GRAVEYARD.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.S.Horror").on_unlock(ctx)
         ))
         node = Lua.get_node(ctx, "TriggerIndex", 8, 0)
         index = node.get_value()
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.GRAVEYARD.is_loaded(ctx),
+            mission.is_loaded(ctx),
             node.get_hash() == node.hashstr,
             delta(index) != 9.0,
             index == 9.0,
@@ -242,16 +254,17 @@ class Worms3DSet(AchievementSet):
 
     @achievement(614496)
     def secret_schools(self, ctx: Context, ach: Achievement):
+        mission = Missions.SCHOOLS
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.SCHOOLS.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.S.Mad").on_unlock(ctx)
         ))
         node = Lua.get_node(ctx, "EasterEgg", 8, 1)
         easter = node.get_value()
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.SCHOOLS.is_loaded(ctx),
+            mission.is_loaded(ctx),
             node.get_hash() == node.hashstr,
             delta(easter) == 1.0,
             easter == 2.0,
@@ -259,16 +272,17 @@ class Worms3DSet(AchievementSet):
 
     @achievement(614497)
     def secret_quick_fix(self, ctx: Context, ach: Achievement):
+        mission = Missions.NOTPC
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.NOTPC.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.S.Lover").on_unlock(ctx)
         ))
         node = Lua.get_node(ctx, "Team17", 8, 1)
         easter = node.get_value()
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.NOTPC.is_loaded(ctx),
+            mission.is_loaded(ctx),
             node.get_hash() == node.hashstr,
             delta(easter) == 111110.0,
             easter == 111111.0,
@@ -276,16 +290,17 @@ class Worms3DSet(AchievementSet):
 
     @achievement(614498)
     def secret_showdown(self, ctx: Context, ach: Achievement):
+        mission = Missions.SHOWDOWN
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.SHOWDOWN.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.P.Giraffe").on_unlock(ctx)
         ))
         node = Lua.get_node(ctx, "CrateNumber", 8, 0)
         crate = node.get_value()
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.SHOWDOWN.is_loaded(ctx),
+            mission.is_loaded(ctx),
             node.get_hash() == node.hashstr,
             delta(crate) != 2.0,
             crate == 2.0,
@@ -293,31 +308,33 @@ class Worms3DSet(AchievementSet):
 
     @achievement(614499)
     def secret_funfair(self, ctx: Context, ach: Achievement):
+        mission = Missions.FUNFAIR
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.FUNFAIR.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.S.Gramps").on_unlock(ctx)
         ))
         node = Lua.get_node(ctx, "TicketBoothDestroyed", 8, 1)
         booth_destroyed = node.get_value()
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.FUNFAIR.is_loaded(ctx),
+            mission.is_loaded(ctx),
             node.get_hash() == node.hashstr,
             booth_destroyed == 0.0,
-            Mission.on_complete(ctx),
+            mission.on_complete(ctx),
         ))
 
     @achievement(614500)
     def secret_breakfast(self, ctx: Context, ach: Achievement):
+        mission = Missions.BREAKFAST
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.BREAKFAST.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.BridgeK").on_unlock(ctx)
         ))
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.BREAKFAST.is_loaded(ctx),
+            mission.is_loaded(ctx),
             delta(XData.get_value(ctx, "Crate.Index")) != 4,
             XData.get_value(ctx, "Crate.Index") == 4,
         ))
@@ -328,42 +345,72 @@ class Worms3DSet(AchievementSet):
 
     @achievement(610362)
     def unlock_mad_cow(self, ctx: Context, ach: Achievement):
+        mission = Missions.HOMING
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.HOMING.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.MadCow").on_unlock(ctx),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE),
         ))
 
     @achievement(610366)
     def unlock_ssheep(self, ctx: Context, ach: Achievement):
+        mission = Missions.TARGETHUNT4
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.TARGETHUNT4.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.SSheep").on_unlock(ctx),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE),
         ))
 
     @achievement(610364)
     def unlock_earthquake(self, ctx: Context, ach: Achievement):
+        mission = Missions.JETPACKCHALL3
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.JETPACKCHALL3.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.EQuake").on_unlock(ctx),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE),
         ))
 
     @achievement(610363)
     def unlock_banana(self, ctx: Context, ach: Achievement):
+        mission = Missions.CHUTE3
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.CHUTE3.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.Banana").on_unlock(ctx),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE),
         ))
 
     @achievement(610365)
     def unlock_nuke(self, ctx: Context, ach: Achievement):
+        mission = Missions.DEATHMATCH10
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
-            Missions.DEATHMATCH10.is_loaded(ctx),
+            mission.is_loaded(ctx),
             Unlock("L.W.Nuke").on_unlock(ctx),
+        ))
+        ach.add_alt(group(
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE, is_deathmatch=True),
         ))
 
     @achievement(610358)
@@ -435,22 +482,22 @@ class Worms3DSet(AchievementSet):
     @achievement(615306)
     def trophy_shotgun_gold(self, ctx: Context, ach: Achievement):
         challenges = [Missions.TARGETHUNT, Missions.TARGETHUNT2, Missions.HOMING]
-        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+        Mission.generate_challenge_trophies(ctx, ach, challenges)
 
     @achievement(615307)
     def trophy_sheep_gold(self, ctx: Context, ach: Achievement):
         challenges = [Missions.SHEEP1, Missions.SHEEP2, Missions.TARGETHUNT4]
-        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+        Mission.generate_challenge_trophies(ctx, ach, challenges)
 
     @achievement(615308)
     def trophy_jetpack_gold(self, ctx: Context, ach: Achievement):
         challenges = [Missions.CRATEFUN, Missions.JETPACKCHALL2, Missions.JETPACKCHALL3]
-        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+        Mission.generate_challenge_trophies(ctx, ach, challenges)
 
     @achievement(615309)
     def trophy_parachute_gold(self, ctx: Context, ach: Achievement):
         challenges = [Missions.CHUTE1, Missions.CHUTE2, Missions.CHUTE3]
-        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+        Mission.generate_challenge_trophies(ctx, ach, challenges)
 
     @achievement(615310)
     def trophy_deathmatch_gold(self, ctx: Context, ach: Achievement):
@@ -459,7 +506,7 @@ class Worms3DSet(AchievementSet):
             Missions.DEATHMATCH5, Missions.DEATHMATCH6, Missions.DEATHMATCH7, Missions.DEATHMATCH8,
             Missions.DEATHMATCH9, Missions.DEATHMATCH10,
         ]
-        ach.add_alt(Mission.generate_challenge_trophies(ctx, challenges))
+        Mission.generate_challenge_trophies(ctx, ach, challenges)
 
     #############################
     # Campaign Challenges       #
@@ -659,11 +706,11 @@ class Worms3DSet(AchievementSet):
             mission.on_loaded(ctx).with_hits(1),
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
-            reset_if(mission.on_leave(ctx)),
             reset_if(
                 (Worms3D.current_team(ctx) == 0) &
                 XData.on_value_decreased(ctx, "Jetpack.Fuel")
             ),
+            reset_if(~mission.is_loaded(ctx)),
         ))
 
     @achievement(615553)
@@ -690,6 +737,7 @@ class Worms3DSet(AchievementSet):
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
             mission.is_loaded(ctx),
+            XData.get_value(ctx, "ElapsedRoundTime") != 0,
             # 2 mins in milliseconds
             XData.get_value(ctx, "ElapsedRoundTime") < (2 * 60 * 1000),
             trigger(mission.on_gold_medal(ctx)),
@@ -726,15 +774,20 @@ class Worms3DSet(AchievementSet):
     def campaign_challenge_timbers(self, ctx: Context, ach: Achievement):
         mission = Missions.TIMBERS
         worm_index = XData.get_value(ctx, "ActiveWormIndex")
+        inv = Inventory.get_inventory(ctx, 0, Inventory.InventoryType.ALLIANCE)
         ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
             mission.on_start(ctx).with_hits(1),
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
             reset_if(
-                # end of captain's turn
-                (delta(worm_index) == 3) &
-                (worm_index != 3)
+                # start of captain's turn
+                (delta(worm_index) != 3) &
+                (worm_index == 3)
+            ).with_hits(2),
+            reset_if(
+                # On ammo used
+                inv >> delta(Inventory.get_ammo_address(Weapons.GIRDER)) > Inventory.get_ammo_address(Weapons.GIRDER)
             ),
             reset_if(~mission.is_loaded(ctx)),
         ))
@@ -845,17 +898,15 @@ class Worms3DSet(AchievementSet):
         mission = Missions.SCHOOLS
         player_team = [0, 1, 2]
         ach.add_alt(group(
-            pause_if(~Worms3D.check_serial(ctx)),
-            mission.on_start(ctx).with_hits(1),
+            Worms3D.check_serial(ctx),
+            mission.is_loaded(ctx),
+            XData.get_value(ctx, "ElapsedRoundTime") != 0,
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
             *(
-                reset_if(
-                    Worm(id).get_instance(ctx).on_death()
-                )
+                Worm(id).get_instance(ctx).health > 0
                 for id in player_team
-            ),
-            reset_if(~mission.is_loaded(ctx)),
+            )
         ))
 
     @achievement(615921)
@@ -887,9 +938,7 @@ class Worms3DSet(AchievementSet):
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
             *(
-                reset_if(
-                    Worm(enemy).get_instance(ctx).on_death()
-                )
+                Worm(enemy).get_instance(ctx).health > 0
                 for enemy in enemy_team
             ),
             reset_if(
@@ -1052,7 +1101,7 @@ class Worms3DSet(AchievementSet):
         ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
             mission.on_start(ctx).with_hits(1),
-            mission.gold_timer_on_pace(ctx),
+            # No gold timer check because this mission has a bug where ElapsedRoundTime never updates
             trigger(mission.on_gold_medal(ctx)),
             *(
                 reset_if(
@@ -1081,15 +1130,15 @@ class Worms3DSet(AchievementSet):
             reset_if(~mission.is_loaded(ctx)),
         ))
         # Jump counter
-        ach.add_alt(group(
-            pause_if(~Worms3D.check_serial(ctx)),
-            measured_if(mission.on_start(ctx).with_hits(1)),
-            remember(Worm(0).get_instance(ctx)),
-            measured(
-                active_worm.on_jump()
-            ).with_hits(max_jumps),
-            always_false(),
-        ))
+        # ach.add_alt(group(
+        #     pause_if(~Worms3D.check_serial(ctx)),
+        #     measured_if(mission.on_start(ctx).with_hits(1)),
+        #     remember(Worm(0).get_instance(ctx)),
+        #     measured(
+        #         active_worm.on_jump()
+        #     ).with_hits(max_jumps),
+        #     always_false(),
+        # ))
 
     @achievement(615931)
     def campaign_challenge_balloon(self, ctx: Context, ach: Achievement):
@@ -1176,10 +1225,10 @@ class Worms3DSet(AchievementSet):
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
             mission.is_loaded(ctx),
+            XData.get_value(ctx, "ElapsedRoundTime") != 0,
             mission.gold_timer_on_pace(ctx),
-            XData.get_value(ctx, "ElapsedRoundTime") > 0,
-            Worm(0).get_instance(ctx).health == 50,
             trigger(mission.on_gold_medal(ctx)),
+            Worm(0).get_instance(ctx).health == 50,
         ))
 
     @achievement(615935)
@@ -1272,6 +1321,7 @@ class Worms3DSet(AchievementSet):
             ctx, ach,
             scheme_name="FE.Scheme.Standdeliver",
             land_name="Tutorial4.xom",
+            skill=3
         )
 
     #############################
@@ -1555,11 +1605,55 @@ class Worms3DSet(AchievementSet):
 
     @leaderboard(164803)
     def leaderboard_pegasus(self, ctx: Context, lb: Leaderboard):
-        return Missions.PEGASUS.generate_leaderboard(ctx, lb)
+        # Exception for this mission because ElapsedRoundTime never updates due to a bug
+        mission = Missions.PEGASUS
+        for g in [lb.start, lb.submit, lb.cancel]:
+            if len(g) == 0:
+                g.append(group(always_true()))
+        lb.add_start(group(
+            Worms3D.check_serial(ctx),
+            mission.on_start(ctx),
+        ))
+        lb.add_cancel(group(
+            Worms3D.check_serial(ctx),
+            ~mission.is_loaded(ctx),
+        ))
+        lb.add_submit(group(
+            Worms3D.check_serial(ctx),
+            mission.on_complete(ctx)
+        ))
+        lb.add_value(group(
+            measured_if(Worms3D.check_serial(ctx)),
+            measured(Worms3D.frame_counter(ctx)),
+        ))
+
 
     @leaderboard(163436)
     def leaderboard_boldly(self, ctx: Context, lb: Leaderboard):
         return Missions.BOLDLY.generate_leaderboard(ctx, lb)
+
+    @leaderboard(165080)
+    def leaderboard_boldly_jumps(self, ctx: Context, lb: Leaderboard):
+        mission = Missions.BOLDLY
+        for g in [lb.start, lb.submit, lb.cancel]:
+            if len(g) == 0:
+                g.append(group(always_true()))
+        lb.add_start(group(
+            Worms3D.check_serial(ctx),
+            mission.on_start(ctx),
+        ))
+        lb.add_cancel(group(
+            Worms3D.check_serial(ctx),
+            ~mission.is_loaded(ctx),
+        ))
+        lb.add_submit(group(
+            Worms3D.check_serial(ctx),
+            mission.on_complete(ctx)
+        ))
+        lb.add_value(group(
+            measured_if(Worms3D.check_serial(ctx)),
+            measured(Worm(0).get_instance(ctx).on_jump()),
+        ))
 
     @leaderboard(164807)
     def leaderboard_balloon(self, ctx: Context, lb: Leaderboard):
