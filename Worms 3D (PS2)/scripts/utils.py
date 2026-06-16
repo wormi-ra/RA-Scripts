@@ -117,7 +117,13 @@ def print_dict(d: dict):
         print(f"    {hex(k)}: \"{v}\",")
     print("}")
 
+
+def badges_template():
+    from assets import achievements
+    for id, ach in achievements.items():
+        print(f"{id},\"{ach.title}\",,,border.png,")
+
 if __name__=="__main__":
     # print_dict(calculate_challenges_hash())
     # print_dict(calculate_levels_hash())
-    generate_missions()
+    badges_template()
