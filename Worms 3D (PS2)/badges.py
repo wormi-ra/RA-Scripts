@@ -3,7 +3,7 @@ from csv import DictReader
 
 IMG_PATH = "data/img"
 OUTPUT_PATH = "output/badges"
-SAMPLING = Image.Resampling.NEAREST
+SAMPLING = Image.Resampling.LANCZOS
 
 class Badge:
     id: int
@@ -20,31 +20,32 @@ class Badge:
         if (img.size[0] < size[0]) and (img.size[1] < img.size[1]):
             sampling = Image.Resampling.NEAREST
         else:
-            sampling = Image.Resampling.LANCZOS
+            sampling = SAMPLING
         return img.resize(size, sampling)
 
     def render(self, size: tuple[int, int] = (64, 64)) -> Image.Image:
         badge = Image.new("RGBA", size)
         if self.background:
-            with Image.open(f"{IMG_PATH}/{self.background}.png") as bg:
+            with Image.open(f"{IMG_PATH}/{self.background}") as bg:
                 bg = self.resize(bg, size).convert("RGB")
-                if self.foreground:
-                    bg = bg.filter(ImageFilter.BoxBlur(1))
+                # bg = bg.filter(ImageFilter.GaussianBlur(0.5))
+                if self.foreground or self.icon:
+                    bg = bg.filter(ImageFilter.GaussianBlur(0.5))
                 badge.paste(bg)
         if self.foreground:
-            with Image.open(f"{IMG_PATH}/{self.foreground}.png") as fg:
+            with Image.open(f"{IMG_PATH}/{self.foreground}") as fg:
                 fg = self.resize(fg.convert("RGBA"), size)
                 badge.paste(fg, mask=fg)
         if self.border:
-            with Image.open(f"{IMG_PATH}/{self.border}.png") as border:
+            with Image.open(f"{IMG_PATH}/{self.border}") as border:
                 border = self.resize(border, size)
                 badge.paste(border, mask=border)
         if self.icon:
-            with Image.open(f"{IMG_PATH}/{self.icon}.png") as icon:
+            with Image.open(f"{IMG_PATH}/{self.icon}") as icon:
                 margin = 0
                 # bottom left
+                icon = self.resize(icon.convert("RGBA"), (24, 24))
                 pos = (size[0] - icon.size[0] - margin, size[1] - icon.size[1] - margin)
-                icon = icon.convert("RGBA")
                 badge.paste(icon, pos, mask=icon)
         return badge
 

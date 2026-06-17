@@ -1,77 +1,77 @@
 id,name,background,foreground,border,icon
-612940,"Worms School",Tutorial_ATF.tga,,border,
-612941,"The Battle for Wormandy",Mission_DD.tga,,border,
-612942,"Fixing the Ice Dispenser",Mission_Ice.tga,,border,
-612943,"Hurry Skurry",Mission_HelterSkelter.tga,,border,
-612944,"UFO Catcher",Mission_CC.tga,,border,
-612945,"The Prince of Darkness",Mission_HS.tga,,border,
-612946,"Escape Room",Mission_PH.tga,,border,
-612947,"Let's Zepple In",Mission_BB.tga,,border,
-612948,"Woooarrrgh",Mission_AJS.tga,,border,
-614494,"Secret of Atlantis",,,border,
-614495,"Secret of the Graveyard",,,border,
-614496,"Secret of the School",,,border,
-614497,"Secret of the Keyboard",,,border,
-614498,"Secret of the Reef",,,border,
-614499,"Secret of the Funfair",,,border,
-614500,"Secret of the House",,,border,
-610362,"Bovine Artillery",,,border,
-610366,"When Sheeps Fly",,,border,
-610364,"Ancient Ritual",,,border,
-610363,"The Soft Fruit of Doom",,,border,
-610365,"The Nuclear Test",,,border,
-610358,"Options!",,,border,
-610359,"Super Villain",,,border,
-610360,"The Art of War",,,border,
-610361,"Globe Trotter",,,border,
-615304,"Medal of Honor",,,border,
-615305,"Gold Challenger",,,border,
-615306,"Shotgun Master",,,border,
-615307,"Super Sheep Master",,,border,
-615308,"Jetpack Master",,,border,
-615309,"Parachute Master",,,border,
-615310,"Deathmatch Master",,,border,
-610367,"Let's Go Gambling!",,,border,
-615956,"Kamikaze",,,border,
-615951,"The Worminator",,,border,
-612677,"Hole in One",,,border,
-615536,"Rewriting History",,,border,
-615537,"Corny Situation",,,border,
-615546,"Grave Digger",,,border,
-615547,"Water-Way to Go",,,border,
-615548,"No Time to Chill",,,border,
-615549,"Pushing Them Back to the Grave",,,border,
-615550,"Grog from the Seas",,,border,
-615551,"Windmiller's Quality",,,border,
-615552,"Bad Apple",,,border,
-615553,"Grenadier",,,border,
-615554,"Cherry Go Round",,,border,
-615555,"Clean-up King",,,border,
-615556,"Washed Up",,,border,
-615557,"Bail Out, Bail Out",,,border,
-615558,"Bobby BlastOff",,,border,
-615689,"Tree Climber",,,border,
-615690,"Jack of All Trades",,,border,
-615919,"Fee Fi Fo Fum",,,border,
-615920,"Bringing Back Bullying",,,border,
-615921,"Evil Stays Asleep",,,border,
-615922,"Short Circuit",,,border,
-615923,"Chickening Out",,,border,
-615924,"Parkour of the Damned",,,border,
-615925,"Avast Ye Matey!",,,border,
-615926,"Puzzling Shortcut",,,border,
-615927,"Aim, Shoot, and Ricochet",,,border,
-615928,"Booth Fraud",,,border,
-615929,"Diplomatic Negotiation",,,border,
-615930,"Only Up!",,,border,
-615931,"Up, up and Away!",,,border,
-615932,"Counting Sheep",,,border,
-615933,"Flooding the Vermin",,,border,
-615934,"Minesweeper",,,border,
-615935,"The Viking Way",,,border,
-615936,"Technophobe",,,border,
-616025,"Sink Fast",,,border,
-616026,"Bazooka and Grenades",,,border,
-616027,"Off to Go Shopping",,,border,
-616028,"Meet the Sniper",,,border,
-616029,"Standing Strong Against Kong",,,border,
+612940,"Worms School",Tutorial_ATF.tga.png,,border.png,Icon_Training.png
+612941,"The Battle for Wormandy",Mission_DD.tga.png,,border.png,Icon_Campaign.png
+612942,"Fixing the Ice Dispenser",Mission_Ice.tga.png,,border.png,Icon_Campaign.png
+612943,"Hurry Skurry",Mission_HelterSkelter.tga.png,,border.png,Icon_Campaign.png
+612944,"UFO Catcher",Mission_CC.tga.png,,border.png,Icon_Campaign.png
+612945,"The Prince of Darkness",Mission_HS.tga.png,,border.png,Icon_Campaign.png
+612946,"Escape Room",Mission_PH.tga.png,,border.png,Icon_Campaign.png
+612947,"Let's Zepple In",Mission_BB.tga.png,,border.png,Icon_Campaign.png
+612948,"Woooarrrgh",Mission_AJS.tga.png,,border.png,Icon_Campaign.png
+614494,"Secret of Atlantis",Tutorial_ATF.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614495,"Secret of the Graveyard",Mission_GD.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614496,"Secret of the School",Mission_SFS.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614497,"Secret of the Keyboard",Mission_AQF.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614498,"Secret of the Reef",Mission_SOCR.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614499,"Secret of the Funfair",Mission_NRFF.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+614500,"Secret of the House",Mission_BBB.tga.png,Icon_TeamRandom.png,border.png,Icon_Padlock.png
+610362,"Bovine Artillery",FE_Backdrop.png,Weap_MadCow.png,border.png,Icon_Padlock.png
+610366,"When Sheeps Fly",FE_Backdrop.png,Weap_SuperSheep.png,border.png,Icon_Padlock.png
+610364,"Ancient Ritual",FE_Backdrop.png,Weap_Quake.png,border.png,Icon_Padlock.png
+610363,"The Soft Fruit of Doom",FE_Backdrop.png,Weap_Banana.png,border.png,Icon_Padlock.png
+610365,"The Nuclear Test",FE_Backdrop.png,Weap_Nuke.png,border.png,Icon_Padlock.png
+610358,"Options!",FE_Backdrop.png,Icon_Options_Game.png,border.png,Icon_Padlock.png
+610359,"Super Villain",FE_Backdrop.png,Icon_Speechtest.png,border.png,Icon_Padlock.png
+610360,"The Art of War",FE_Backdrop.png,Icon_Wormopaedia.png,border.png,Icon_Padlock.png
+610361,"Globe Trotter",FE_Backdrop.png,Icon_LandscapeMenu.png,border.png,Icon_Padlock.png
+615304,"Medal of Honor",FE_Backdrop.png,Icon_BigGold.png,border.png,Icon_Campaign.png
+615305,"Gold Challenger",FE_Backdrop.png,Icon_BigGold.png,border.png,Icon_Challenge.png
+615306,"Shotgun Master",FE_Backdrop.png,Weap_Shotgun.png,border.png,Icon_Challenge.png
+615307,"Super Sheep Master",FE_Backdrop.png,Weap_SuperSheep.png,border.png,Icon_Challenge.png
+615308,"Jetpack Master",FE_Backdrop.png,Util_JetPack.png,border.png,Icon_Challenge.png
+615309,"Parachute Master",FE_Backdrop.png,Weap_Parachute.png,border.png,Icon_Challenge.png
+615310,"Deathmatch Master",FE_Backdrop.png,Icon_Team_Options.png,border.png,Icon_Challenge.png
+610367,"Let's Go Gambling!",FE_Backdrop.png,Icon_WormPot.png,border.png,
+615956,"Kamikaze",FE_Backdrop.png,Icon_Quick.png,border.png,
+615951,"The Worminator",wpd_uzi.tga.png,,border.png,
+612677,"Hole in One",Tutorial_DR.tga.png,Icon_Training.png,border.png,
+615536,"Rewriting History",Mission_DD.tga.png,,border.png,Icon_BigGold.png
+615537,"Corny Situation",Mission_CB.tga.png,,border.png,Icon_BigGold.png
+615546,"Grave Digger",Mission_GD.tga.png,,border.png,Icon_BigGold.png
+615547,"Water-Way to Go",Mission_LVP.tga.png,,border.png,Icon_BigGold.png
+615548,"No Time to Chill",Mission_Ice.tga.png,,border.png,Icon_BigGold.png
+615549,"Pushing Them Back to the Grave",Mission_WAC.tga.png,,border.png,Icon_BigGold.png
+615550,"Grog from the Seas",Mission_RD.tga.png,,border.png,Icon_BigGold.png
+615551,"Windmiller's Quality",Mission_EYC.tga.png,,border.png,Icon_BigGold.png
+615552,"Bad Apple",Mission_ACI.tga.png,,border.png,Icon_BigGold.png
+615553,"Grenadier",Mission_HelterSkelter.tga.png,,border.png,Icon_BigGold.png
+615554,"Cherry Go Round",Mission_TMC.tga.png,,border.png,Icon_BigGold.png
+615555,"Clean-up King",Mission_ISNCHYC.tga.png,,border.png,Icon_BigGold.png
+615556,"Washed Up",Mission_SMT.tga.png,,border.png,Icon_BigGold.png
+615557,"Bail Out, Bail Out",Mission_FFY.tga.png,,border.png,Icon_BigGold.png
+615558,"Bobby BlastOff",Mission_CC.tga.png,,border.png,Icon_BigGold.png
+615689,"Tree Climber",Mission_TreeVillage.tga.png,,border.png,Icon_BigGold.png
+615690,"Jack of All Trades",Mission_MM.tga.png,,border.png,Icon_BigGold.png
+615919,"Fee Fi Fo Fum",Mission_Beanstalk.tga.png,,border.png,Icon_BigGold.png
+615920,"Bringing Back Bullying",Mission_SFS.tga.png,,border.png,Icon_BigGold.png
+615921,"Evil Stays Asleep",Mission_HS.tga.png,,border.png,Icon_BigGold.png
+615922,"Short Circuit",Mission_AQF.tga.png,,border.png,Icon_BigGold.png
+615923,"Chickening Out",Mission_ACU.tga.png,,border.png,Icon_BigGold.png
+615924,"Parkour of the Damned",Mission_TD.tga.png,,border.png,Icon_BigGold.png
+615925,"Avast Ye Matey!",Mission_SOCR.tga.png,,border.png,Icon_BigGold.png
+615926,"Puzzling Shortcut",Mission_PH.tga.png,,border.png,Icon_BigGold.png
+615927,"Aim, Shoot, and Ricochet",Mission_HLS.tga.png,,border.png,Icon_BigGold.png
+615928,"Booth Fraud",Mission_NRFF.tga.png,,border.png,Icon_BigGold.png
+615929,"Diplomatic Negotiation",Mission_HUR.tga.png,,border.png,Icon_BigGold.png
+615930,"Only Up!",Mission_TBG.tga.png,,border.png,Icon_BigGold.png
+615931,"Up, up and Away!",Mission_BB.tga.png,,border.png,Icon_BigGold.png
+615932,"Counting Sheep",Mission_GNS.tga.png,,border.png,Icon_BigGold.png
+615933,"Flooding the Vermin",Mission_BBB.tga.png,,border.png,Icon_BigGold.png
+615934,"Minesweeper",Mission_CDD.tga.png,,border.png,Icon_BigGold.png
+615935,"The Viking Way",Mission_RR.tga.png,,border.png,Icon_BigGold.png
+615936,"Technophobe",Mission_AJS.tga.png,,border.png,Icon_BigGold.png
+616025,"Sink Fast",Mission_CDD.tga.png,,border.png,Icon_Multi.png
+616026,"Bazooka and Grenades",Level_PNMI.tga.png,,border.png,Icon_Multi.png
+616027,"Off to Go Shopping",Challenge_JP1.tga.png,,border.png,Icon_Multi.png
+616028,"Meet the Sniper",Tutorial_CA.tga.png,,border.png,Icon_Multi.png
+616029,"Standing Strong Against Kong",Tutorial_TMK.tga.png,,border.png,Icon_Multi.png
