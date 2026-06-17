@@ -22,7 +22,7 @@
 
 During my journey of developping achievements for [Worms 3D on the PS2](https://retroachievements.org/game/21184), I faced Lua memory and learned a lot about Lua's inner mechanisms and wanted to share my experience for other developpers wanting to take on future sets with games using Lua.
 
-This guide only cover Lua 5 and will probably make some assumptions since every game and system is different and that Worms 3D is the only game using Lua I worked on so far, but I hope this guide will help and motivate other developpers to work with Lua games.
+This guide only covers Lua 5 and will probably make some assumptions since every game and system is different and that Worms 3D is the only game using Lua I worked on so far, but I hope this guide will help and motivate other developpers to work with Lua games.
 
 ### Why Lua 5?
 
@@ -76,7 +76,7 @@ You will often encounter values such as:
 The exact representation may vary depending on the system architecture but you can convert floats using this tool: [Floating Point to Hex Converter](https://gregstoll.com/~gregstoll/floattohex/)
 
 > [!NOTE]
-> There is a Lua compilation option that allows numbers to be stored as integers but it is very unlikely to be used in a video game
+> There is a Lua compilation option that allows numbers to be stored as integers but it is very unlikely to be used in a video game.
 
 Start by looking for a simple global variable in a specific script that is predictable, easy to manipulate and in a reproducible environment.
 
@@ -110,16 +110,16 @@ end
 Here, `cdestroy` is the amount of crates destroyed in the Rum Deal mission.
 The mission fails once you have destroyed 3 crates.
 Let's say I want to find the address to this `cdestroy` variable.
-It is trivial to find it using constant compare with the `float32` type, comparing against 0.0 on mission start, 1.0 after destoying one crate, 2.0 after destroying a second crate, and so on...
+It is trivial to find it using constant compare with the `float32` type, comparing against `0.0` on mission start, `1.0` after destroying one crate, `2.0` after destroying a second crate, and so on...
 
 > [!WARNING]
-> The variable might get reallocated at any time when performing ingame actions as the Lua script executes so keep your actions very simple if possible, try other variables or other scripts if search attempts keep failing
+> The variable might get reallocated at any time when performing ingame actions as the Lua script executes so keep your actions very simple if possible, try other variables or other scripts if search attempts keep failing.
 
 Repeat the operation on different save states by doing exactly the same actions in the same order every time, this is important so that the Lua functions are always executed in the same order. You should now have multiple save states with either exactly the same address or slightly varying addresses. This should also give you an idea of where lies the Lua memory range.
 
 ### 4. Finding the Lua State and Global Table addresses
 
-The `Lua State` structure is the absolute root for our Lua memory. Depending on how dynamic is your game's memory, it could be or not be allocated at the same address every time. For Worms 3D, the `Lua State` and Global `Table` structure were allocated at deterministic addresses.
+The `Lua State` structure is the absolute root for our Lua memory. Depending on how dynamic is your game's memory, it could or could not be allocated at the same address every time. For Worms 3D, the `Lua State` and Global `Table` structure were allocated at deterministic addresses.
 
 > [!NOTE]
 > It is not necessary, but having knowledge about C memory alignment and padding and knowing how to read C structs really helps figuring out how the data is laid out in memory.
@@ -189,7 +189,7 @@ typedef struct Table {
 What we're looking for is the `_gt` (table of globals) property of `Lua State` then the `node` pointer of the `Table` struct, as well as the `lsizenode` property (which should be 8-bit). `_gt->node` is where are stored all the global variables, including the `cdestroy` variable we're looking for.
 
 Using [PointerFinder2](https://github.com/CySlaytor/PointerFinder2) with the save states we created earlier, we should find at least one converging pointer chain to this table of global.
-It may or may not the base address or our pointer chain depending on how dynamic is your game so take time to analyse what's in surrounding memory in each step of the chain.
+It may or may not be the base address or our pointer chain depending on how dynamic is your game so take time to analyse what's in surrounding memory in each step of the chain.
 
 Alternatively, if you have access to a debugger and your game ROM has debugging symbols enabled (rare but it was the case for the Europe ROM of Worms 3D), you can use breakpoints on most of the `lua_*` functions, for example the `luaH_set` function.
 Otherwise use a breakpoint on the address of the variable you found previously and perform an action ingame to make it change.
@@ -204,10 +204,10 @@ With the help of both PF2, the debugger, and analysing memory myself, I was able
 +++0xa48: [32-bit Float] cdestroy variable
 ```
 
-Again, exact offsets may vary depending on your Lua version and system architecture but should be similar
+Again, exact offsets may vary depending on your Lua version and system architecture but should be similar.
 
 > [!NOTE]
-> PF2 might find one or more additional `+0x10` or `+0xc` pointers at the end of the chain. This is normal and will be explained in the next step
+> PF2 might find one or more additional `+0x10` or `+0xc` pointers at the end of the chain. This is normal and will be explained in the next step.
 
 ### 5. Lua Nodes and Table structure
 
@@ -215,11 +215,11 @@ We now have a working pointer chain to our variable, but only under certain cond
 Now let's see how the `Table` data structure works.
 
 In Lua 5, this is implemented as a [Chained Scatter Table](https://book.huihoo.com/data-structures-and-algorithms-with-object-oriented-design-patterns-in-c++/page230.html).
-It essentially is a contiguous memory vector that uses string hashes as index just like an associative array except that each "slot" is actually a node to a linked list.
+It essentially is a contiguous memory vector that uses string hashes as index just like an associative array except that each "slot" is actually a node in a linked list.
 This linked list is used to handle hash collisions by creating a node in the next empty slot and by appending it to the linked list of it's current node. That means you are not guaranteed to find the variable you are looking for in the first node directly, but you are guaranteed to find it if you follow the linked list.
 This is a very efficient hybrid data structure but unfortunately a pain to work with in the RA toolkit.
 
-Here's the node definition in Lua 5.0
+Here's the node definition in Lua 5.0:
 
 ```C
 // lua.h from Lua source code
@@ -292,14 +292,14 @@ This means that the offset varies depending on the vector size (which is always 
 
 Let's grab our variable's key hash by following the key pointer from our node
 From there we should be able to see the hash (32-bit) followed by the string length (also 32-bit) then the string itself `cdestroy`.
-It's hash value is `0x87652183`
+It's hash value is `0x87652183`.
 
 During my playtesting, I have been watching how the `LSizeNode` value from the Global Table evolves.
 It starts at `0x7` during the mission's intro cutscene and changes to `0x8` as soon as the cutscene ends.
 
-`LSizeNode` is the Log2 size of the node vector, the vector size is always a multiple of two, that means for a `LSizeNode` of `0x8` the vector is 256 nodes long
+`LSizeNode` is the Log2 size of the node vector, the vector size is always a multiple of two, that means for a `LSizeNode` of `0x8` the vector is 256 nodes long.
 
-Here's the representation of the `LSizeNode` values
+Here's the representation of the `LSizeNode` values:
 ```
 0x0 = 1
 0x1 = 2
@@ -323,7 +323,7 @@ If we take our `cdestroy` example, the offset for a `LSizeNode` value of `0x8` i
 
 > (0x87652183 % 256) * 20 = 0xa3c
 
-Add to that `0xc` to get the value of the node and we end up with `0xa48` which match exactly the offset that we found earlier with PF2
+Add to that `0xc` to get the value of the node and we end up with `0xa48` which match exactly the offset that we found earlier with PF2.
 
 ### 7. Using Lua memory in achievement logic
 
@@ -479,7 +479,7 @@ class Lua:
 ```
 
 The code isn't too pretty but it does exactly what you expect.
-We can now use it our achievement logic to generate code like this:
+We can now use it in our achievement logic to generate code like this:
 
 ```python
 for lsize in [7, 8]:
@@ -502,10 +502,10 @@ With this toolkit, we can now generate logic without even having to calculate th
 As you can imagine, this method cannot be used to create very complex logic without hitting some kind of limitations since using multiple Lua variables in a single achievements would multiply alt conditions exponentially.
 It only works well for checking against very specific values such as event flags or counters that are not exposed in regular memory.
 
-If you want to look at more real life examples of this implementations you can take a look at my Worms 3D code notes at address 0x17f31d0,
+If you want to look at more real life examples of this implementations you can take a look at my Worms 3D code notes at address `0x17f31d0`,
 as well as the python implementation of my logic in the references below.
 
-Thank you very much for staying until the end, I hope this guide will be useful for future Lua set developpers. Do not hesitate to [contact me on the RA website](https://retroachievements.org/user/Wormi) if you need help or on discord the RA discord.
+Thank you very much for staying until the end, I hope this guide will be useful for future Lua set developpers. Do not hesitate to [contact me on the RA website](https://retroachievements.org/user/Wormi) if you need help or on the RA discord.
 
 If you wish to improve this guide, you can contribute on github by submitting a PR or just contacting me.
 
