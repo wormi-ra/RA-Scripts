@@ -24,8 +24,8 @@ id,name,background,foreground,border,icon
 610359,"Super Villain",FE_Backdrop.png,Icon_Speechtest.png,border.png,Icon_Padlock.png
 610360,"The Art of War",FE_Backdrop.png,Icon_Wormopaedia.png,border.png,Icon_Padlock.png
 610361,"Globe Trotter",FE_Backdrop.png,Icon_LandscapeMenu.png,border.png,Icon_Padlock.png
-615304,"Medal of Honor",FE_Backdrop.png,Icon_BigGold.png,border.png,Icon_Campaign.png
-615305,"Gold Challenger",FE_Backdrop.png,Icon_BigGold.png,border.png,Icon_Challenge.png
+615304,"Medal of Honor",FE_Backdrop.png,Icon_Trophy.png,border.png,Icon_Campaign.png
+615305,"Gold Challenger",FE_Backdrop.png,Icon_Trophy.png,border.png,Icon_Challenge.png
 615306,"Shotgun Master",FE_Backdrop.png,Weap_Shotgun.png,border.png,Icon_Challenge.png
 615307,"Super Sheep Master",FE_Backdrop.png,Weap_SuperSheep.png,border.png,Icon_Challenge.png
 615308,"Jetpack Master",FE_Backdrop.png,Util_JetPack.png,border.png,Icon_Challenge.png

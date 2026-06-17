@@ -32,17 +32,17 @@ class Badge:
                 if self.foreground or self.icon:
                     bg = bg.filter(ImageFilter.GaussianBlur(0.5))
                 badge.paste(bg)
-        if self.foreground:
-            with Image.open(f"{IMG_PATH}/{self.foreground}") as fg:
-                fg = self.resize(fg.convert("RGBA"), size)
-                badge.paste(fg, mask=fg)
         if self.border:
             with Image.open(f"{IMG_PATH}/{self.border}") as border:
                 border = self.resize(border, size)
                 badge.paste(border, mask=border)
+        if self.foreground:
+            with Image.open(f"{IMG_PATH}/{self.foreground}") as fg:
+                fg = self.resize(fg.convert("RGBA"), size)
+                badge.paste(fg, mask=fg)
         if self.icon:
             with Image.open(f"{IMG_PATH}/{self.icon}") as icon:
-                margin = 0
+                margin = 1
                 # bottom left
                 icon = self.resize(icon.convert("RGBA"), (24, 24))
                 pos = (size[0] - icon.size[0] - margin, size[1] - icon.size[1] - margin)
