@@ -373,6 +373,8 @@ class Mission:
                 (XData.get_value(ctx, "GameOver.AwardMovie") >> byte(0x0) != 0x0)
             )
         gametime = XData.get_value(ctx, "MCa.LastGameTime")
+        if self.mtype == GameMode.CAMPAIGN:
+            return (delta(gametime) == 0) & (gametime >= 1) & (gametime <= 3)
         return (delta(gametime) == 0) & (gametime != 0)
 
     # @staticmethod
@@ -386,6 +388,7 @@ class Mission:
             return group(
                 remember(XData.get_value(ctx, "MCa.LastGameTime")),
                 (delta(XData.get_value(ctx, "MCa.LastGameTime")) == 0) &
+                (recall() != 0) &
                 (
                     XData.get_value(ctx, "MCa.BestGold") > recall() if is_deathmatch
                     else XData.get_value(ctx, "MCa.BestGold") < recall()

@@ -410,7 +410,7 @@ class Worms3DSet(AchievementSet):
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
             mission.is_loaded(ctx),
-            mission.on_gold_medal(ctx, gamemode=GameMode.CHALLENGE, is_deathmatch=True),
+            mission.on_complete(ctx),
         ))
 
     @achievement(610358)
