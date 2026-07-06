@@ -1,15 +1,11 @@
-from functools import reduce
-import operator
-from pycheevos.core.condition import ConditionList
 from pycheevos.models.set import AchievementSet, Leaderboard
 from pycheevos.models.achievement import Achievement
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 
 from framework import achievement, achievement_set, leaderboard
-from logic import Context, Controller, GameMode, Inventory, Landscape, Lua, Mission, Team, TeamPersist, Unlock, Weapons, Worm, Worms3D, XData
-from data import UNLOCKS, Missions
-from memory import Memory
+from logic import Context, Controller, GameMode, Inventory, Lua, Mission, Team, Unlock, Weapons, Worm, Worms3D, XData
+from data import Missions
 import assets
 
 @achievement_set(
@@ -54,8 +50,7 @@ class Worms3DSet(AchievementSet):
             (float, node.get_value())
         ]:
             alt = group(
-                measured_if(Worms3D.check_serial(ctx)),
-                measured_if(Missions.DRIVING.is_loaded(ctx)),
+                pause_if(~Worms3D.check_serial(ctx)),
                 pause_if(XData.get_value(ctx, "ElapsedRoundTime") == 0),
                 [
                     add_hits(
@@ -65,11 +60,9 @@ class Worms3DSet(AchievementSet):
                     for i in range(1, 16)
                 ],
                 measured(always_false()).with_hits(15),
-                reset_if(
-                    Worms3D.check_serial(ctx) & 
-                    ~string_equals(Mission.current_script(ctx), Missions.DRIVING.filename[:4])
-                )
             )
+            if dtype is int:
+                alt.append(reset_if(~Missions.DRIVING.is_loaded(ctx)))
             if dtype is float:
                 alt.insert(2, measured_if(node.get_hash() == node.hashstr))
             ach.add_alt(alt)
@@ -84,11 +77,10 @@ class Worms3DSet(AchievementSet):
             ~Missions.TUTORIAL2.is_loaded(ctx),
             XData.get_value(ctx, "FCS.GameOver") == 0,
             Team.get_active_team(ctx).is_ai_controlled == 0,
+            remember(XData.get_value(ctx, "CurrentTeamIndex")),
             *(
                 # Kill counter
                 group(
-                    remember(XData.get_value(ctx, "CurrentTeamIndex")),
-                    reset_next_if(XData.on_value_changed(ctx, "CurrentTeamIndex")),
                     add_hits(
                         (Worm(id).get_instance(ctx).team_id != recall()) &
                         Worm(id).get_instance(ctx).on_death()
@@ -97,6 +89,7 @@ class Worms3DSet(AchievementSet):
                 for id in range(16)
             ),
             always_false().with_hits(3),
+            reset_if(delta(XData.get_value(ctx, "CurrentTeamIndex")) != recall()),
             reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)),
         ))
 
@@ -105,7 +98,7 @@ class Worms3DSet(AchievementSet):
         recall_worm = Worm.Instance(MemoryExpression(recall()))
         for id in range(16):
             worm = Worm(id).get_instance(ctx)
-            ach.add_alt(group(
+            alt = group(
                 pause_if(~Worms3D.check_serial(ctx)),
                 Worms3D.is_ingame(ctx),
                 ~Worms3D.is_in_attract(ctx),
@@ -125,9 +118,11 @@ class Worms3DSet(AchievementSet):
                 # Checkpoint 3: Target worm dies
                 (delta(recall_worm.is_active) == 1) &
                 (recall_worm.is_active == 0).with_hits(1),
-                reset_if(XData.on_value_changed(ctx, "CurrentTeamIndex")),
-                reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)),
-            ))
+            )
+            if id == 0:
+                alt.append(reset_if(XData.on_value_changed(ctx, "CurrentTeamIndex")))
+                alt.append(reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)))
+            ach.add_alt(alt)
 
     #############################
     # Progression               #

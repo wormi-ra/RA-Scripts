@@ -1,11 +1,8 @@
-from functools import reduce
-from os import name
 from typing import Literal
-from pycheevos.models.generic import GameObject
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
-from pycheevos.core.condition import Condition, ConditionList
-from pycheevos.core.value import MemoryExpression, MemoryValue
+from pycheevos.core.condition import Condition
+from pycheevos.core.value import MemoryExpression
 from pycheevos.models.leaderboard import Leaderboard
 from pycheevos.models.set import Achievement
 from memory import Memory
