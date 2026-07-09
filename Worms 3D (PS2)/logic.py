@@ -100,6 +100,13 @@ class Controller:
             bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7
         ][button.value % 8](addr)
 
+    @staticmethod
+    def plugged(ctx: Context):
+        return {
+            "US": Memory.US_CONTROLLER_STATE,
+            "EU": Memory.EU_CONTROLLER_STATE,
+        }[ctx.region] == value(0x6)
+
 
 class GameMode:
     TUTORIAL = 3
@@ -402,6 +409,8 @@ class Mission:
             Worms3D.check_serial(ctx),
             self.is_loaded(ctx),
             self.on_complete(ctx),
+            reset_next_if(Mission.on_hash_changed(ctx)),
+            pause_if(~Controller.plugged(ctx).with_hits(1)),
         ))
         lb.set_cancel(always_false())
         lb.set_submit(always_true())
@@ -856,4 +865,6 @@ class Worms3D:
                 XData.get_value(ctx, "FE.Wormpot.Reel3") == 0x11,
                 # On round won
                 trigger(team_persist >> delta(dword(0x14)) < dword(0x14)),
+                reset_next_if(Mission.on_hash_changed(ctx)),
+                pause_if(~Controller.plugged(ctx).with_hits(1)),
             ))

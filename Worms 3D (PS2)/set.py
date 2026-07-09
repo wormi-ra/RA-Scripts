@@ -91,6 +91,7 @@ class Worms3DSet(AchievementSet):
             always_false().with_hits(3),
             reset_if(delta(XData.get_value(ctx, "CurrentTeamIndex")) != recall()),
             reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615956)
@@ -122,6 +123,7 @@ class Worms3DSet(AchievementSet):
             if id == 0:
                 alt.append(reset_if(XData.on_value_changed(ctx, "CurrentTeamIndex")))
                 alt.append(reset_if(delta(Mission.current_hash(ctx)) != Mission.current_hash(ctx)))
+                alt.append(reset_if(~Controller.plugged(ctx)))
             ach.add_alt(alt)
 
     #############################
@@ -520,6 +522,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_decreased(ctx, "Jetpack.Fuel")
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615537)
@@ -541,6 +544,7 @@ class Worms3DSet(AchievementSet):
             ),
             measured(always_false()).with_hits(len(enemy_team)),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Challenge indicator (never trigger)
         ach.add_alt(group(
@@ -562,6 +566,7 @@ class Worms3DSet(AchievementSet):
             measured(inv >> delta(byte(0x2b)) < byte(0x2b)).with_hits(9),
             mission.on_gold_medal(ctx),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Challenge indicator (never trigger)
         ach.add_alt(group(
@@ -594,6 +599,7 @@ class Worms3DSet(AchievementSet):
                 for id in player_worms
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615548)
@@ -611,6 +617,7 @@ class Worms3DSet(AchievementSet):
                 (team_index != 0)
             ).with_hits(max_turns),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Turn counter
         ach.add_alt(group(
@@ -643,6 +650,7 @@ class Worms3DSet(AchievementSet):
                 )
             )),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615550)
@@ -668,6 +676,7 @@ class Worms3DSet(AchievementSet):
             ),
             cdestroy_conds,
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615551)
@@ -691,6 +700,7 @@ class Worms3DSet(AchievementSet):
                 (crate <= 3),
             )),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615552)
@@ -706,6 +716,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_decreased(ctx, "Jetpack.Fuel")
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615553)
@@ -724,6 +735,7 @@ class Worms3DSet(AchievementSet):
                 (active_worm.equipped_weapon == Weapons.BAZOOKA)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615554)
@@ -736,6 +748,8 @@ class Worms3DSet(AchievementSet):
             # 2 mins in milliseconds
             XData.get_value(ctx, "ElapsedRoundTime") < (2 * 60 * 1000),
             trigger(mission.on_gold_medal(ctx)),
+            reset_next_if(Mission.on_hash_changed(ctx)),
+            pause_if(~Controller.plugged(ctx).with_hits(1)),
         ))
 
     @achievement(615555)
@@ -763,6 +777,7 @@ class Worms3DSet(AchievementSet):
                 (XData.get_value(ctx, "Jetpack.Fuel") < 7500)
             ).with_hits(2),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615556)
@@ -785,6 +800,7 @@ class Worms3DSet(AchievementSet):
                 inv >> delta(Inventory.get_ammo_address(Weapons.GIRDER)) > Inventory.get_ammo_address(Weapons.GIRDER)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615557)
@@ -803,6 +819,7 @@ class Worms3DSet(AchievementSet):
                 (worm_index != 0)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615558)
@@ -818,6 +835,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_changed(ctx, "Crate.Index")
             )),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615689)
@@ -843,6 +861,7 @@ class Worms3DSet(AchievementSet):
                 for weapon in weapons
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615690)
@@ -868,6 +887,7 @@ class Worms3DSet(AchievementSet):
                 for weapon in weapons
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615919)
@@ -886,6 +906,7 @@ class Worms3DSet(AchievementSet):
                 Worm.get_active_worm(ctx).animation_state == 0x13
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615920)
@@ -901,7 +922,9 @@ class Worms3DSet(AchievementSet):
             *(
                 Worm(id).get_instance(ctx).health > 0
                 for id in player_team
-            )
+            ),
+            reset_next_if(Mission.on_hash_changed(ctx)),
+            pause_if(~Controller.plugged(ctx).with_hits(1)),
         ))
 
     @achievement(615921)
@@ -919,6 +942,7 @@ class Worms3DSet(AchievementSet):
                 for id in range(0, 16)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615922)
@@ -941,6 +965,7 @@ class Worms3DSet(AchievementSet):
                 inv >> delta(Inventory.get_ammo_address(Weapons.LAND_MINE)) > Inventory.get_ammo_address(Weapons.LAND_MINE)
             ).with_hits(max_mines + 1),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Mine counter
         ach.add_alt(group(
@@ -972,6 +997,7 @@ class Worms3DSet(AchievementSet):
                 Worm.on_attack(ctx)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615924)
@@ -992,6 +1018,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_changed(ctx, "Trigger.Index")
             ).with_hits(2),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615925)
@@ -1009,6 +1036,7 @@ class Worms3DSet(AchievementSet):
                 (team_index != 0)
             ).with_hits(max_turns),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Turn counter
         ach.add_alt(group(
@@ -1035,6 +1063,7 @@ class Worms3DSet(AchievementSet):
                 inv >> delta(Inventory.get_ammo_address(Weapons.LOW_GRAVITY)) > Inventory.get_ammo_address(Weapons.LOW_GRAVITY)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615927)
@@ -1052,6 +1081,7 @@ class Worms3DSet(AchievementSet):
                 inv >> delta(Inventory.get_ammo_address(Weapons.BAZOOKA)) > Inventory.get_ammo_address(Weapons.BAZOOKA)
             ).with_hits(max_ammo + 1),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Bazooka counter
         ach.add_alt(group(
@@ -1081,6 +1111,7 @@ class Worms3DSet(AchievementSet):
             ),
             measured(always_false()).with_hits(len(enemy_team)),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Challenge indicator
         ach.add_alt(group(
@@ -1105,6 +1136,7 @@ class Worms3DSet(AchievementSet):
                 for enemy in enemy_team
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615930)
@@ -1123,6 +1155,7 @@ class Worms3DSet(AchievementSet):
                 active_worm.on_jump()
             ).with_hits(max_jumps + 1),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Jump counter
         # ach.add_alt(group(
@@ -1152,6 +1185,7 @@ class Worms3DSet(AchievementSet):
                 inv >> delta(Inventory.get_ammo_address(Weapons.HOMING_MISSILE)) > Inventory.get_ammo_address(Weapons.HOMING_MISSILE)
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615932)
@@ -1167,6 +1201,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_increased(ctx, "TurnTimeRemaining")
             ).with_hits(max_turns + 1),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Turn counter
         ach.add_alt(group(
@@ -1199,6 +1234,7 @@ class Worms3DSet(AchievementSet):
             ),
             measured(always_false()).with_hits(len(enemy_team)),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
         # Challenge indicator (never trigger)
         ach.add_alt(group(
@@ -1224,6 +1260,8 @@ class Worms3DSet(AchievementSet):
             mission.gold_timer_on_pace(ctx),
             trigger(mission.on_gold_medal(ctx)),
             Worm(0).get_instance(ctx).health == 50,
+            reset_next_if(Mission.on_hash_changed(ctx)),
+            pause_if(~Controller.plugged(ctx).with_hits(1)),
         ))
 
     @achievement(615935)
@@ -1246,6 +1284,7 @@ class Worms3DSet(AchievementSet):
                 )
             )),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     @achievement(615936)
@@ -1272,6 +1311,7 @@ class Worms3DSet(AchievementSet):
                 XData.on_value_decreased(ctx, "Jetpack.Fuel")
             ),
             reset_if(~mission.is_loaded(ctx)),
+            reset_if(~Controller.plugged(ctx)),
         ))
 
     #############################
@@ -1613,6 +1653,10 @@ class Worms3DSet(AchievementSet):
             Worms3D.check_serial(ctx),
             ~mission.is_loaded(ctx),
         ))
+        lb.add_cancel(group(
+            Worms3D.check_serial(ctx),
+            ~Controller.plugged(ctx),
+        ))
         lb.add_submit(group(
             Worms3D.check_serial(ctx),
             mission.on_complete(ctx)
@@ -1640,6 +1684,10 @@ class Worms3DSet(AchievementSet):
         lb.add_cancel(group(
             Worms3D.check_serial(ctx),
             ~mission.is_loaded(ctx),
+        ))
+        lb.add_cancel(group(
+            Worms3D.check_serial(ctx),
+            ~Controller.plugged(ctx),
         ))
         lb.add_submit(group(
             Worms3D.check_serial(ctx),

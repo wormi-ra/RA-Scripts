@@ -26,6 +26,10 @@ class Memory:
 
     US_GLOBAL_FRAME_COUNTER = dword(0x005f2640)
 
+    EU_CONTROLLER_STATE = byte(0x006cfc70)
+
+    US_CONTROLLER_STATE = byte(0x0079fcb0)
+
     EU_STATE_CHECK_IS_LOADING = dword(0x53359c)
     """
     [32-bit Boolean] (EU) State Check | Is Loading
