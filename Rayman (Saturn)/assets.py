@@ -224,7 +224,7 @@ achievements = OrderedDict({
     574639: Achievement(
         id=574639,
         title="""Haircopter""",
-        description="""Learn the abillity to hover using your hair as an helicopter""",
+        description="""Learn the ability to hover using your hair as an helicopter""",
         points=4,
         badge="656973",
         type=AchievementType.PROGRESSION,
