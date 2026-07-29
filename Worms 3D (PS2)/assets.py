@@ -275,7 +275,7 @@ achievements = OrderedDict({
         id=615537,
         title="""Corny Situation""",
         description="""Earn the gold trophy in "Crate Britain" after killing all the enemy worms""",
-        points=5,
+        points=10,
         badge="701219",
     ),
     615546: Achievement(
