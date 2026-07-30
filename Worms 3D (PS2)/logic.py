@@ -438,11 +438,21 @@ class Mission:
             return self.get_challenge_goldtime(ctx) > self.gold
 
     @staticmethod
+    def check_high_score_array_size(ctx: Context):
+        return (
+            XData.get_value(ctx, "DATA.TeamBarracks")
+            >> dword(0x14) >> dword(0x18)
+        ) == 0x1b
+
+    @staticmethod
     def generate_challenge_trophies(ctx: Context, ach: Achievement, challenges: list["Mission"]):
         is_deathmatch = challenges[0].is_deathmatch()
         game_awarded = XData.get_value(ctx, "MCa.GameAwarded")
         ach.add_alt(group(
             pause_if(~Worms3D.check_serial(ctx)),
+            # make sure the high score array is initialized before accumulating hits
+            pause_if(~Worms3D.game_booted(ctx)),
+            pause_if(~Mission.check_high_score_array_size(ctx)),
             *(
                 add_hits(chall.has_challenge_goldtime(ctx)).with_hits(1)
                 for chall in challenges
