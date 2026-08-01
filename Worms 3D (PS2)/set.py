@@ -1138,6 +1138,7 @@ class Worms3DSet(AchievementSet):
             trigger(mission.on_gold_medal(ctx)),
             *(
                 reset_if(
+                    (Worms3D.current_team(ctx) == 0) &
                     Worm(enemy).get_instance(ctx).on_death()
                 )
                 for enemy in enemy_team
