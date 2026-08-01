@@ -274,14 +274,14 @@ achievements = OrderedDict({
     615537: Achievement(
         id=615537,
         title="""Corny Situation""",
-        description="""Earn the gold trophy in "Crate Britain" after killing all the enemy worms""",
+        description="""Earn the gold trophy in "Crate Britain" after killing every enemy worm""",
         points=10,
         badge="701219",
     ),
     615546: Achievement(
         id=615546,
         title="""Grave Digger""",
-        description="""Earn the gold trophy in "Grave Danger" after collecting all the crates""",
+        description="""Earn the gold trophy in "Grave Danger" after collecting every crate""",
         points=3,
         badge="701170",
     ),
@@ -316,7 +316,7 @@ achievements = OrderedDict({
     615551: Achievement(
         id=615551,
         title="""Windmiller's Quality""",
-        description="""Kill all enemy worms before collecting any health crate and earn the gold trophy in "Earn Your Crust\"""",
+        description="""Kill every enemy worm before collecting any health crate and earn the gold trophy in "Earn Your Crust\"""",
         points=3,
         badge="701175",
     ),
@@ -449,7 +449,7 @@ achievements = OrderedDict({
     615928: Achievement(
         id=615928,
         title="""Booth Fraud""",
-        description="""Kill all enemy worms in "Nobody Rides For Free\"""",
+        description="""Kill every enemy worm in "Nobody Rides For Free\"""",
         points=10,
         badge="701250",
     ),
