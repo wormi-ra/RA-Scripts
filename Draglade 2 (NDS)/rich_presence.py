@@ -1,14 +1,11 @@
 from pycheevos.core.condition import ConditionList
-from pycheevos.core.helpers import add_address, add_source, byte, delta, group, measured, recall, remember, value
+from pycheevos.core.helpers import add_address, add_source, bit1, byte, delta, group, measured, recall, remember, value
 from pycheevos.core.value import Flag
 from pycheevos.models.rich_presence import *
 
 # from logic import Level, LevelInfo
 from memory import Memory, bitcount
 from data import BULLETS, CHESTS, QUESTS, TITLES
-
-def render(conditions: ConditionList):
-    return "_".join([cond.render() for cond in conditions])
 
 class DG2RichPresence(RichPresence):
     def __init__(self):
@@ -17,19 +14,37 @@ class DG2RichPresence(RichPresence):
 
     def generate(self):
         # self.add_lookup("Level", {**Level.NAMES})
-        # self.add_lookup("Paused", {
-        #     1: "▌▌ "
-        # })
+        self.add_lookup("Paused", {
+            1: "▌▌ "
+        })
+        self.add_lookup("State", {
+            2: "In the title screen",
+            3: "In the main menu",
+            5: "Playing the story",
+            6: "VS CPU",
+            7: "Training",
+            8: "Learning to grap",
+            0xb: "Trying to setup Wi-Fi for some reason",
+        }, default="Playing Draglade 2")
         self.add_display(
             (
                 (Memory.STATE_GAME_BOOTED == 1)
             ),
-            f"Playing Draglade 2 • {self.story_progress()} • {self.total_quests()} • {self.total_bullets()} • {self.total_chests()} • {self.total_titles()}"
+            f"{self.paused()}{self.game_state()} • {self.player_level()} • {self.credits()} • {self.story_progress()} • {self.total_quests()} • {self.total_bullets()} • {self.total_titles()}"
         )
         self.add_display(None, "Playing Custom Beat Battle: Draglade 2")
 
-    # def paused(self):
-    #     return f"@Paused({Memory.INGAME_PAUSED})"
+    def paused(self):
+        return f"@Paused({bit1(Memory.STATE_GAME_PAUSE.address)})"
+
+    def game_state(self):
+        return f"@State({Memory.STATE_GAME_MODE})"
+
+    def credits(self):
+        return f"@Number({Memory.SAVE_DATA_CREDITS})￠"
+
+    def player_level(self):
+        return f"Lv.@Number({Memory.RAIO_LEVEL})"
 
     def story_progress(self):
         return f"📖Story @Number({group(

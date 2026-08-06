@@ -3,10 +3,55 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Memory:
-    STATE_GAME_PAUSED = byte(0x0e19ee)
+
+    STATE_SCRIPT_ACTIVE = dword(0x0eac3c)
     """
-    [8-bit] [Boolean] State | Game Paused?
+    [32-bit] State | Script Active
+    0x0 = Inactive
+    0x3 = Active
     """
+
+    STATE_GAME_PAUSE = byte(0x0eb930)
+    """
+    [8-bit] [Bitfield] State | Game Pause
+    Bit0 = Can Pause
+    Bit1 = Paused
+    Bit2 = ?
+    Bit3 = Quit to main menu
+    """
+
+    STATE_NETWORK_MODE = byte(0x0eb932)
+    """
+    0x0 = Offline
+    0x1 = Wireless
+    0x2 = Wi-Fi
+    """
+
+    STATE_TUTORIAL = byte(0x0eb933)
+    """
+    [8-bit] [Boolean] State | Tutorial
+    """
+
+    STATE_GAME_MODE = byte(0x0eb934)
+    """
+    [8-bit] State | Game Mode
+    0x0 = Uninitialized
+    0x1 = Booting up
+    0x2 = Title Screen
+    0x3 = Main Menu
+    0x5 = Story
+    0x6 = VS CPU
+    0x7 = Training
+    0x8 = Grap Tutorial
+    0xb = Wi-Fi Config Menu
+    """
+
+    STATE_LAST_GAME_MODE = byte(0x0eb936)
+    """
+    [8-bit] State | Last Game Mode
+    Prior value of 0xeb934
+    """
+
 
     STATE_CURRENT_AREA = byte(0x0ebee0)
     """
