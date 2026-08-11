@@ -365,7 +365,7 @@ achievements = OrderedDict({
     615558: Achievement(
         id=615558,
         title="""Bobby BlastOff""",
-        description="""Earn the gold trophy in "Crop Circle" without collecting any crate""",
+        description="""Earn the gold trophy in "Crop Circle" without collecting any crates""",
         points=5,
         badge="701182",
     ),
@@ -386,7 +386,7 @@ achievements = OrderedDict({
     615919: Achievement(
         id=615919,
         title="""Fee Fi Fo Fum""",
-        description="""Reach the safety boat with any of your worm without using the parachute in "Worm and the Beanstalk\"""",
+        description="""Reach the safety boat with any of your worms without using the parachute in "Worm and the Beanstalk\"""",
         points=5,
         badge="701246",
     ),
@@ -400,21 +400,21 @@ achievements = OrderedDict({
     615921: Achievement(
         id=615921,
         title="""Evil Stays Asleep""",
-        description="""Earn the gold trophy in "High Stakes" without awakening any undead worm""",
+        description="""Earn the gold trophy in "High Stakes" without awakening any undead worms""",
         points=5,
         badge="701187",
     ),
     615922: Achievement(
         id=615922,
         title="""Short Circuit""",
-        description="""Earn the gold trophy in "A Quick Fix" without killing any enemy or placing more than 6 landmines""",
+        description="""Earn the gold trophy in "A Quick Fix" without killing any enemies or placing more than 6 landmines""",
         points=5,
         badge="701247",
     ),
     615923: Achievement(
         id=615923,
         title="""Chickening Out""",
-        description="""Earn the gold trophy in "All Cooped Up" without using any explosive weapon""",
+        description="""Earn the gold trophy in "All Cooped Up" without using any explosive weapons""",
         points=5,
         badge="701248",
     ),
@@ -435,7 +435,7 @@ achievements = OrderedDict({
     615926: Achievement(
         id=615926,
         title="""Puzzling Shortcut""",
-        description="""Earn the gold trophy in "Plaice Holder" without using any low gravity""",
+        description="""Earn the gold trophy in "Plaice Holder" without using low gravity""",
         points=5,
         badge="701249",
     ),
@@ -456,7 +456,7 @@ achievements = OrderedDict({
     615929: Achievement(
         id=615929,
         title="""Diplomatic Negotiation""",
-        description="""Earn the gold trophy in "Hold Until Relieved" without killing any enemy worm""",
+        description="""Earn the gold trophy in "Hold Until Relieved" without killing any enemy worms""",
         points=5,
         badge="701236",
     ),
@@ -469,7 +469,7 @@ achievements = OrderedDict({
     ),
     615931: Achievement(
         id=615931,
-        title="""Up, up and Away!""",
+        title="""Up, Up and Away!""",
         description="""Earn the gold trophy in "Beautiful Balloon" without collecting fuel crates or using the homing missile""",
         points=5,
         badge="701251",
