@@ -780,7 +780,11 @@ class RaymanSet(AchievementSet):
             ).with_hits(1),
             # rest of the fight
             reset_next_if(Rayman.on_spawn()),
-            pause_if(Rayman.took_damage()).with_hits(1),
+            pause_if(
+                # hp randomly flickers when rayman transforms from normal to tiny
+                (Rayman.is_tiny() == delta(Rayman.is_tiny())) &
+                Rayman.took_damage()
+            ).with_hits(1),
             trigger(Bosses.on_defeated(Bosses.MR_DARK)),
         ])
 
