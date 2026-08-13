@@ -3,12 +3,88 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Memory:
+    SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000000)
+    """
+    [Notes] Set created with the help of PyCheevos scripts
+    See github below for source code and further information
+    https://github.com/wormi-ra/RA-Scripts/tree/main/Draglade%202%20(NDS)
+
+    Overlay Table:
+    // See $0xeb89c
+    ov00 = 0x021252c0 (19,328 bytes)
+    ov01 = 0x021252c0 (179,840 bytes)
+    ov02 = 0x021252c0 (135,104 bytes)
+    ov03 = 0x021252c0 (166,432 bytes)
+    ov04 = 0x021252c0 (172,800 bytes)
+    ov05 = 0x021252c0 (1,536 bytes)
+    ov06 = 0x021252c0 (16,832 bytes)
+    ov07 = 0x021252c0 (6,176 bytes)
+    // See $0xeb8d0
+    ov08 = 0x02151240 (480 bytes)
+    ov09 = 0x02151240 (9,920 bytes)
+    ov10 = 0x02151240 (1,664 bytes)
+    ov11 = 0x02151240 (90,144 bytes)
+    ov12 = 0x02151240 (315,232 bytes)
+    ov13 = 0x02151240 (9,408 bytes)
+    // See $0xeb904
+    ov14 = 0x021a2120 (10,208 bytes)
+    ov15 = 0x021a2120 (17,120 bytes)
+    ov16 = 0x021a2120 (16,992 bytes)
+    ov17 = 0x021a2120 (14,784 bytes)
+    """
 
     STATE_SCRIPT_ACTIVE = dword(0x0eac3c)
     """
     [32-bit] State | Script Active
     0x0 = Inactive
     0x3 = Active
+    """
+
+    AREA_POINTER = tbyte(0x0eac50)
+    """
+    [24-bit] Area Pointer
+    +0x0 = [32-bit] Magic "#DMP" (0x504d4423)
+    +0x4 = [16-bit] Map Width
+    +0x6 = [16-bit] Map Height
+    +0x8 = [16-bit] [Boolean] Unknown
+    """
+
+    OVERLAY_TABLE_ID = dword(0x0eb89c)
+    """
+    [32-bit] Overlay Table [0] | ID
+    Loads at $0x1252c0
+
+    0x0 = Title Screen
+    0x1 = Main Menu
+    0x2 = ?
+    0x3 = VS CPU / Training
+    0x4 = Story
+    0x5 = ?
+    0x6 = Result Screen
+    0x7 = VS Intro
+    """
+
+    OVERLAY_TABLE_ID_1 = dword(0x0eb8d0)
+    """
+    [32-bit] Overlay Table [1] | ID
+    Loads at $0x151240
+
+    0x8 = ?
+    0x9 = ?
+    0xa = Default
+    0xb = Pause Menu
+    0xc = Wi-Fi Config Menu
+    """
+
+    OVERLAY_TABLE_ID_2 = dword(0x0eb904)
+    """
+    [32-bit] Overlay Table [2] | ID
+    Loads at $0x1a2120
+
+    0xe = Area Select
+    0xf = Title Screen
+    0x10 = Wireless
+    0x11 = Wi-Fi Connection
     """
 
     STATE_GAME_PAUSE = byte(0x0eb930)
@@ -22,6 +98,7 @@ class Memory:
 
     STATE_NETWORK_MODE = byte(0x0eb932)
     """
+    [8-bit] State | Network Mode
     0x0 = Offline
     0x1 = Wireless
     0x2 = Wi-Fi
@@ -52,10 +129,58 @@ class Memory:
     Prior value of 0xeb934
     """
 
-
-    STATE_CURRENT_AREA = byte(0x0ebee0)
+    RESULT_ENTRY_BONUS = word(0x0ebe02)
     """
-    [8-bit] State | Current Area
+    [16-bit] Result | Entry Bonus
+    """
+
+    RESULT_WIN_BONUS = word(0x0ebe04)
+    """
+    [16-bit] Result | Win Bonus
+    """
+
+    RESULT_BEAT_APPEAL = word(0x0ebe06)
+    """
+    [16-bit] Result | Beat Appeal
+    """
+
+    RESULT_BEAT_APPEAL_SP = word(0x0ebe08)
+    """
+    [16-bit] Result | Beat Appeal SP
+    """
+
+    RESULT_MP_BONUS = word(0x0ebe0a)
+    """
+    [16-bit] Result | MP Bonus
+    """
+
+    RESULT_BULLET_BONUS = word(0x0ebe0c)
+    """
+    [16-bit] Result | Bullet Bonus
+    """
+
+    RESULT_ATTACK_BONUS = word(0x0ebe0e)
+    """
+    [16-bit] Result | Attack Bonus
+    """
+
+    RESULT_ACT_BONUS = word(0x0ebe10)
+    """
+    [16-bit] Result | Act Bonus
+    """
+
+    RESULT_STATE = byte(0x0ebe14)
+    """
+    [8-bit] Result | State
+    0x0 = Disabled
+    0x1 = VS Intro
+    0x2 = In Battle
+    0x3 = In Result Screen
+    """
+
+    AREA_SELECTION_CURRENT_AREA = byte(0x0ebee0)
+    """
+    [8-bit] Area Selection | Current Area
     Not initialized on first load
     0x0 = King's Area
     0x1 = Volcano Area
@@ -65,7 +190,19 @@ class Memory:
     0x5 = Harmonic Area
     0x6 = Main Land
     0x7 = Okuman Land
-    0x8 = Area Selection?
+    0x8 = Area Selection
+    """
+
+    AREA_SELECTION_NEXT_AREA = byte(0x0ebee1)
+    """
+    [8-bit] Area Selection | Next Area
+    0x0 = King's Area
+    0x1 = Volcano Area
+    0x2 = Water Area
+    0x3 = Canyon Area
+    0x4 = Elekick Area
+    0x5 = Harmonic Area
+    0xff = None
     """
 
     STATE_GAME_BOOTED = byte(0x0ebee4)
@@ -97,6 +234,47 @@ class Memory:
     """
     [32-bit] Save Data | Credits
     Story currency
+    """
+
+    SAVE_DATA_CHARACTER_UNLOCKS = byte(0x0ebf38)
+    """
+    [8-bit] [Bitfield] Save Data | Character Unlocks [0]
+    Bit0 = Hibito
+    Bit1 = Guy
+    Bit2 = Daichi
+    Bit3 = Kyle
+    Bit4 = Zeke
+    Bit5 = Cross
+    Bit6 = Raio
+    Bit7 = Jet
+    """
+
+    SAVE_DATA_CHARACTER_UNLOCKS_1 = byte(0x0ebf39)
+    """
+    [8-bit] [Bitfield] Save Data | Character Unlocks [1]
+    Bit0 = Neon
+    Bit1 = Kamzou
+    """
+
+    SAVE_DATA_G_HALL_UNLOCKS = byte(0x0ebf3a)
+    """
+    [8-bit] [Bitfield] Save Data | G-Hall Unlocks [0]
+    Bit0 = King's
+    Bit1 = Volcano
+    Bit2 = Water
+    Bit3 = Canyon
+    Bit4 = Elekick
+    Bit5 = Harmonic
+    Bit6 = Okuman
+    Bit7 = Training
+    """
+
+    SAVE_DATA_G_HALL_UNLOCKS_1 = byte(0x0ebf3b)
+    """
+    [8-bit] [Bitfield] Save Data | G-Hall Unlocks [1]
+    Bit0 = G-Live (CoroCoro Cup)
+    Bit1 = Unused
+    Bit2 = G-Live (VS)
     """
 
     SAVE_DATA_BULLETS = byte(0x0ebf3c)
@@ -500,7 +678,8 @@ class Memory:
     QUESTS_COMPLETION = byte(0x0ed4c5)
     """
     [8-bit] [Bitfield] Quests | Completion [0]
-    bit7 = Mirage Egg
+    Bit0 = CoroCoro Cup Registered
+    Bit7 = Mirage Egg
     """
 
     QUESTS_COMPLETION_1 = byte(0x0ed4c6)
@@ -549,7 +728,7 @@ class Memory:
     bit1 = Arman Soldier
     bit2 = Golden Arman
     bit3 = Ult. Arman
-    bit4 = Sudden Death?
+    bit4 = Sudden Death
     bit5 = G-Live Grapper 1 Fought
     bit6 = G-Live Grapper 2 Fought
     bit7 = G-Live Grapper 3 Fought
@@ -558,37 +737,93 @@ class Memory:
     CHEST_FLAGS = byte(0x0ed4cb)
     """
     [8-bit] [Bitfield] Chest Flags [0]
-    bit0 = Goshi Desert 1st map
+    // Format: Level | Map ID | Reward
+    Bit0 = Goshi Desert | 0xc9 | 100 MP
+    Bit1 = Saru Ruins | 0xd1 | 100 MP
+    Bit2 = Saru Ruins | 0xd6 | Lure
+    Bit3 = Mirage Egg | 0x15a | p Light
+    Bit4 = Mirage Egg | 0x15d | 200 MP
+    Bit5 = Mirage Egg | 0x15e | m Daze
+    Bit6 = Mirage Egg | 0x15f | Phoenix
+    Bit7 = Zoff Pass | 0xe3 | Rock Vest
     """
 
     CHEST_FLAGS_1 = byte(0x0ed4cc)
     """
     [8-bit] [Bitfield] Chest Flags [1]
+    Bit0 = Zoff Pass | 0xe4 | m Heal
+    Bit1 = Ghost Underground | 0xe9 | Ice Vest
+    Bit2 = Ghost Underground | 0xf2 | p Heal
+    Bit3 = Ghost Underground | 0xf3 | 300 MP
+    Bit4 = DS Dropped | 0x164 | Light Vest
+    Bit5 = DS Dropped | 0x16f | f Ice
+    Bit6 = DS Dropped | 0x170 | p Burn
+    Bit7 = DS Dropped | 0x171 | 300 MP
     """
 
     CHEST_FLAGS_2 = byte(0x0ed4cd)
     """
     [8-bit] [Bitfield] Chest Flags [2]
+    Bit0 = DS Dropped | 0x175 | Dark Star
+    Bit1 = Kenmeri | 0xfa | p Ice
+    Bit2 = Kenmeri | 0x102 | Armor up
+    Bit3 = Kenmeri | 0x107 | Bit Slicer
+    Bit4 = Kenmeri | 0x10b | Pulse
+    Bit5 = Kenmeri | 0x10d | p Fire
+    Bit6 = Poshka Ruins | 0x112 | Ice Rain
+    Bit7 = Poshka Ruins | 0x116 | Wind Vest
     """
 
     CHEST_FLAGS_3 = byte(0x0ed4ce)
     """
     [8-bit] [Bitfield] Chest Flags [3]
+    Bit0 = Poshka Ruins | 0x116 | m Sonar
+    Bit1 = Poshka Ruins | 0x11c | m Sonar
+    Bit2 = Poshka Ruins | 0x11d | Dark Vest
+    Bit3 = Poshka Ruins | 0x121 | 300 MP
+    Bit4 = Poshka Ruins | 0x121 | m Bolt
+    Bit5 = My Treasure | 0x178 | 200 MP
+    Bit6 = My Treasure | 0x178 | Twin Razor
+    Bit7 = My Treasure | 0x17a | m Rock
     """
 
     CHEST_FLAGS_4 = byte(0x0ed4cf)
     """
     [8-bit] [Bitfield] Chest Flags [4]
+    Bit0 = My Treasure | 0x17f | m Daze
+    Bit1 = My Treasure | 0x17f | Vanish
+    Bit2 = Hidden Path | 0x127 | 200 MP
+    Bit3 = Underground Lab | 0x130 | Bolt Vest
+    Bit4 = Underground Lab | 0x136 | f Water
+    Bit5 = Underground Lab | 0x137 | Sam-10
+    Bit6 = Underground Lab | 0x137 | 300 MP
+    Bit7 = Underground Lab Core | 0x13e | f Daze
     """
 
     CHEST_FLAGS_5 = byte(0x0ed4d0)
     """
     [8-bit] [Bitfield] Chest Flags [5]
+    Bit0 = Underground Lab Core | 0x142 | 100 MP
+    Bit1 = Underground Lab Core | 0x145 | m Fire
+    Bit2 = Underground Lab Core | 0x14b | 300 MP
+    Bit3 = Underground Lab Core | 0x150 | f Rock
+    Bit4 = Underground Lab Core | 0x152 | f Night
+    Bit5 = Underground Lab Core | 0x155 | p Ice
+    Bit6 = Arman Ranger | 0x188 | f Spark
+    Bit7 = Arman Soldier | 0x18e | m Water
     """
 
     CHEST_FLAGS_6 = byte(0x0ed4d1)
     """
     [8-bit] [Bitfield] Chest Flags [6]
+    Bit0 = Arman Soldier | 0x197 | f Sonar
+    Bit1 = Golden Arman | 0x19c | f Water
+    Bit2 = Golden Arman | 0x19e | m Daze
+    Bit3 = Golden Arman | 0x19e | 200 MP
+    Bit4 = Ultimate Arman | 0x1a2 | f Light
+    Bit5 = Ultimate Arman | 0x1ad | f Fire
+    Bit6 = Ultimate Arman | 0x1b1 | 300 MP
+    Bit7 = Ultimate Arman | 0x1b1 | p Earth
     """
 
     STORY_PROGRESS = byte(0x0ed504)
@@ -632,6 +867,47 @@ class Memory:
     0xbd = Story End
     """
 
+    LAST_QUEST_STARTED = byte(0x0ed505)
+    """
+    [8-bit] Last Quest Started
+    0x5 = Mirage Egg
+    0x6 = Return It
+    0x7 = DS Dropped
+    0x8 = DoraDora
+    0x9 = My Treasure
+    0xa = Goshi Desert
+    0xb = Saru Ruins
+    0xc = Zoff Pass
+    0xd = Ghost Town Underground
+    0xe = Kenmeri
+    0xf = Poshka Ruins
+    0x10 = Win Desert
+    0x11 = Iwaku Pass
+    0x12 = Hidden Path
+    0x13 = Underground Lab
+    0x14 = Deep Underground Lab
+    0x15 = Matter Invert
+    0x16 = Other Space
+    0x17 = Change Beat!
+    0x18 = Char Grapper
+    0x19 = Myst Grapper
+    0x1a = Goril's Roar
+    0x1b = Goril's Roar+
+    0x1c = Goril's Rage
+    0x1d = Final Goril
+    0x1e = Arman Ranger
+    0x1f = Arman Soldier
+    0x20 = Golden Arman
+    0x21 = Ultimate Arman
+    0x22 = Sudden Death
+    """
+
+    SAVE_DATA_SCRIPT_ID = word(0x0ed528)
+    """
+    [16-bit] Save Data | Script ID
+    See $0x23bb70
+    """
+
     RAIO_LEVEL = byte(0x0ed52d)
     """
     [8-bit] Raio | Level
@@ -666,9 +942,22 @@ class Memory:
     [32-bit] Stats | G-Live
     """
 
-    STATS_UNKNOWN_1 = dword(0x0ed5ec)
+    STATS_G_LIVER_FLAGS = byte(0x0ed5ec)
     """
-    [32-bit] Stats | Unknown 1
+    [8-bit] Stats | G-Liver Flags
+    Hidden Stat
+
+    Bit0 = King's Area
+    Bit1 = Volcano Area
+    Bit2 = Water Area
+    Bit3 = Canyon Area
+    Bit4 = Elekick Area
+    Bit5 = Harmonic Area
+    """
+
+    STATS_VARIANTS_KILLED = byte(0x0ed5ed)
+    """
+    [8-bit] Stats | Variants Killed
     Hidden Stat
     """
 
@@ -722,9 +1011,21 @@ class Memory:
     [32-bit] Stats | Close Wins
     """
 
-    STATS_UNKNOWN_2 = dword(0x0ed618)
+    STATS_MATCHES_OVER_1000_CREDITS = byte(0x0ed618)
     """
-    [32-bit] Stats | Unknown 2
+    [8-bit] Stats | Matches Over 1000 Credits
+    Hidden Stat
+    """
+
+    STATS_MATCHES_WON = byte(0x0ed619)
+    """
+    [8-bit] Stats | Matches Won (Charismatic Grapper)
+    Hidden Stat
+    """
+
+    STATS_CLOSE_WINS_1 = byte(0x0ed61a)
+    """
+    [8-bit] Stats | Close Wins (Gladiator)
     Hidden Stat
     """
 
@@ -748,10 +1049,28 @@ class Memory:
     [32-bit] Stats | Super Beat Combo Wins
     """
 
-    STATS_UNKNOWN_3 = dword(0x0ed62c)
+    STATS_SBC_WINNER_FLAGS = byte(0x0ed62c)
     """
-    [32-bit] Stats | Unknown 3
+    [8-bit] [Bitfield] Stats | SBC Winner Flags [0]
     Hidden Stat
+
+    Bit0 = Hibito
+    Bit1 = Guy
+    Bit2 = Daichi
+    Bit3 = Kyle
+    Bit4 = Zeke
+    Bit5 = Cross
+    Bit6 = Raio
+    Bit7 = Jet
+    """
+
+    STATS_SBC_WINNER_FLAGS_1 = byte(0x0ed62d)
+    """
+    [8-bit] [Bitfield] Stats | SBC Winner Flags [1]
+    Hidden Stat
+
+    Bit0 = Neon
+    Bit1 = Kamzou
     """
 
     STATS_BEAT_DRIVE_COUNT = dword(0x0ed630)
@@ -764,10 +1083,28 @@ class Memory:
     [32-bit] Stats | Beat Drive Wins
     """
 
-    STATS_UNKNOWN_4 = dword(0x0ed638)
+    STATS_BD_WINNER_FLAGS = byte(0x0ed638)
     """
-    [32-bit] Stats | Unknown 4
+    [8-bit] [Bitfield] Stats | BD Winner Flags [0]
     Hidden Stat
+
+    Bit0 = Hibito
+    Bit1 = Guy
+    Bit2 = Daichi
+    Bit3 = Kyle
+    Bit4 = Zeke
+    Bit5 = Cross
+    Bit6 = Raio
+    Bit7 = Jet
+    """
+
+    STATS_BD_WINNER_FLAGS_1 = byte(0x0ed639)
+    """
+    [8-bit] [Bitfield] Stats | BD Winner Flags [1]
+    Hidden Stat
+
+    Bit0 = Neon
+    Bit1 = Kamzou
     """
 
     STATS_FIRE_BULLETS = dword(0x0ed63c)
@@ -1474,6 +1811,37 @@ class Memory:
     0x2 = Unlocked
     """
 
+    UNIDENTIFIED_LINKED_LIST = tbyte(0x0edf8c)
+    """
+    [24-bit Pointer] Unidentified Linked List
+    +0x0 = [24-bit Pointer] Next
+    +0x4 = [24-bit Pointer] Prev
+    +0x8 = [24-bit Pointer] Data
+    ..Points to static bytecode addresses
+
+    Null in match battle
+    """
+
+    PLAYER_CHARACTER = word(0x0f3594)
+    """
+    [16-bit] Player | Character
+    0x0 = Hibito
+    0x1 = Guy
+    0x2 = Daichi
+    0x3 = Kyle
+    0x4 = Zeke
+    0x5 = Cross
+    0x6 = Raio
+    0x7 = Jet
+    0x8 = Neon
+    0x9 = Kamzou
+    """
+
+    PLAYER_ACTIVE = byte(0x0f35a4)
+    """
+    [8-bit] [Boolean] Player | Active
+    """
+
     PLAYER_POSITION_X = dword(0x0f36d8)
     """
     [32-bit] [Float] Player | Position X
@@ -1491,6 +1859,13 @@ class Memory:
     0x1 = Left
     """
 
+    PLAYER_IN_AIR = byte(0x0f3711)
+    """
+    [8-bit] [Boolean] Player | In Air
+    0x0 = Touching Ground
+    0x1 = In Air
+    """
+
     PLAYER_MAX_HEALTH = word(0x0f3720)
     """
     [16-bit] Player | Max Health
@@ -1504,6 +1879,25 @@ class Memory:
     PLAYER_CURRENT_BP = byte(0x0f3734)
     """
     [8-bit] Player | Current BP
+    0x9 = Max
+    """
+
+    PLAYER_DAMAGE_EFFECT = byte(0x0f374e)
+    """
+    [8-bit] [Bitfield] Player | Damage Effect [0]
+    Bit4 = Electrocuted
+    """
+
+    PLAYER_DAMAGE_EFFECT_1 = byte(0x0f374f)
+    """
+    [8-bit] [Bitfield] Player | Damage Effect [1]
+    Bit2 = Touching Floor Hazard
+    Bit3 = Aerial Recovery
+    """
+
+    PLAYER_PENDING_TICK_DAMAGE = word(0x0f375e)
+    """
+    [16-bit] Player | Pending Tick Damage
     """
 
     ENEMY_HEALTH = word(0x0f8bb4)
@@ -1533,9 +1927,299 @@ class Memory:
     bit3 = Y
     """
 
+    VERSUS_ENDING_TIMER = word(0x100104)
+    """
+    [16-bit] Versus | Ending Timer
+    0x0 = In Versus
+    0x1-0xf8 = Ending Timer
+    """
+
+    VERSUS_WINNER = word(0x100106)
+    """
+    [16-bit] Versus | Winner
+    0x0 = None
+    0x1 = Player
+    0x2 = Enemy
+    """
+
+    VERSUS_RESULT_SCREEN = word(0x100108)
+    """
+    [16-bit] [Boolean] Versus | Result Screen
+    0x1 = In Result Screen
+    """
+
+    VERSUS_READY_TIMER = word(0x100118)
+    """
+    [16-bit] Versus | Ready Timer
+    0x1-0x8b = Ready Timer
+    0x0 = Battle Started
+    """
+
+    VERSUS_READY_STATE = word(0x10011a)
+    """
+    [16-bit] Versus | Ready State
+    0x3 = Readying
+    0x4 = Battle Started
+    """
+
+    BATTLE_G_HALL = word(0x10025c)
+    """
+    [16-bit] Battle | G-Hall
+    0x6 = King
+    0x7 = Volcano
+    0x8 = Water
+    0x9 = Canyon
+    0x10 = G-Live (VS)
+    0xa = Elekick
+    0xb = Harmonic
+    0xd = Training (VS)
+    0xc = Okuman
+    0xe = G-Live (CoroCoro Cup)
+    0xf = Tutorial
+    0x14 = G-Live (Story)
+    0x3f = Zoff Pass (Daichi)
+    0x49 = Underground Lab (Zeke)
+    0x4a = Underground (Return It)
+    """
+
+    BATTLE_TRAPS = word(0x10025e)
+    """
+    [16-bit] [Boolean] Battle | Traps
+    """
+
+    BATTLE_MODE = word(0x100260)
+    """
+    [16-bit] Battle | Mode
+    0x0 = VS CPU
+    0x3 = Training
+    0x4 = Tutorial
+    0x5 = Story
+    """
+
+    BATTLE_PLAYER_CHARACTER = word(0x100262)
+    """
+    [16-bit] Battle | Player Character
+    0x0 = Hibito
+    0x1 = Guy
+    0x2 = Daichi
+    0x3 = Kyle
+    0x4 = Zeke
+    0x5 = Cross
+    0x6 = Raio
+    0x7 = Jet
+    0x8 = Neon
+    0x9 = Kamzou
+    """
+
+    BATTLE_ENEMY_CHARACTER = word(0x100264)
+    """
+    [16-bit] Battle | Enemy Character
+    0x0 = Hibito
+    0x1 = Guy
+    0x2 = Daichi
+    0x3 = Kyle
+    0x4 = Zeke
+    0x5 = Cross
+    0x6 = Raio
+    0x7 = Jet
+    0x8 = Neon
+    0x9 = Kamzou
+    0xa = Ichiman
+    0xb = Ask (Trainer)
+    0xd = Saike
+    0xf = Nemuemi
+    0x11 = Blue Nor
+    0x12 = Doum
+    0x13 = Gamuran
+    0x14 = Sho
+    0x15 = Linda
+    0x16 = Mamesh
+    0x17 = McDou
+    0x18 = Pokina
+    """
+
+    BATTLE_PLAYER_COLOR = word(0x100266)
+    """
+    [16-bit] Battle | Player Color
+    """
+
+    BATTLE_ENEMY_COLOR = word(0x100268)
+    """
+    [16-bit] Battle | Enemy Color
+    """
+
+    BATTLE_FRAME_TIMER = dword(0x1004ac)
+    """
+    [32-bit] Battle | Frame Timer
+    Frames elapsed during current quest map or battle
+    Affects the time left at the top of the screen
+    Time is not in seconds
+    1 unit = 110 frames
+    """
+
+    BATTLE_TIME_LIMIT = word(0x1004b0)
+    """
+    [16-bit] [Boolean] Battle | Time Limit
+    0x0 = Time Limited
+    0x1 = Infinite Time
+    """
+
+    BATTLE_TIMER = word(0x1004b2)
+    """
+    [16-bit] Battle | Timer
+    "Seconds" left in quest or battle displayed on top of the screen
+    Not actual seconds
+    1 unit = 110 frames
+    """
+
+    INGAME_DATA_POINTER = tbyte(0x106f1c)
+    """
+    [24-bit Pointer] Ingame Data Pointer
+    Always point to 0x23b7e0
+    0x0 when no script is loaded
+    """
+
     ENEMY_HEALTH_1 = word(0x111edc)
     """
     [16-bit] Enemy (Quest) | Health
     Seems to always be the first active/loaded enemy
+    """
+
+    EVENT_FLAG_BUFFER = (0x23bb28)
+    """
+    [40 bytes] Event Flag Buffer
+    Initialized when $0x106f1c != 0x0
+    Copy buffer of  $0xed4c4 - $0xed4e8
+    Overwrites save data on level transition
+    """
+
+    CURRENT_SCRIPT_ID = word(0x23bb70)
+    """
+    [16-bit] Current Script ID
+    Use when $0xeac50 != 0x0
+
+    0x0 = Tutorial
+    // Story
+    0x01-0x0d = King's Area
+    0x0e-0x15 = Elekick Area
+    0x16-0x17 = Goshi Desert
+    0x18-0x1a = King's Area
+    0x1b-0x1e = Water Area
+    0x1f-0x25 = Volcano Area
+    0x26-0x28 = Saru Ruins
+    0x29-0x2c = Canyon Area
+    0x2d-0x35 = Harmonic Area
+    0x36-0x3e = Elekick Area
+    0x3f-0x45 = Water Area
+    0x46 = Matter Energy Lab
+    0x47-0x48 = King's Area
+    0x49-0x5b = Okuman Land
+    0x5c-0x5f = Zoff Pass
+    0x60-0x65 = Canyon Area
+    0x66-0x68 = Ghost Underground
+    0x69-0x6a = King's Area
+    0x6b = Matter Energy Lab
+    0x6c-0x6d = King's Area
+    0x6e-0x74 = Harmonic Area
+    0x75-0x77 = Win Desert
+    0x78-0x7e = Water Area
+    0x7f-0x82 = Volcano Area
+    0x83-0x89 = Elekick Area
+    0x8a-0x8c = Kenmeri Forest
+    0x8d-0x90 = Harmonic Area
+    0x91-0x93 = Iwaku Pass
+    0x94-0x9c = Canyon Area
+    0x9d-0x9f = Poshka Ruins
+    0xa0-0xa2 = King's Area
+    0xa3-0xa9 = Volcano Area
+    0xaa-0xaf = King's Area
+    0xb0-0xb1 = Matter Energy Lab
+    0xb2-0xb4 = Underground Lab
+    0xb5-0xb7 = Deep Underground Lab
+    0xb8-0xb9 = Underground Lab Core
+    0xba-0xbc = Matter Energy Lab
+    0xbd-0xc0 = King's Area (Final Fight)
+    0xc1-0xc2 = Credits
+
+    // Quest Cutscenes
+    0xc3 = Dora Desert (Mirage Egg)
+    0xc4 = Korman Forest (Dropped DS)
+    0xc5 = Urakko Pass (My Treasure)
+
+    // Quests
+    0xc6 = King's Area (Hibito Fight)
+    0xc7 = Elekick Area (Round 1)
+    0xc8-0xcd = Goshi Desert
+    0xce = Volcano Area (Round 2)
+    0xcf-0xd7 = Saru Ruins
+    0xd8 = Harmonic Area (Round 3)
+    0xd9 = Elekick Area (Guy)
+    0xda = Water Area (Round 4)
+    0xdb-0xdf = Okuman Land
+    0xe0-0xe6 = Zoff Pass
+    0xe7 = Canyon Area (Round 5)
+    0xe8-0xf3 = Ghost Underground
+    0xf4 = Harmonic Area (Round 6)
+    0xf5 = Win Desert
+    0xf6 = Water Area (Round 7)
+    0xf7 = Volcano Area (Round 8)
+    0xf8-0x10d = Kenmeri Forest
+    0x10e = Iwaku Pass
+    0x10f = Canyon Area (Round 9)
+    0x110-0x122 = Poshka Ruins
+    0x123 = Volcano Area (Round 10)
+    0x124-0x12b = Underground Lab
+    0x12c = Underground Lab (Zeke)
+    0x134 = Deep Underground Lab (Variant)
+    0x12d-0x139 = Deep Underground Lab
+    0x13a-0x155 = Underground Lab Core
+    0x156 = Underground Lab Core (King)
+    0x157 = King's Area (Evil One)
+    0x158-0x15f = Dora Desert (Mirage Egg)
+    0x160 = Underground Hideout (Return It)
+    0x161-0x175 = Korman Forest (DS Dropped)
+    0x176 = Delhezi Ruins (DoraDora)
+    0x177-0x17f = Urakko Pass (My Treasure)
+    0x180 = G-Live (Change Beat!)
+    0x181 = Underground Lab Core (Charismatic Grapper)
+    0x182 = Underground Lab Core (Mysterious Grapper)
+    0x183 = Underground Hideout (Goril's Roar)
+    0x184 = Delhezi Ruins (Goril's Roar+)
+    0x185 = Win Desert (Goril's Rage)
+    0x186 = Polka Forest (Final Goril)
+    0x187-0x18c = Goshi Desert (Arman Ranger)
+    0x18d-0x198 = Underground Hideout (Arman Soldier)
+    0x199-0x19f = Zoff Pass (Golden Arman)
+    0x1a0-0x1b2 = Poshka Ruins (Ultimate Arman)
+    0x1b3-0x1bb = King's Area (Sudden Death)
+    0x1bc = G-Center (Quest Reward)
+    0x1bd = G-Center (Quest Failed)
+
+    // Overworld
+    0x1be-0x1c9 = King's Area
+    0x1ca-0x1d8 = Volcano Area
+    0x1d9-0x1e7 = Water Area
+    0x1e8-0x1f5 = Canyon Area
+    0x1f6-0x204 = Elekick Area
+    0x205-0x213 = Harmonic Area
+    0x214-0x21b = Matter Energy Lab
+    0x21c-0x21d = Okuman Land
+    0x21e-0x21f = Challenge Area
+    0x220 = Underground Lab
+    0x221 = Deep Underground Lab
+    0x222 = G-Live (Battle)
+    0x223 = G-Live (Win)
+    0x224 = G-Live (Lose)
+    0x225-0x230 = Challenge Area
+
+    // Misc
+    0x231-0x24f = GNN
+    0x250 = Area Selection
+    0x251 = Title Screen
+    """
+
+    GLOBAL_FRAME_COUNTER = dword(0x3ffc3c)
+    """
+    [32-bit] Global Frame Counter
     """
 

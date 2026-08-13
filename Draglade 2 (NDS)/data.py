@@ -104,6 +104,22 @@ BULLETS = [
     Memory.SAVE_DATA_BULLETS_13,
 ]
 
+STORY_BULLETS = [
+    bitcount(Memory.SAVE_DATA_BULLETS.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_1.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_2.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_3.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_4.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_5.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_6.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_7.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_8.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_9.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_10.address),
+    bitcount(Memory.SAVE_DATA_BULLETS_11.address),
+    bit0(Memory.SAVE_DATA_BULLETS_12.address),
+]
+
 QUESTS = [
     bit7(Memory.QUESTS_COMPLETION.address),
     bitcount(Memory.QUESTS_COMPLETION_1.address),

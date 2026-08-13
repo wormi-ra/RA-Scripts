@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 **/img/raw/
 /scripts
+*.nds
