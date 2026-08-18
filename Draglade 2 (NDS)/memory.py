@@ -647,6 +647,19 @@ class Memory:
     [8-bit] Deck 5 [4] | Selected Beat Score Index
     """
 
+    VERSUS_ACTIVE_DECK_INDEX = byte(0x0ed494)
+
+    SAVE_DATA_GLOBAL_FLAGS = byte(0x0ed498)
+    """
+    [8-bit] Save Data | Global Flags
+    Bit0 = Story Started
+    // Right, Down, Left, L, Down, Right, Down, Right, R, Start
+    // Enter on title screen
+    // Gives 500 credits and p Heal
+    Bit1 = Code Entered
+    Bit2 = Unknown (Always ON)
+    """
+
     RAIO_NAME = (0x0ed49c)
     """
     [12 bytes] [String] Raio | Name
@@ -675,9 +688,17 @@ class Memory:
     (Experience)
     """
 
+    RAIO_EXP_UNTIL_NEXT_LEVEL = dword(0x0ed4c0)
+    """
+    [32-bit] Raio | Exp Until Next Level
+    """
+
     QUESTS_COMPLETION = byte(0x0ed4c5)
     """
     [8-bit] [Bitfield] Quests | Completion [0]
+    // Up, R, Down, Left, Start
+    // Enter on title screen
+    // Unlocks Challenge Arena and CoroCoro G-Hall
     Bit0 = CoroCoro Cup Registered
     Bit7 = Mirage Egg
     """
@@ -911,6 +932,7 @@ class Memory:
     RAIO_LEVEL = byte(0x0ed52d)
     """
     [8-bit] Raio | Level
+    99 = Max
     """
 
     RAIO_GRADE = byte(0x0ed52f)
@@ -1898,6 +1920,13 @@ class Memory:
     PLAYER_PENDING_TICK_DAMAGE = word(0x0f375e)
     """
     [16-bit] Player | Pending Tick Damage
+    """
+
+    AREA_FRAME_TIMER = dword(0x0f7f90)
+    """
+    [32-bit] Area Frame Timer
+    Resets on quest/area change
+    Resets on result screen
     """
 
     ENEMY_HEALTH = word(0x0f8bb4)
