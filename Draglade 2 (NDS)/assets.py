@@ -329,7 +329,7 @@ achievements = OrderedDict({
     631506: Achievement(
         id=631506,
         title="""Tertiary Elementalist""",
-        description="""Earn the titles for using Light, Dark, Music and Void bullets 200 times each in battle""",
+        description="""Earn the titles for using Light, Dark, Sound and Void bullets 200 times each in battle""",
         points=5,
         badge="00000",
     ),
@@ -392,21 +392,21 @@ achievements = OrderedDict({
     631528: Achievement(
         id=631528,
         title="""Can a Gangster Leave The Gang?""",
-        description="""On VS CPU mode, defeat Jet while playing as Guy in the G-Live G-Hall with only Lightning bullets equipped""",
+        description="""On VS CPU mode, defeat Jet while playing as Guy in the King's G-Hall with only Lightning bullets equipped""",
         points=3,
         badge="00000",
     ),
     631531: Achievement(
         id=631531,
         title="""Nothing Personal Kid""",
-        description="""On VS CPU mode, defeat Hibito while playing as Kamzou in the Volcano G-Hall with only Flower bullets equipped and traps ON""",
+        description="""On VS CPU mode, defeat Hibito while playing as Kamzou in the Volcano G-Hall with only Poison bullets equipped and traps ON""",
         points=3,
         badge="00000",
     ),
     631529: Achievement(
         id=631529,
         title="""Take a Hint""",
-        description="""On VS CPU mode, defeat Kamzou while playing as Neon in the Canyon G-Hall with only Music bullets equipped and traps ON""",
+        description="""On VS CPU mode, defeat Kamzou while playing as Neon in the Canyon G-Hall with only Sound bullets equipped and traps ON""",
         points=3,
         badge="00000",
     ),
@@ -420,7 +420,7 @@ achievements = OrderedDict({
     631511: Achievement(
         id=631511,
         title="""Train For Another Hundred Years""",
-        description="""On VS CPU mode, defeat Raio while playing as Cross in the King's G-Hall with only Light bullets equipped""",
+        description="""On VS CPU mode, defeat Raio while playing as Cross in the Training G-Hall with only Light bullets equipped""",
         points=3,
         badge="00000",
     ),
