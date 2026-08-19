@@ -1,0 +1,61 @@
+id,name,background,foreground,border,icon
+631472,"Return of the Fire Hero",bg_training.png,hibito_r.png,border.png,
+631473,"Grand Prix: First Round",bg_elekick.png,linda.png,border.png,
+631474,"Grand Prix: Second Round",bg_volcano.png,sho.png,border.png,
+631475,"Grand Prix: Third Round",bg_harmonic.png,ichiman.png,border.png,
+631476,"Grand Prix: Fourth Round",bg_water.png,mcdou.png,border.png,
+631477,"Money Can't Buy Everything",bg_okuman.png,okuman.png,border.png,
+631478,"Grand Prix: Fifth Round",bg_canyon.png,kamzou2.png,border.png,
+631479,"Grand Prix: Sixth Round",bg_harmonic.png,neon2.png,border.png,
+631480,"Grand Prix: Seventh Round",bg_water.png,kyle2.png,border.png,
+631481,"Grand Prix: Eighth Round",bg_elekick.png,guy2.png,border.png,
+631482,"Grand Prix: Quarterfinals",bg_canyon.png,jet2.png,border.png,
+631483,"Grand Prix: Semifinals",bg_volcano.png,hibito2.png,border.png,
+631484,"Fall of the King",bg_matter_invert.png,king.png,border.png,
+631491,"Superhero",end.png,,border.png,title_superhero.png
+631485,"G-Quester",bg_desert1.png,,border.png,title_quests.png
+631486,"Victory Lap",bg_lab.png,,border.png,title_quests.png
+631487,"Mysterious Grappers",bg_matter_invert.png,,border.png,title_quests.png
+631488,"Gorilla Attack",bg_hideout.png,goril3.png,border.png,title_quests.png
+631489,"Full Metal Armor",bg_desert2.png,arman3.png,border.png,title_quests.png
+631490,"Survivor",bg_kings.png,,border.png,title_quests.png
+631518,"Treasure Hunter",bg_default.png,title_chests.png,border.png,
+631519,"Bulleteer",bg_default.png,title_bulleteer.png,border.png,
+631492,"Super Rich",bg_default.png,title_superrich.png,border.png,
+631493,"Super Celebrity",bg_default.png,title_superceleb.png,border.png,
+631494,"Scorer",bg_default.png,title_scorer.png,border.png,
+631495,"Composer",bg_default.png,title_composer.png,border.png,
+631496,"Attacker",bg_default.png,title_attacker.png,border.png,
+631497,"Rushman",bg_default.png,title_rushman.png,border.png,
+631498,"Though Guy",bg_default.png,title_though.png,border.png,
+631499,"Berserker",bg_default.png,title_berserker.png,border.png,
+631513,"Variant Hunter",bg_default.png,title_variant.png,border.png,
+631500,"Matter Breaker",bg_default.png,title_matter_br.png,border.png,
+631514,"G-Liver",bg_default.png,title_gliver.png,border.png,
+631515,"Iron Man",bg_default.png,title_ironman.png,border.png,
+631501,"Gladiator",bg_default.png,title_gladiator.png,border.png,
+631516,"Special Ranker",bg_default.png,title_sp_ranker.png,border.png,
+631517,"Beat Drive Winner",bg_default.png,title_bd_winner.png,border.png,
+631503,"Super Beat Combo Winner",bg_default.png,title_sbc_winner.png,border.png,
+631502,"Beat Drive Mania",bg_default.png,title_bd_mania.png,border.png,
+631504,"Beat Combo Mania",bg_default.png,title_full_bc.png,border.png,
+631505,"Charismatic Grapper",bg_default.png,title_char_grapper.png,border.png,
+631520,"G-Live Master",bg_default.png,title_glive_master.png,border.png,
+631521,"Primary Elementalist",bg_default.png,title_fire.png,border.png,
+631522,"Secondary Elementalist",bg_default.png,title_ice.png,border.png,
+631506,"Tertiary Elementalist",bg_default.png,title_music.png,border.png,
+631523,"CoroCoro Challenger",bg_corocoro.png,,border.png,icon_trophy.png
+631524,"Dashing Prospect",bg_desert3.png,,border.png,icon_trophy.png
+631507,"The Floor is Darkness",bg_lab.png,,border.png,icon_trophy.png
+631525,"1 Man vs. 1 Gorilla",bg_forest.png,goril2.png,border.png,icon_trophy.png
+631508,"Ultimate Trashcan",bg_ruins.png,arman2.png,border.png,icon_trophy.png
+631526,"Grease Fire Don't Mix With Water",bg_water.png,hibito_vs_kyle.png,border.png,
+631527,"Let's Get This Arena Humid",bg_canyon.png,kyle_vs_daichi.png,border.png,
+631509,"Man vs. Earth",bg_elekick.png,daichi_vs_guy.png,border.png,
+631528,"Can a Gangster Leave The Gang?",bg_kings.png,guy_vs_jet.png,border.png,
+631531,"Nothing Personal Kid",bg_volcano.png,kamzou_vs_hibito.png,border.png,
+631529,"Take a Hint",bg_canyon.png,neon_vs_kamzou.png,border.png,
+631510,"Sound Clout",bg_harmonic.png,jet_vs_neon.png,border.png,
+631511,"Train For Another Hundred Years",bg_training.png,cross_vs_raio.png,border.png,
+631530,"Faster Than Light",bg_glive.png,zeke_vs_cross.png,border.png,
+631512,"Deja Vu",bg_okuman.png,raio_vs_zeke.png,border.png,
