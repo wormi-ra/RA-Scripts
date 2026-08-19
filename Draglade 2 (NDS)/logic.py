@@ -263,6 +263,8 @@ class Draglade2:
     @staticmethod
     def on_titles_unlock(titles: list[MemoryValue]):
         return group(
+            *map(lambda title: or_next(delta(title) == 1), titles[:-1]),
+            delta(titles[-1]) == 1,
             *map(lambda title: add_source(delta(title) / 2), titles),
             value(0) < value(len(titles)),
             *map(lambda title: add_source(title / 2), titles),
