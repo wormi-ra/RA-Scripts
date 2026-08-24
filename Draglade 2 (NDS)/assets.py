@@ -14,7 +14,7 @@ achievements = OrderedDict({
     ),
     631473: Achievement(
         id=631473,
-        title="""Grand Prix: First Round""",
+        title="""First Round: Spring Breeze Linda""",
         description="""Win the 1st round of G-1 Major Grand Prix in the Elekick Area""",
         points=5,
         badge="719106",
@@ -22,7 +22,7 @@ achievements = OrderedDict({
     ),
     631474: Achievement(
         id=631474,
-        title="""Grand Prix: Second Round""",
+        title="""Second Round: Sho of the Frozen Sea""",
         description="""Win the 2nd round of G-1 Major Grand Prix in the Volcano Area""",
         points=5,
         badge="719107",
@@ -30,7 +30,7 @@ achievements = OrderedDict({
     ),
     631475: Achievement(
         id=631475,
-        title="""Grand Prix: Third Round""",
+        title="""Third Round: Dazzling Gold Ichiman""",
         description="""Win the 3rd round of G-1 Major Grand Prix in the Harmonic Area""",
         points=5,
         badge="719108",
@@ -38,7 +38,7 @@ achievements = OrderedDict({
     ),
     631476: Achievement(
         id=631476,
-        title="""Grand Prix: Fourth Round""",
+        title="""Fourth Round: Lovely Flower McDou""",
         description="""Win the 4th round of G-1 Major Grand Prix in the Water Area""",
         points=5,
         badge="719109",
@@ -54,7 +54,7 @@ achievements = OrderedDict({
     ),
     631478: Achievement(
         id=631478,
-        title="""Grand Prix: Fifth Round""",
+        title="""Fifth Round: Elderly Grapper Kamzou""",
         description="""Win the 5th round of G-1 Major Grand Prix in the Canyon Area""",
         points=5,
         badge="719111",
@@ -62,7 +62,7 @@ achievements = OrderedDict({
     ),
     631479: Achievement(
         id=631479,
-        title="""Grand Prix: Sixth Round""",
+        title="""Sixth Round: Neon of Sound Wave""",
         description="""Win the 6th round of G-1 Major Grand Prix in the Harmonic Area""",
         points=5,
         badge="719112",
@@ -70,7 +70,7 @@ achievements = OrderedDict({
     ),
     631480: Achievement(
         id=631480,
-        title="""Grand Prix: Seventh Round""",
+        title="""Seventh Round: Funky Pirate Kyle""",
         description="""Win the 7th round of G-1 Major Grand Prix in the Water Area""",
         points=5,
         badge="719113",
@@ -78,7 +78,7 @@ achievements = OrderedDict({
     ),
     631481: Achievement(
         id=631481,
-        title="""Grand Prix: Eighth Round""",
+        title="""Eighth Round: Thunderlight Guy""",
         description="""Win the 8th round of G-1 Major Grand Prix in the Elekick Area""",
         points=5,
         badge="719114",
@@ -86,7 +86,7 @@ achievements = OrderedDict({
     ),
     631482: Achievement(
         id=631482,
-        title="""Grand Prix: Quarterfinals""",
+        title="""Quarterfinals: Storm Feet Jet""",
         description="""Win the quarterfinals of G-1 Major Grand Prix in the Canyon Area""",
         points=5,
         badge="719115",
@@ -94,7 +94,7 @@ achievements = OrderedDict({
     ),
     631483: Achievement(
         id=631483,
-        title="""Grand Prix: Semifinals""",
+        title="""Semifinals: Blazing Hibito""",
         description="""Win the semifinals of G-1 Major Grand Prix in the Volcano Area""",
         points=5,
         badge="719116",
@@ -336,7 +336,7 @@ achievements = OrderedDict({
     631523: Achievement(
         id=631523,
         title="""CoroCoro Challenger""",
-        description="""Complete the Survival 10 challenge at the Challenge Arena. Press [Up R Down Left Start] sequentially in the title screen to unlock the Challenge Arena""",
+        description="""Complete the Survival 10 challenge at the Challenge Arena. Press [Up R Down Left Start] on the title screen to unlock the Challenge Arena""",
         points=10,
         badge="719190",
     ),
