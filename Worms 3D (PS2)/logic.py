@@ -6,7 +6,6 @@ from pycheevos.core.value import MemoryExpression
 from pycheevos.models.leaderboard import Leaderboard
 from pycheevos.models.set import Achievement
 from memory import Memory
-import polars as pl
 import csv
 
 Region = Literal["EU"] | Literal["US"]
