@@ -1,5 +1,6 @@
 import csv
 from pycheevos.core.helpers import *
+from pycheevos.models.leaderboard import Leaderboard
 from memory import Memory
 
 class Slots:
@@ -170,6 +171,47 @@ class MnLBIS:
                     MnLBIS.STATS_CAP[k].append(v)
 
     @staticmethod
+    def generate_leaderboard(lb: Leaderboard, battle_id: int, top_screen_id: int = -1, bottom_screen_id: int = -1):
+        lb.set_start(group(
+            MnLBIS.is_in_battle(
+                battle_id=battle_id,
+                top_screen_id=top_screen_id,
+                bottom_screen_id=bottom_screen_id,
+            ),
+            MnLBIS.on_enemy_dead(),
+            MnLBIS.is_challenge_medal_equipped(),
+            MnLBIS.check_cheated_equipments(),
+            reset_next_if(
+                MnLBIS.on_retry() |
+                (Memory.SCREEN_ID_ != 0x6be) # not in battle
+            ),
+            pause_if(MnLBIS.badge_used()).with_hits(1)
+        ))
+        lb.set_cancel(always_false())
+        lb.set_submit(always_true())
+        lb.set_value(measured(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_))
+
+    @staticmethod
+    def generate_gauntlet_lb(lb: Leaderboard, gauntlet: int):
+        lb.set_start(group(
+            (
+                MnLBIS.on_gauntlet_enter(gauntlet)
+            ).with_hits(1),
+            MnLBIS.on_gauntlet_completed(gauntlet),
+            MnLBIS.is_challenge_medal_equipped(),
+            MnLBIS.check_cheated_equipments(),
+            reset_if(
+                (Memory.SCREEN_ID_ != 0x20b2) &
+                (Memory.SCREEN_ID_ != 0x06be)
+            ),
+            reset_if(MnLBIS.on_death()),
+            reset_if(byte(Memory.GAUNTLET__8) == 0x64)
+        ))
+        lb.set_cancel(always_false())
+        lb.set_submit(always_true())
+        lb.set_value(measured(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_))
+
+    @staticmethod
     def on_retry():
         return Memory.INVENTORY_RETRY_CLOCKS < delta(Memory.INVENTORY_RETRY_CLOCKS)
 
@@ -274,6 +316,13 @@ class MnLBIS:
                 and_next(enemies[i] == 0)
                 for i in ids
             ]).with_flag(Flag.NONE),
+        )
+
+    @staticmethod
+    def on_death():
+        return (
+            ((delta(Memory.MARIOS_HP) + delta(Memory.LUIGIS_HP)) > 0) &
+            ((Memory.MARIOS_HP + Memory.LUIGIS_HP) == 0)
         )
 
     @staticmethod
