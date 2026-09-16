@@ -198,7 +198,7 @@ achievement(
 )
 
 achievement(
-    title = "Our Hero Has Triumphed", points = 10, type="win_condition",
+    title = "May You Both Live Happily Ever After...", points = 10, type="win_condition",
     description = "Defeat Singe the Dragon and rescue Princess Daphne",
     id = 12003, badge = "11861",
     trigger = (
@@ -271,7 +271,7 @@ achievement(
 )
 
 achievement(
-    title = "May You Both Live Happily Ever After...", points = 25,
+    title = "Our Hero Has Triumphed", points = 25,
     description = "Defeat Singe the Dragon using the Dagger",
     id = 11993, badge = "11871",
     trigger = (
