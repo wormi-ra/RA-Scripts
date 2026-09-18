@@ -20,9 +20,9 @@
 
 ## Context
 
-During my journey of developping achievements for [Worms 3D on the PS2](https://retroachievements.org/game/21184), I faced Lua memory and learned a lot about Lua's inner mechanisms and wanted to share my experience for other developpers wanting to take on future sets with games using Lua.
+During my journey of developping achievements for [Worms 3D on the PS2](https://retroachievements.org/game/21184), I faced Lua memory and learned a lot about Lua's inner mechanisms and wanted to share my experience for other developers wanting to take on future sets with games using Lua.
 
-This guide only covers Lua 5 and will probably make some assumptions since every game and system is different and that Worms 3D is the only game using Lua I worked on so far, but I hope this guide will help and motivate other developpers to work with Lua games.
+This guide only covers Lua 5 and will probably make some assumptions since every game and system is different and that Worms 3D is the only game using Lua I worked on so far, but I hope this guide will help and motivate other developers to work with Lua games.
 
 ### Why Lua 5?
 
@@ -505,7 +505,7 @@ It only works well for checking against very specific values such as event flags
 If you want to look at more real life examples of this implementations you can take a look at my Worms 3D code notes at address `0x17f31d0`,
 as well as the python implementation of my logic in the references below.
 
-Thank you very much for staying until the end, I hope this guide will be useful for future Lua set developpers. Do not hesitate to [contact me on the RA website](https://retroachievements.org/user/Wormi) if you need help or on the RA discord.
+Thank you very much for staying until the end, I hope this guide will be useful for future Lua set developers. Do not hesitate to [contact me on the RA website](https://retroachievements.org/user/Wormi) if you need help or on the RA discord.
 
 If you wish to improve this guide, you can contribute on github by submitting a PR or just contacting me.
 
