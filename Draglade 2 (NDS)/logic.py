@@ -99,6 +99,7 @@ class Quest:
                 Draglade2.is_booted(),
                 Memory.STATE_GAME_MODE == GameMode.STORY,
                 Memory.SAVE_DATA_SCRIPT_ID == script,
+                Memory.PLAYER_HEALTH != 0,
                 delta(Memory.RESULT_STATE) != 0x3,
                 Memory.RESULT_STATE == 0x3,
             ))
