@@ -35,7 +35,7 @@ class Draglade2Set(AchievementSet):
             Draglade2.is_booted(),
             Memory.STATE_GAME_MODE == GameMode.STORY,
             Memory.STORY_PROGRESS == 0x7,
-            (delta(Memory.VERSUS_WINNER) == 0),
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1)
         ))
 
@@ -582,7 +582,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.HIBITO,
             Memory.BATTLE_ENEMY_CHARACTER == Character.KYLE,
             Bullet.deck_is_type(Bullet.Type.FIRE, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -597,7 +597,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.KYLE,
             Memory.BATTLE_ENEMY_CHARACTER == Character.DAICHI,
             Bullet.deck_is_type(Bullet.Type.WATER, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -612,7 +612,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.DAICHI,
             Memory.BATTLE_ENEMY_CHARACTER == Character.GUY,
             Bullet.deck_is_type(Bullet.Type.EARTH, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -626,7 +626,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.GUY,
             Memory.BATTLE_ENEMY_CHARACTER == Character.JET,
             Bullet.deck_is_type(Bullet.Type.LIGHTNING, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -640,7 +640,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.JET,
             Memory.BATTLE_ENEMY_CHARACTER == Character.NEON,
             Bullet.deck_is_type(Bullet.Type.VOID, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -655,7 +655,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.NEON,
             Memory.BATTLE_ENEMY_CHARACTER == Character.KAMZOU,
             Bullet.deck_is_type(Bullet.Type.MUSIC, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -669,7 +669,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.CROSS,
             Memory.BATTLE_ENEMY_CHARACTER == Character.RAIO,
             Bullet.deck_is_type(Bullet.Type.LIGHT, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -683,7 +683,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.ZEKE,
             Memory.BATTLE_ENEMY_CHARACTER == Character.CROSS,
             Bullet.deck_is_type(Bullet.Type.DARK, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -698,7 +698,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.KAMZOU,
             Memory.BATTLE_ENEMY_CHARACTER == Character.HIBITO,
             Bullet.deck_is_type(Bullet.Type.POISON, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
@@ -712,7 +712,7 @@ class Draglade2Set(AchievementSet):
             Memory.BATTLE_PLAYER_CHARACTER == Character.RAIO,
             Memory.BATTLE_ENEMY_CHARACTER == Character.ZEKE,
             Bullet.deck_is_type(Bullet.Type.EMPTY, is_versus=True),
-            delta(Memory.VERSUS_WINNER) == 0,
+            trigger(delta(Memory.VERSUS_WINNER) == 0),
             trigger(Memory.VERSUS_WINNER == 1),
         ))
 
