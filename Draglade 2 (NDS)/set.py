@@ -332,21 +332,24 @@ class Draglade2Set(AchievementSet):
     @achievement(631515)
     def ironman(self, ach: Achievement):
         ach.add_core(group(
-            Draglade2.is_booted(),
+            measured_if(Draglade2.is_booted()),
+            measured(Memory.STATS_PERFECT_WINS >= 10),
             Draglade2.on_title_unlock(Memory.TITLES_IRON_MAN),
         ))
 
     @achievement(631501)
     def gladiator(self, ach: Achievement):
         ach.add_core(group(
-            Draglade2.is_booted(),
+            measured_if(Draglade2.is_booted()),
+            measured(Memory.STATS_CLOSE_WINS_1 >= 10),
             Draglade2.on_title_unlock(Memory.TITLES_GLADIATOR),
         ))
 
     @achievement(631516)
     def sp_ranker(self, ach: Achievement):
         ach.add_core(group(
-            Draglade2.is_booted(),
+            measured_if(Draglade2.is_booted()),
+            measured(Memory.STATS_MATCHES_OVER_1000_CREDITS >= 20),
             Draglade2.on_title_unlock(Memory.TITLES_SP_RANKER),
         ))
 

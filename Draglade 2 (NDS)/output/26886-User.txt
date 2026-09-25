@@ -31,12 +31,12 @@ Custom Beat Battle: Draglade 2
 631513:"0xHebee4=1_d0xHed69d=1_0xHed69d=2":"Variant Hunter":"Defeat 200 variants"::::Wormi:5:::::719146
 631500:"0xHebee4=1_d0xHed6a9=1_0xHed6a9=2":"Matter Breaker":"Defeat 200 grappers"::::Wormi:5:::::719133
 631514:"Q:0xHebee4=1_M:0xKed5ec=6_d0xHed69f=1_0xHed69f=2":"G-Liver":"Grap in every G-Live arena"::::Wormi:5:::::719179
-631515:"0xHebee4=1_d0xHed6a7=1_0xHed6a7=2":"Iron Man":"Win 10 matches without taking damage"::::Wormi:10:::::719180
-631501:"0xHebee4=1_d0xHed6a8=1_0xHed6a8=2":"Gladiator":"Win 10 matches with 100 MP or less remaining"::::Wormi:10:::::719171
-631516:"0xHebee4=1_d0xHed6aa=1_0xHed6aa=2":"Special Ranker":"Win 20 matches with over 1,000 credits awarded"::::Wormi:10:::::719149
+631515:"Q:0xHebee4=1_M:0xXed610>=10_d0xHed6a7=1_0xHed6a7=2":"Iron Man":"Win 10 matches without taking damage"::::Wormi:10:::::719180
+631501:"Q:0xHebee4=1_M:0xHed61a>=10_d0xHed6a8=1_0xHed6a8=2":"Gladiator":"Win 10 matches with 100 MP or less remaining"::::Wormi:10:::::719171
+631516:"Q:0xHebee4=1_M:0xHed618>=20_d0xHed6aa=1_0xHed6aa=2":"Special Ranker":"Win 20 matches with over 1,000 credits awarded"::::Wormi:10:::::719149
 631502:"0xHebee4=1_d0xHed6b3=1_0xHed6b3=2":"Beat Drive Mania":"Activate a Beat Drive 50 times"::::Wormi:5:::::719135
-631517:"Q:0xHebee4=1_A:0xKed638_M:0xKed639=10_d0xHed6b4=1_0xHed6b4=2":"Beat Drive Winner":"Win a match with every grapper in VS. CPU mode after performing a Beat Drive"::::Wormi:10:::::719181
-631503:"Q:0xHebee4=1_A:0xKed62c_M:0xKed62d=10_d0xHed6b2=1_0xHed6b2=2":"Super Beat Combo Winner":"Win a match with every grapper in VS. CPU mode after performing a Super Beat Combo"::::Wormi:10:::::719172
+631517:"Q:0xHebee4=1_A:0xKed638_M:0xKed639=10_d0xHed6b4=1_0xHed6b4=2":"Beat Drive Winner":"Finish off every grapper in VS. CPU mode by performing a Beat Drive"::::Wormi:10:::::719181
+631503:"Q:0xHebee4=1_A:0xKed62c_M:0xKed62d=10_d0xHed6b2=1_0xHed6b2=2":"Super Beat Combo Winner":"Finish off every grapper in VS. CPU mode by performing a Super Beat Combo"::::Wormi:10:::::719172
 631518:"Q:0xHebee4=1_A:0xKed4cb_A:0xKed4cc_A:0xKed4cd_A:0xKed4ce_A:0xKed4cf_A:0xKed4d0_A:0xKed4d1_M:0=56_d0xHed69c=1_0xHed69c=2":"Treasure Hunter":"Open all 56 unique chests in the game"::::Wormi:25:::::719182
 631519:"Q:0xHebee4=1_A:0xKebf3c_A:0xKebf3d_A:0xKebf3e_A:0xKebf3f_A:0xKebf40_A:0xKebf41_A:0xKebf42_A:0xKebf43_A:0xKebf44_A:0xKebf45_A:0xKebf46_A:0xKebf47_A:0xMebf48_M:0=97_d0xHed6b5=1_0xHed6b5=2":"Bulleteer":"Collect all 97 story bullets"::::Wormi:50:::::719152
 631504:"Q:0xHebee4=1_O:d0xHed6af=1_O:d0xHed6b0=1_d0xHed6b1=1_A:d0xHed6af/2_A:d0xHed6b0/2_A:d0xHed6b1/2_0<3_A:0xHed6af/2_A:0xHed6b0/2_A:0xHed6b1/2_M:0=3":"Beat Combo Mania":"Earn the titles for performing 100 Beat Combos, 100 Full Beat Combos and 50 Super Beat Combos"::::Wormi:5:::::719173
