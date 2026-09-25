@@ -273,14 +273,14 @@ achievements = OrderedDict({
     631517: Achievement(
         id=631517,
         title="""Beat Drive Winner""",
-        description="""Finish off every grapper in VS. CPU mode by performing a Beat Drive""",
+        description="""Win a match with every grapper in VS. CPU mode by finishing off your opponent with a Beat Drive""",
         points=10,
         badge="719181",
     ),
     631503: Achievement(
         id=631503,
         title="""Super Beat Combo Winner""",
-        description="""Finish off every grapper in VS. CPU mode by performing a Super Beat Combo""",
+        description="""Win a match with every grapper in VS. CPU mode by finishing off your opponent with a Super Beat Combo""",
         points=10,
         badge="719172",
     ),
