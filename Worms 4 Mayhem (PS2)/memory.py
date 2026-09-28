@@ -313,25 +313,11 @@ class Memory:
     """
     [32-bit Pointer] Hashmap | Lock.Tash.Afro.B
     +0x4
-    ++0x1c = [32-bit Pointer] Lock Container
-    .. Every "Lock." hashmap entry follow this structure
-    +++0x18 = [32-bit] Price
-    +++0x1c = [32-bit Pointer] FETXT ID String
-    +++0x20 = [32-bit] Worm Mustaches | Afro.B
+    ++0x1c = [32-bit Pointer] LockedContainer
+    +++0x20 = [32-bit] Worm Mustache | Afro.B (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
-    +++0x24 = [32-bit] Shop Category
-    ... 0x0 = None
-    ... 0x1 = Sound Banks
-    ... 0x2 = Maps
-    ... 0x3 = Hats
-    ... 0x4 = Spectacles
-    ... 0x5 = Hands
-    ... 0x6 = Mustaches
-    ... 0x7 = Weapons
-    ... 0x8 = Game Styles
-    ... 0x9 = Character
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHAFROG = dword(0xde755c)
@@ -339,10 +325,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Afro.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Afro.G
+    +++0x20 = [32-bit] Worm Mustache | Afro.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHAFROR = dword(0xde7590)
@@ -350,10 +336,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Afro.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Afro.R
+    +++0x20 = [32-bit] Worm Mustache | Afro.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPUNKY = dword(0xde75a4)
@@ -361,10 +347,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Punk.Y
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Punk.Y
+    +++0x20 = [32-bit] Worm Hats | Punk.Y
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACENHS = dword(0xde76d0)
@@ -372,10 +358,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.NHS
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | NHS
+    +++0x20 = [32-bit] Worm Spectacles | NHS (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEROOTNSHOOT = dword(0xde7790)
@@ -383,10 +369,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.RootNShoot
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | RootNShoot
+    +++0x20 = [32-bit] Game Styles | RootNShoot
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSPACESUIT = dword(0xde77d0)
@@ -394,10 +380,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Spacesuit
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Spacesuit
+    +++0x20 = [32-bit] Worm Hats | Spacesuit (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYTURKISHDELIGHTS = dword(0xde780c)
@@ -405,8 +391,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.TurkishDelights
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.TurkishDelights
+    +++0x20 = [32-bit] Time Bonus | Story.TurkishDelights
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -415,8 +402,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.CrateCollect
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.CrateCollect
+    +++0x20 = [32-bit] Time Bonus | Challenge.CrateCollect
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -425,8 +413,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.Saboteurs
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.Saboteurs
+    +++0x20 = [32-bit] Time Bonus | Story.Saboteurs
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -435,8 +424,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.Saboteurs
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | Saboteurs
+    +++0x20 = [32-bit] Story | Saboteurs
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -445,6 +435,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Jetpack.Fuel
     +0x4
     ++0x1c = [32-bit] Jetpack Fuel
+    .. 1 Ingame Unit = 500
     """
 
     HASHMAP_LOCKSOUNDGAMESHOW = dword(0xde795c)
@@ -452,10 +443,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Gameshow
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Gameshow
+    +++0x20 = [32-bit] Sound Banks | Gameshow (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYNOROOMFORERROR = dword(0xde7988)
@@ -463,8 +454,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.NoRoomForError
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.NoRoomForError
+    +++0x20 = [32-bit] Time Bonus | Story.NoRoomForError
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -473,10 +465,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Cowboy.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Cowboy.Bk
+    +++0x20 = [32-bit] Worm Mustache | Cowboy.Bk (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKWEAPONICARUSPOTION = dword(0xde7a38)
@@ -484,10 +476,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Weapon.IcarusPotion
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Weapons | IcarusPotion
+    +++0x20 = [32-bit] Weapons | IcarusPotion
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATARABIAND = dword(0xde7ad0)
@@ -495,10 +487,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Arabian.D
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Arabian.D
+    +++0x20 = [32-bit] Worm Hats | Arabian.D
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPARTY = dword(0xde7ae4)
@@ -506,10 +498,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Party
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Party
+    +++0x20 = [32-bit] Worm Hats | Party (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATARABIANR = dword(0xde7b08)
@@ -517,10 +509,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Arabian.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Arabian.R
+    +++0x20 = [32-bit] Worm Hats | Arabian.R
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPSABOTEURS = dword(0xde7b0c)
@@ -528,10 +520,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.Saboteurs
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | Saboteurs
+    +++0x20 = [32-bit] Map | Saboteurs
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATARABIANW = dword(0xde7b1c)
@@ -539,10 +531,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Arabian.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Arabian.W
+    +++0x20 = [32-bit] Worm Hats | Arabian.W
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_AWARDS = dword(0xde7b8c)
@@ -573,8 +565,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.DestructAndServe
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | DestructAndServe
+    +++0x20 = [32-bit] Story | DestructAndServe
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -591,8 +584,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.JetPack
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.JetPack
+    +++0x20 = [32-bit] Time Bonus | Challenge.JetPack
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -601,10 +595,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.HoldUntil
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | HoldUntil
+    +++0x20 = [32-bit] Map | HoldUntil
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCOWBOYB = dword(0xde7c08)
@@ -612,10 +606,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Cowboy.B
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Cowboy.B
+    +++0x20 = [32-bit] Worm Mustache | Cowboy.B (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCOWBOYG = dword(0xde7c1c)
@@ -623,10 +617,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Cowboy.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Cowboy.G
+    +++0x20 = [32-bit] Worm Mustache | Cowboy.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPIRATE = dword(0xde7c54)
@@ -634,10 +628,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Pirate
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Pirate
+    +++0x20 = [32-bit] Worm Hands | Pirate (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACERAYBAN2 = dword(0xde7ccc)
@@ -645,10 +639,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Rayban2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Rayban2
+    +++0x20 = [32-bit] Worm Spectacles | Rayban2 (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATWIZARDGR = dword(0xde7d08)
@@ -656,10 +650,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Wizard.Gr
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Wizard.Gr
+    +++0x20 = [32-bit] Worm Hats | Wizard.Gr
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDWIZARD = dword(0xde7d14)
@@ -667,10 +661,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Wizard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Wizard
+    +++0x20 = [32-bit] Sound Banks | Wizard
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEDARKSIDER = dword(0xde7d88)
@@ -678,10 +672,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Darksider
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Darksider
+    +++0x20 = [32-bit] Game Styles | Darksider
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYWINDYWIZARD = dword(0xde7dd0)
@@ -689,8 +683,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.WindyWizard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.WindyWizard
+    +++0x20 = [32-bit] Time Bonus | Story.WindyWizard
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -699,10 +694,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.GhostHill
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | GhostHill
+    +++0x20 = [32-bit] Map | GhostHill
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_FCSGAMEOVER = dword(0xde8008)
@@ -717,10 +712,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Scott
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Scott
+    +++0x20 = [32-bit] Sound Banks | Scott (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKWEAPONINFLATABLESCOUSER = dword(0xde80cc)
@@ -728,10 +723,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Weapon.InflatableScouser
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Weapons | InflatableScouser
+    +++0x20 = [32-bit] Weapons | InflatableScouser
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_ROUNDTIMEREMAINING = dword(0xde81ac)
@@ -746,8 +741,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.10
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 10
+    +++0x20 = [32-bit] Deathmatch | 10
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -756,10 +752,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Matrix
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Matrix
+    +++0x20 = [32-bit] Worm Spectacles | Matrix (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALLGY = dword(0xde8364)
@@ -767,10 +763,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.Gy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.Gy
+    +++0x20 = [32-bit] Worm Hats | Baseball.Gy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYDOOMCANYON = dword(0xde8378)
@@ -778,8 +774,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.DoomCanyon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | DoomCanyon
+    +++0x20 = [32-bit] Story | DoomCanyon
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -796,10 +793,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.AmericanFootball.S
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | AmericanFootball.S
+    +++0x20 = [32-bit] Worm Hats | AmericanFootball.S (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATAMERICANFOOTBALLY = dword(0xde8464)
@@ -807,10 +804,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.AmericanFootball.Y
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | AmericanFootball.Y
+    +++0x20 = [32-bit] Worm Hats | AmericanFootball.Y (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_DAMAGEDWORMID = dword(0xde84d4)
@@ -825,10 +822,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.3D
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | 3D
+    +++0x20 = [32-bit] Worm Spectacles | 3D (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTCHALLENGEICARUS = dword(0xde854c)
@@ -836,8 +833,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.Icarus
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.Icarus
+    +++0x20 = [32-bit] Time Bonus | Challenge.Icarus
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -846,10 +844,56 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.Pe
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.Pe
+    +++0x20 = [32-bit] Worm Hats | Baseball.Pe (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
+    """
+
+    HASHMAP_PERSISTSTATS = dword(0xde858c)
+    """
+    [32-bit Pointer] Hashmap | PersistStats
+    +0x4
+    ++0x1c
+    +++0x18 = [32-bit Pointer] Stat Array Container
+    ... Not sure what these stats are, they seem to increment every match played depending on which team is used.
+    ... Initialized to 1 on game start
+    ++++0x40 = [32-bit Pointer] Stat [0]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x44 = [32-bit Pointer] Stat [1]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x48 = [32-bit Pointer] Stat [2]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x4c = [32-bit Pointer] Stat [3]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x50 = [32-bit Pointer] Stat [4]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x54 = [32-bit Pointer] Stat [5]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x58 = [32-bit Pointer] Stat [6]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x5c = [32-bit Pointer] Stat [7]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x60 = [32-bit Pointer] Stat [8]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x64 = [32-bit Pointer] Stat [9]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x68 = [32-bit Pointer] Stat [10]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
+    ++++0x6c = [32-bit Pointer] Stat [11]
+    +++++0x14
+    ++++++0x1c = [32-bit] Value
     """
 
     HASHMAP_LOCKHATWIZARD = dword(0xde85d0)
@@ -857,10 +901,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Wizard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Wizard
+    +++0x20 = [32-bit] Worm Hats | Wizard
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEXRAY = dword(0xde85e4)
@@ -868,10 +912,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.XRay
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | XRay
+    +++0x20 = [32-bit] Worm Spectacles | XRay
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDBLUESMAN = dword(0xde8638)
@@ -879,10 +923,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.BluesMan
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | BluesMan
+    +++0x20 = [32-bit] Sound Banks | BluesMan (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPTURKISHDELIGHTS = dword(0xde864c)
@@ -890,10 +934,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.TurkishDelights
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | TurkishDelights
+    +++0x20 = [32-bit] Map | TurkishDelights
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_CSTORYDINERMIGHT = dword(0xde8710)
@@ -908,10 +952,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Wiseworm
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Wiseworm
+    +++0x20 = [32-bit] Sound Banks | Wiseworm (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMESTANDARD = dword(0xde88d0)
@@ -919,10 +963,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Standard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Standard
+    +++0x20 = [32-bit] Game Styles | Standard (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEKITCHENSINK = dword(0xde88ec)
@@ -930,10 +974,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.KitchenSink
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | KitchenSink
+    +++0x20 = [32-bit] Game Styles | KitchenSink
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPLANDWORMSFORGOT = dword(0xde8990)
@@ -941,10 +985,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.LandWormsForgot
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | LandWormsForgot
+    +++0x20 = [32-bit] Map | LandWormsForgot
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATAFRO = dword(0xde89bc)
@@ -952,10 +996,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Afro
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Afro
+    +++0x20 = [32-bit] Worm Hats | Afro (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTDEATHMATCH1 = dword(0xde8a44)
@@ -963,8 +1007,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.1
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.1
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.1
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -973,10 +1018,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Set.Professor
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Character Sets | Professor
+    +++0x20 = [32-bit] Character Sets | Professor
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTDEATHMATCH2 = dword(0xde8a4c)
@@ -984,8 +1029,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.2
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.2
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -994,8 +1040,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.3
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.3
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.3
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1004,8 +1051,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.4
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.4
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.4
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1014,8 +1062,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.5
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.5
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.5
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1024,8 +1073,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.6
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.6
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.6
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1034,8 +1084,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.7
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.7
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.7
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1044,8 +1095,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.8
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.8
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.8
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1054,8 +1106,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.9
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.9
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.9
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1064,10 +1117,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.GibbonTake
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | GibbonTake
+    +++0x20 = [32-bit] Map | GibbonTake
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPNOROOMFORERROR = dword(0xde8b48)
@@ -1075,10 +1128,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.NoRoomForError
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | NoRoomForError
+    +++0x20 = [32-bit] Map | NoRoomForError
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYTINCANWALLY = dword(0xde8c24)
@@ -1086,8 +1139,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.TinCanWally
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.TinCanWally
+    +++0x20 = [32-bit] Time Bonus | Story.TinCanWally
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1096,10 +1150,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Knight.Gn
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Knight.Gn
+    +++0x20 = [32-bit] Worm Hands | Knight.Gn (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEALLACTION = dword(0xde8db8)
@@ -1107,10 +1161,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.AllAction
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | AllAction
+    +++0x20 = [32-bit] Game Styles | AllAction
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYBRIDGETHIEVES = dword(0xde8dcc)
@@ -1118,8 +1172,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.BridgeThieves
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.BridgeThieves
+    +++0x20 = [32-bit] Time Bonus | Story.BridgeThieves
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1128,8 +1183,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.TraitorousWaters
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.TraitorousWaters
+    +++0x20 = [32-bit] Time Bonus | Story.TraitorousWaters
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1138,10 +1194,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Pirate
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Pirate
+    +++0x20 = [32-bit] Worm Hats | Pirate (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDWHOOPSIE = dword(0xde8f94)
@@ -1149,10 +1205,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Whoopsie
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Whoopsie
+    +++0x20 = [32-bit] Sound Banks | Whoopsie (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPJOUSTABOUTIT = dword(0xde8fd4)
@@ -1160,10 +1216,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.JoustAboutIt
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | JoustAboutIt
+    +++0x20 = [32-bit] Map | JoustAboutIt
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTCHALLENGENAVIGATION = dword(0xde9038)
@@ -1171,8 +1227,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.Navigation
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.Navigation
+    +++0x20 = [32-bit] Time Bonus | Challenge.Navigation
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1181,10 +1238,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Classic
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Classic
+    +++0x20 = [32-bit] Sound Banks | Classic (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATCOWBOY = dword(0xde9064)
@@ -1192,10 +1249,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Cowboy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Cowboy
+    +++0x20 = [32-bit] Worm Hats | Cowboy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPIRATEGN = dword(0xde90f8)
@@ -1203,10 +1260,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Pirate.Gn
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Pirate.Gn
+    +++0x20 = [32-bit] Worm Hands | Pirate.Gn (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGEICARUS = dword(0xde910c)
@@ -1214,8 +1271,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.Icarus
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Icarus
+    +++0x20 = [32-bit] Challenge | Icarus
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1224,10 +1282,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.ChuteToVictory
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | ChuteToVictory
+    +++0x20 = [32-bit] Map | ChuteToVictory
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYTINCANWALLY = dword(0xde9168)
@@ -1235,8 +1293,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.TinCanWally
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | TinCanWally
+    +++0x20 = [32-bit] Story | TinCanWally
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1245,10 +1304,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Crown
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Crown
+    +++0x20 = [32-bit] Worm Hats | Crown
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYTURKISHDELIGHTS = dword(0xde918c)
@@ -1256,8 +1315,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.TurkishDelights
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | TurkishDelights
+    +++0x20 = [32-bit] Story | TurkishDelights
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1266,10 +1326,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.NHS.Bl
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | NHS.Bl
+    +++0x20 = [32-bit] Worm Spectacles | NHS.Bl (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPTINCANWALLY = dword(0xde91e4)
@@ -1277,10 +1337,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.TinCanWally
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | TinCanWally
+    +++0x20 = [32-bit] Map | TinCanWally
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALL = dword(0xde91f0)
@@ -1288,10 +1348,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball
+    +++0x20 = [32-bit] Worm Hats | Baseball (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPIRATEBK = dword(0xde922c)
@@ -1299,10 +1359,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Pirate.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Pirate.Bk
+    +++0x20 = [32-bit] Worm Hands | Pirate.Bk (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBLUESBROTHER = dword(0xde9288)
@@ -1310,10 +1370,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.BluesBrother
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | BluesBrother
+    +++0x20 = [32-bit] Worm Hats | BluesBrother (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSWHITE = dword(0xde92d8)
@@ -1321,10 +1381,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.White
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | White
+    +++0x20 = [32-bit] Worm Hands | White (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPWINDYWIZARD = dword(0xde93d0)
@@ -1332,10 +1392,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.WindyWizard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | WindyWizard
+    +++0x20 = [32-bit] Map | WindyWizard
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEHOLYGRAIL = dword(0xde93f4)
@@ -1343,10 +1403,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.HolyGrail
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | HolyGrail
+    +++0x20 = [32-bit] Game Styles | HolyGrail
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYGIBBONTAKE = dword(0xde9454)
@@ -1354,8 +1414,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.GibbonTake
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | GibbonTake
+    +++0x20 = [32-bit] Story | GibbonTake
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1364,10 +1425,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.ArabianThief
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | ArabianThief
+    +++0x20 = [32-bit] Sound Banks | ArabianThief
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTCHALLENGESNIPERRIFLE = dword(0xde9558)
@@ -1375,8 +1436,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.SniperRifle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.SniperRifle
+    +++0x20 = [32-bit] Time Bonus | Challenge.SniperRifle
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1399,10 +1461,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.RobInTheHood
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | RobInTheHood
+    +++0x20 = [32-bit] Map | RobInTheHood
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYCRATEESCAPE = dword(0xde96d4)
@@ -1410,8 +1472,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.CrateEscape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | CrateEscape
+    +++0x20 = [32-bit] Story | CrateEscape
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1420,10 +1483,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Pigtails
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Pigtails
+    +++0x20 = [32-bit] Worm Hats | Pigtails (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_STORYDINERMIGHT = dword(0xde9818)
@@ -1449,17 +1512,17 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Weapon.HolyHandGrenade
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Weapons | HolyHandGrenade
+    +++0x20 = [32-bit] Weapons | HolyHandGrenade
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKAWARD0 = dword(0xde9880)
     """
     [32-bit Pointer] Hashmap | Lock.Award.0
     +0x4
-    ++0x1c
+    ++0x1c = [32-bit Pointer] LockedContainer
     +++0x20 = [32-bit] Trophy | Gold Damage
     ... 0x0 = Locked
     ... 0x2 = Unlocked
@@ -1472,7 +1535,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.1
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | 4 Bagger
+    +++0x20 = [32-bit] Trophy | 4 Bagger
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1482,7 +1545,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Big Blast
+    +++0x20 = [32-bit] Trophy | Big Blast
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1492,7 +1555,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.3
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Magic Bullet
+    +++0x20 = [32-bit] Trophy | Magic Bullet
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1502,7 +1565,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.4
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | The Beast Within
+    +++0x20 = [32-bit] Trophy | The Beast Within
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1512,7 +1575,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.5
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Silver Damage
+    +++0x20 = [32-bit] Trophy | Silver Damage
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1522,7 +1585,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.6
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | 3 Bagger
+    +++0x20 = [32-bit] Trophy | 3 Bagger
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1532,7 +1595,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.7
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Hot Foot
+    +++0x20 = [32-bit] Trophy | Hot Foot
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1542,7 +1605,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.8
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Animal Lover
+    +++0x20 = [32-bit] Trophy | Animal Lover
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1552,7 +1615,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.9
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Weapon Specialist
+    +++0x20 = [32-bit] Trophy | Weapon Specialist
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -1562,8 +1625,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.Shotgun
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Shotgun
+    +++0x20 = [32-bit] Challenge | Shotgun
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1572,10 +1636,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Bones
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Bones
+    +++0x20 = [32-bit] Worm Hands | Bones
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATHELMETKING = dword(0xde995c)
@@ -1583,10 +1647,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.HelmetKing
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | HelmetKing
+    +++0x20 = [32-bit] Worm Hats | HelmetKing
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEMONOCLE = dword(0xde9998)
@@ -1594,10 +1658,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Monocle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Monocle
+    +++0x20 = [32-bit] Worm Spectacles | Monocle (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYCHUTETOVICTORY = dword(0xde99a4)
@@ -1605,8 +1669,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.ChuteToVictory
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | ChuteToVictory
+    +++0x20 = [32-bit] Story | ChuteToVictory
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1615,10 +1680,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.NiceToSiege
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | NiceToSiege
+    +++0x20 = [32-bit] Map | NiceToSiege
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_AUDIOVOLMUSIC = dword(0xde9a0c)
@@ -1642,10 +1707,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.HighNoon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | HighNoon
+    +++0x20 = [32-bit] Map | HighNoon
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYJOUSTABOUTIT = dword(0xde9ad0)
@@ -1653,8 +1718,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.JoustAboutIt
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.JoustAboutIt
+    +++0x20 = [32-bit] Time Bonus | Story.JoustAboutIt
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1663,10 +1729,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Cowboy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Cowboy
+    +++0x20 = [32-bit] Worm Hands | Cowboy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYGHOSTHILL = dword(0xde9bb0)
@@ -1674,16 +1740,17 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.GhostHill
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | GhostHill
+    +++0x20 = [32-bit] Story | GhostHill
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
-    POINTER_TO_SHOP_COINS = dword(0xde9c94)
+    HASHMAP_WXFESHOPBALANCE = dword(0xde9c94)
     """
-    [32-bit] Pointer to Shop Coins
-    +0x04
-    ++0x1c | Coins [32-bit]
+    [32-bit Pointer] Hashmap | WXFE.Shop.Balance
+    +0x4
+    ++0x1c = [32-bit] Coins
     """
 
     HASHMAP_LOCKSTORYESCAPE = dword(0xde9cd4)
@@ -1691,8 +1758,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.Escape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | Escape
+    +++0x20 = [32-bit] Story | Escape
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1701,10 +1769,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.TraitorousWaters
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | TraitorousWaters
+    +++0x20 = [32-bit] Map | TraitorousWaters
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYDOOMCANYON = dword(0xde9db8)
@@ -1712,18 +1780,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.DoomCanyon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.DoomCanyon
+    +++0x20 = [32-bit] Time Bonus | Story.DoomCanyon
     ... 0x0 = Locked
-    ... 0x2 = Unlocked
-    """
-
-    HASHMAP_LOCKTSTORYALL = dword(0xde9e70)
-    """
-    [32-bit Pointer] Hashmap | Lock.T.Story.All
-    +0x4
-    ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.All
-    ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1732,10 +1791,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Cowboy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Cowboy
+    +++0x20 = [32-bit] Sound Banks | Cowboy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPDINERMIGHT = dword(0xde9f10)
@@ -1743,10 +1802,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.DinerMight
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | DinerMight
+    +++0x20 = [32-bit] Map | DinerMight
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATREDBERET = dword(0xde9f50)
@@ -1754,10 +1813,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.RedBeret
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | RedBeret
+    +++0x20 = [32-bit] Worm Hats | RedBeret (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYLANDWORMSFORGOT = dword(0xde9f58)
@@ -1765,8 +1824,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.LandWormsForgot
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.LandWormsForgot
+    +++0x20 = [32-bit] Time Bonus | Story.LandWormsForgot
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1775,10 +1835,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.CaveWorm
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | CaveWorm
+    +++0x20 = [32-bit] Sound Banks | CaveWorm
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEPIRATE = dword(0xdea014)
@@ -1786,10 +1846,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Pirate
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Pirate
+    +++0x20 = [32-bit] Worm Spectacles | Pirate (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYGHOSTHILL = dword(0xdea030)
@@ -1797,8 +1857,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.GhostHill
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.GhostHill
+    +++0x20 = [32-bit] Time Bonus | Story.GhostHill
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1807,10 +1868,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Pigtails.Bnd
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Pigtails.Bnd
+    +++0x20 = [32-bit] Worm Hats | Pigtails.Bnd (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACENHSR = dword(0xdea188)
@@ -1818,10 +1879,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.NHS.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | NHS.R
+    +++0x20 = [32-bit] Worm Spectacles | NHS.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYWINDYWIZARD = dword(0xdea190)
@@ -1829,8 +1890,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.WindyWizard
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | WindyWizard
+    +++0x20 = [32-bit] Story | WindyWizard
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1839,10 +1901,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.NHS.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | NHS.W
+    +++0x20 = [32-bit] Worm Spectacles | NHS.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATROCKETMAN = dword(0xdea3f8)
@@ -1850,10 +1912,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.RocketMan
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | RocketMan
+    +++0x20 = [32-bit] Worm Hats | RocketMan (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPDOOMCANYON = dword(0xdea438)
@@ -1861,10 +1923,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.DoomCanyon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | DoomCanyon
+    +++0x20 = [32-bit] Map | DoomCanyon
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYVALLEYOFDINOWORMS = dword(0xdea44c)
@@ -1872,8 +1934,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.ValleyOfDinoWorms
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | ValleyOfDinoWorms
+    +++0x20 = [32-bit] Story | ValleyOfDinoWorms
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1882,10 +1945,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Fashion
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Fashion
+    +++0x20 = [32-bit] Worm Hats | Fashion
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPCRATEESCAPE = dword(0xdea4a8)
@@ -1893,10 +1956,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.CrateEscape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | CrateEscape
+    +++0x20 = [32-bit] Map | CrateEscape
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPDESTRUCTANDSERVE = dword(0xdea4e8)
@@ -1904,10 +1967,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.DestructAndServe
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | DestructAndServe
+    +++0x20 = [32-bit] Map | DestructAndServe
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_DEADWORMID = dword(0xdea554)
@@ -1922,8 +1985,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.HighNoon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.HighNoon
+    +++0x20 = [32-bit] Time Bonus | Story.HighNoon
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -1932,10 +1996,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Wizard.D
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Wizard.D
+    +++0x20 = [32-bit] Worm Hats | Wizard.D
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_GAMELOGICCURRENTSCRIPT = dword(0xdea658)
@@ -1943,8 +2007,9 @@ class Memory:
     [32-bit Pointer] Hashmap | GameLogic.CurrentScript
     +0x4
     ++0x1c
-    +++0x0 = [ASCII] Current Script Name
+    +++0x0 = [ASCII] Current Script Filename
     ... // Multiplayer
+    ... "stdvs" = Standard/Homelands Multiplayer Game
     ... "stdvs,wormpot" = Standard/Homelands Multiplayer Game
     ... "Survivor" = Survivor Multiplayer Game
     ... "MultiplayerDestruction" = Destruction Multiplayer Game
@@ -1965,6 +2030,44 @@ class Memory:
     ... "RobInTheHood" = Rob In The Hood
     ... "JoustAboutIt" = Joust About It
     ... "NiceToSiegeYou" = Nice To Siege You
+    ... // Wild West
+    ... "MineAllMine" = Mine All Mine
+    ... "GhostHillGraveyard" = Ghost Hill Graveyard
+    ... "TinCanWally" = Tin Can Wally
+    ... "DoomCanyon" = Doom Canyon
+    ... "HighNoonHiJinx" = High Noon Hijinx
+    ... // Arabian
+    ... "TurkishDelights" = Turkish Delights
+    ... "NoRoomForError" = No Room For Error
+    ... "CarpetCapers" = Carpet Capers
+    ... "TraitorousWaters" = Traitorous Waters
+    ... "GibbonTake" = Gibbon Take
+    ... // Prehistoric
+    ... "FastFoodDino" = Fast Food Dino
+    ... "EscapeFromTreeRex" = Escape From Tree-Rex
+    ... "ChuteToVictory" = Chute To Victory
+    ... "TheLandThatWormsForgot" = The Land That Worms Forgot
+    ... "ValleyOfTheDino" = Valley Of The Dino
+    ... // Challenges
+    ... "ChallengeSniper" = Sniper Rifle Challenge
+    ... "ChallengeJetpack" = Jet Pack Challenge
+    ... "ChallengeSheep" = Super Sheep Challenge
+    ... "ChallengeRedBull" = Icarus Potion Challenge
+    ... "ChallengeShotgun" = Shotgun Challenge
+    ... "ChallengeAccuracy" = Accuracy Challenge
+    ... "ChallengeNavigation" = Navigation Challenge
+    ... "ChallengeCrate" = Crate Collect Challenge
+    ... // Deathmatches
+    ... "DeathMatch1" = Deathmatch 1
+    ... "DeathMatch2" = Deathmatch 2
+    ... "DeathMatch3" = Deathmatch 3
+    ... "DeathMatch4" = Deathmatch 4
+    ... "DeathMatch5" = Deathmatch 5
+    ... "DeathMatch6" = Deathmatch 6
+    ... "DeathMatch7" = Deathmatch 7
+    ... "DeathMatch8" = Deathmatch 8
+    ... "DeathMatch9" = Deathmatch 9
+    ... "DeathMatch10" = Deathmatch 10
     """
 
     HASHMAP_LOCKHATWIZARDR = dword(0xdea688)
@@ -1972,10 +2075,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Wizard.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Wizard.R
+    +++0x20 = [32-bit] Worm Hats | Wizard.R
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPMINEALLMINE = dword(0xdea694)
@@ -1983,10 +2086,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.MineAllMine
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | MineAllMine
+    +++0x20 = [32-bit] Map | MineAllMine
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATUSMARINE = dword(0xdea6d8)
@@ -1994,10 +2097,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.USMarine
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | USMarine
+    +++0x20 = [32-bit] Worm Hats | USMarine (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBUNNY = dword(0xdea764)
@@ -2005,10 +2108,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Bunny
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Bunny
+    +++0x20 = [32-bit] Worm Hats | Bunny (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKDEATHMATCH1 = dword(0xdea7c4)
@@ -2016,8 +2119,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.1
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 1
+    +++0x20 = [32-bit] Deathmatch | 1
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2026,8 +2130,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 2
+    +++0x20 = [32-bit] Deathmatch | 2
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2036,8 +2141,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.3
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 3
+    +++0x20 = [32-bit] Deathmatch | 3
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2046,8 +2152,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.4
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 4
+    +++0x20 = [32-bit] Deathmatch | 4
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2056,8 +2163,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.5
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 5
+    +++0x20 = [32-bit] Deathmatch | 5
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2066,8 +2174,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.6
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 6
+    +++0x20 = [32-bit] Deathmatch | 6
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2076,8 +2185,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.7
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 7
+    +++0x20 = [32-bit] Deathmatch | 7
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2086,8 +2196,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.8
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 8
+    +++0x20 = [32-bit] Deathmatch | 8
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2096,8 +2207,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Deathmatch.9
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Deathmatch 9
+    +++0x20 = [32-bit] Deathmatch | 9
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2106,8 +2218,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.Shotgun
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.Shotgun
+    +++0x20 = [32-bit] Time Bonus | Challenge.Shotgun
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2116,10 +2229,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.WW1
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | WW1
+    +++0x20 = [32-bit] Worm Hats | WW1 (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATWW2 = dword(0xdeaac8)
@@ -2127,10 +2240,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.WW2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | WW2
+    +++0x20 = [32-bit] Worm Hats | WW2 (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATCOWBOYBK = dword(0xdeabec)
@@ -2138,10 +2251,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Cowboy.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Cowboy.Bk
+    +++0x20 = [32-bit] Worm Hats | Cowboy.Bk (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDKNIGHT = dword(0xdeac50)
@@ -2149,10 +2262,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Knight
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Knight
+    +++0x20 = [32-bit] Sound Banks | Knight
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEMEGAPOWER = dword(0xdeacc8)
@@ -2160,10 +2273,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.MegaPower
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | MegaPower
+    +++0x20 = [32-bit] Game Styles | MegaPower
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPIGTAILSR = dword(0xdead48)
@@ -2171,10 +2284,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Pigtails.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Pigtails.R
+    +++0x20 = [32-bit] Worm Hats | Pigtails.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYDESTRUCTANDSERVE = dword(0xdead54)
@@ -2182,8 +2295,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.DestructAndServe
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.DestructAndServe
+    +++0x20 = [32-bit] Time Bonus | Story.DestructAndServe
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2192,10 +2306,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.White.Y
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | White.Y
+    +++0x20 = [32-bit] Worm Hands | White.Y (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSWHITED = dword(0xdead90)
@@ -2203,10 +2317,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.White.D
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | White.D
+    +++0x20 = [32-bit] Worm Hands | White.D (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEPRO = dword(0xdeadbc)
@@ -2214,10 +2328,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Pro
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Pro
+    +++0x20 = [32-bit] Game Styles | Pro (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPBRIDGETHIEVES = dword(0xdeae0c)
@@ -2225,10 +2339,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.BridgeThieves
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | BridgeThieves
+    +++0x20 = [32-bit] Map | BridgeThieves
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPOLICE = dword(0xdeaf14)
@@ -2236,10 +2350,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Police
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Police
+    +++0x20 = [32-bit] Worm Hats | Police (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHSCOTT = dword(0xdeb090)
@@ -2247,10 +2361,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Scott
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Scott
+    +++0x20 = [32-bit] Worm Mustache | Scott (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKWEAPONSNIPERRIFLE = dword(0xdeb0d4)
@@ -2258,10 +2372,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Weapon.SniperRifle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Weapons | SniperRifle
+    +++0x20 = [32-bit] Weapons | SniperRifle
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSSPACESUITP = dword(0xdeb1c0)
@@ -2269,10 +2383,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Spacesuit.P
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Spacesuit.P
+    +++0x20 = [32-bit] Worm Hands | Spacesuit.P (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSSPACESUITB = dword(0xdeb208)
@@ -2280,10 +2394,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Spacesuit.B
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Spacesuit.B
+    +++0x20 = [32-bit] Worm Hands | Spacesuit.B (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYSTORMTHECASTLE = dword(0xdeb214)
@@ -2291,8 +2405,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.StormTheCastle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | StormTheCastle
+    +++0x20 = [32-bit] Story | StormTheCastle
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2301,10 +2416,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Spacesuit.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Spacesuit.G
+    +++0x20 = [32-bit] Worm Hands | Spacesuit.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEELVISR = dword(0xdeb28c)
@@ -2312,10 +2427,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Elvis.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Elvis.R
+    +++0x20 = [32-bit] Worm Spectacles | Elvis.R
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEELVISS = dword(0xdeb290)
@@ -2323,10 +2438,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Elvis.S
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Elvis.S
+    +++0x20 = [32-bit] Worm Spectacles | Elvis.S
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEELVIS = dword(0xdeb2cc)
@@ -2334,10 +2449,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Elvis
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Elvis
+    +++0x20 = [32-bit] Worm Spectacles | Elvis
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHVIKING = dword(0xdeb2dc)
@@ -2345,10 +2460,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Viking
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Viking
+    +++0x20 = [32-bit] Worm Mustache | Viking (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYCRATEESCAPE = dword(0xdeb4a4)
@@ -2356,8 +2471,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.CrateEscape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.CrateEscape
+    +++0x20 = [32-bit] Time Bonus | Story.CrateEscape
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2366,10 +2482,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Astronaut
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Astronaut
+    +++0x20 = [32-bit] Sound Banks | Astronaut (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSETHORROR = dword(0xdeb65c)
@@ -2377,10 +2493,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Set.Horror
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Character Sets | Horror
+    +++0x20 = [32-bit] Character Sets | Horror
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPUNKGN = dword(0xdeb6f8)
@@ -2388,10 +2504,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Punk.Gn
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Punk.Gn
+    +++0x20 = [32-bit] Worm Hands | Punk.Gn
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSRINGED = dword(0xdeb790)
@@ -2399,10 +2515,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Ringed
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Ringed
+    +++0x20 = [32-bit] Worm Hands | Ringed
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHAFRO = dword(0xdeb7bc)
@@ -2410,10 +2526,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Afro
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Afro
+    +++0x20 = [32-bit] Worm Mustache | Afro (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPESCAPE = dword(0xdeb858)
@@ -2421,10 +2537,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.Escape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | Escape
+    +++0x20 = [32-bit] Map | Escape
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSPACESUITBL = dword(0xdeb9f0)
@@ -2432,10 +2548,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Spacesuit.Bl
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Spacesuit.Bl
+    +++0x20 = [32-bit] Worm Hats | Spacesuit.Bl (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_STORYBRIDGETHIEVES = dword(0xdeba0c)
@@ -2451,10 +2567,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Elvis.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Elvis.Bk
+    +++0x20 = [32-bit] Worm Spectacles | Elvis.Bk
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPTRAININGGROUNDS = dword(0xdeba8c)
@@ -2462,10 +2578,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.TrainingGrounds
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | TrainingGrounds
+    +++0x20 = [32-bit] Map | TrainingGrounds
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATAMERICANFOOTBALLBL = dword(0xdebaf4)
@@ -2473,10 +2589,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.AmericanFootball.Bl
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | AmericanFootball.Bl
+    +++0x20 = [32-bit] Worm Hats | AmericanFootball.Bl (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHSMALLBR = dword(0xdebb48)
@@ -2484,10 +2600,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Small.Br
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Small.Br
+    +++0x20 = [32-bit] Worm Mustache | Small.Br (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSPACESUITGY = dword(0xdebb68)
@@ -2495,10 +2611,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Spacesuit.Gy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Spacesuit.Gy
+    +++0x20 = [32-bit] Worm Hats | Spacesuit.Gy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALLC = dword(0xdebbd0)
@@ -2506,10 +2622,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.C
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.C
+    +++0x20 = [32-bit] Worm Hats | Baseball.C (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALLP = dword(0xdebc0c)
@@ -2517,10 +2633,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.P
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.P
+    +++0x20 = [32-bit] Worm Hats | Baseball.P (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALLR = dword(0xdebc14)
@@ -2528,10 +2644,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.R
+    +++0x20 = [32-bit] Worm Hats | Baseball.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCURLYB = dword(0xdebc48)
@@ -2539,10 +2655,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Curly.B
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Curly.B
+    +++0x20 = [32-bit] Worm Mustache | Curly.B (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCURLYG = dword(0xdebc5c)
@@ -2550,10 +2666,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Curly.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Curly.G
+    +++0x20 = [32-bit] Worm Mustache | Curly.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYBRIDGETHIEVES = dword(0xdebc8c)
@@ -2561,8 +2677,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.BridgeThieves
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | BridgeThieves
+    +++0x20 = [32-bit] Story | BridgeThieves
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2571,10 +2688,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Curly.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Curly.R
+    +++0x20 = [32-bit] Worm Mustache | Curly.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHSMALLR = dword(0xdebd48)
@@ -2582,10 +2699,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Small.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Small.R
+    +++0x20 = [32-bit] Worm Mustache | Small.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHSMALLW = dword(0xdebd5c)
@@ -2593,10 +2710,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Small.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Small.W
+    +++0x20 = [32-bit] Worm Mustache | Small.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCOWBOY = dword(0xdebd64)
@@ -2604,10 +2721,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Cowboy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Cowboy
+    +++0x20 = [32-bit] Worm Mustache | Cowboy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_AUDIOVOLSPEECH = dword(0xdebda0)
@@ -2624,10 +2741,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Star.P
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Star.P
+    +++0x20 = [32-bit] Worm Spectacles | Star.P (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACESTARZ = dword(0xdebde8)
@@ -2635,10 +2752,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Star.Z
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Star.Z
+    +++0x20 = [32-bit] Worm Spectacles | Star.Z (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGESSHEEP = dword(0xdebe00)
@@ -2646,8 +2763,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.SSheep
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | SSheep
+    +++0x20 = [32-bit] Challenge | SSheep
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2656,10 +2774,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Star.L
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Star.L
+    +++0x20 = [32-bit] Worm Spectacles | Star.L (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMESTRATEGY = dword(0xdebe64)
@@ -2667,10 +2785,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Strategy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Strategy
+    +++0x20 = [32-bit] Game Styles | Strategy
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGEJETPACK = dword(0xdebf6c)
@@ -2678,8 +2796,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.JetPack
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | JetPack
+    +++0x20 = [32-bit] Challenge | JetPack
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2743,10 +2862,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.ReSubmission
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | ReSubmission
+    +++0x20 = [32-bit] Map | ReSubmission
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDBUILDER = dword(0xdec108)
@@ -2754,10 +2873,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Builder
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Builder
+    +++0x20 = [32-bit] Sound Banks | Builder
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPTOPSECRET = dword(0xdec114)
@@ -2765,10 +2884,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.TopSecret
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | TopSecret
+    +++0x20 = [32-bit] Map | TopSecret
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACESTAR = dword(0xdec1c8)
@@ -2776,10 +2895,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Star
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Star
+    +++0x20 = [32-bit] Worm Spectacles | Star (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATVIKING = dword(0xdec3dc)
@@ -2787,10 +2906,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Viking
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Viking
+    +++0x20 = [32-bit] Worm Hats | Viking (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_WXDCURRENTTUTORIAL = dword(0xdec434)
@@ -2828,8 +2947,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.Escape
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.Escape
+    +++0x20 = [32-bit] Time Bonus | Story.Escape
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2838,10 +2958,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Bng
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Bng
+    +++0x20 = [32-bit] Game Styles | Bng (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPIRATEW = dword(0xdec61c)
@@ -2849,10 +2969,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Pirate.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Pirate.W
+    +++0x20 = [32-bit] Worm Hands | Pirate.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTCHALLENGESSHEEP = dword(0xdec640)
@@ -2860,8 +2980,42 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.SSheep
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.SSheep
+    +++0x20 = [32-bit] Time Bonus | Challenge.SSheep
     ... 0x0 = Locked
+    ... 0x1 = Available
+    ... 0x2 = Unlocked
+    """
+
+    HASHMAP_LOCKTUTORIAL1 = dword(0xdec784)
+    """
+    [32-bit Pointer] Hashmap | Lock.Tutorial1
+    +0x4
+    ++0x1c = [32-bit Pointer] LockedContainer
+    +++0x20 = [32-bit] Tutorial1 | 
+    ... 0x0 = Locked
+    ... 0x1 = Available
+    ... 0x2 = Unlocked
+    """
+
+    HASHMAP_LOCKTUTORIAL2 = dword(0xdec788)
+    """
+    [32-bit Pointer] Hashmap | Lock.Tutorial2
+    +0x4
+    ++0x1c = [32-bit Pointer] LockedContainer
+    +++0x20 = [32-bit] Tutorial2 | 
+    ... 0x0 = Locked
+    ... 0x1 = Available
+    ... 0x2 = Unlocked
+    """
+
+    HASHMAP_LOCKTUTORIAL3 = dword(0xdec78c)
+    """
+    [32-bit Pointer] Hashmap | Lock.Tutorial3
+    +0x4
+    ++0x1c = [32-bit Pointer] LockedContainer
+    +++0x20 = [32-bit] Tutorial3 | 
+    ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2870,10 +3024,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Rayban
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Rayban
+    +++0x20 = [32-bit] Worm Spectacles | Rayban (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEXRAYP = dword(0xdec8c0)
@@ -2881,10 +3035,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.XRay.P
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | XRay.P
+    +++0x20 = [32-bit] Worm Spectacles | XRay.P
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEXRAYS = dword(0xdec8cc)
@@ -2892,10 +3046,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.XRay.S
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | XRay.S
+    +++0x20 = [32-bit] Worm Spectacles | XRay.S
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEXRAYY = dword(0xdec8e4)
@@ -2903,10 +3057,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.XRay.Y
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | XRay.Y
+    +++0x20 = [32-bit] Worm Spectacles | XRay.Y
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGENAVIGATION = dword(0xdec938)
@@ -2914,8 +3068,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.Navigation
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Navigation
+    +++0x20 = [32-bit] Challenge | Navigation
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2924,8 +3079,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.MineAllMine
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.MineAllMine
+    +++0x20 = [32-bit] Time Bonus | Story.MineAllMine
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -2934,10 +3090,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Meme
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Meme
+    +++0x20 = [32-bit] Sound Banks | Meme
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSCHEMEMYSTERY = dword(0xdeca64)
@@ -2945,10 +3101,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Mystery
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Mystery
+    +++0x20 = [32-bit] Game Styles | Mystery
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSPACESUITP = dword(0xdecb00)
@@ -2956,10 +3112,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Spacesuit.P
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Spacesuit.P
+    +++0x20 = [32-bit] Worm Hats | Spacesuit.P (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSSPACESUIT = dword(0xdecb90)
@@ -2967,10 +3123,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Spacesuit
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Spacesuit
+    +++0x20 = [32-bit] Worm Hands | Spacesuit (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSWHITEBR = dword(0xdecc88)
@@ -2978,10 +3134,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.White.Br
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | White.Br
+    +++0x20 = [32-bit] Worm Hands | White.Br (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPCARPETCAPERS = dword(0xdecd0c)
@@ -2989,10 +3145,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.CarpetCapers
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | CarpetCapers
+    +++0x20 = [32-bit] Map | CarpetCapers
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATQUEENOFSHEBA = dword(0xded084)
@@ -3000,10 +3156,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.QueenOfSheba
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | QueenOfSheba
+    +++0x20 = [32-bit] Worm Hats | QueenOfSheba
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSCOWBOYBK = dword(0xded0ac)
@@ -3011,10 +3167,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Cowboy.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Cowboy.Bk
+    +++0x20 = [32-bit] Worm Hands | Cowboy.Bk (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDGANGSTER = dword(0xded0c8)
@@ -3022,10 +3178,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Gangster
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Gangster
+    +++0x20 = [32-bit] Sound Banks | Gangster (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDDISCO = dword(0xded0fc)
@@ -3033,10 +3189,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Disco
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Disco
+    +++0x20 = [32-bit] Sound Banks | Disco (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBUILDER = dword(0xded188)
@@ -3044,10 +3200,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Builder
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Builder
+    +++0x20 = [32-bit] Worm Hats | Builder
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYTRAITOROUSWATERS = dword(0xded1cc)
@@ -3055,8 +3211,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.TraitorousWaters
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | TraitorousWaters
+    +++0x20 = [32-bit] Story | TraitorousWaters
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3065,10 +3222,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.FuManChu
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | FuManChu
+    +++0x20 = [32-bit] Worm Hands | FuManChu
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYMINEALLMINE = dword(0xded21c)
@@ -3076,8 +3233,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.MineAllMine
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | MineAllMine
+    +++0x20 = [32-bit] Story | MineAllMine
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3086,8 +3244,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.GibbonTake
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.GibbonTake
+    +++0x20 = [32-bit] Time Bonus | Story.GibbonTake
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3096,10 +3255,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Punk.Bl
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Punk.Bl
+    +++0x20 = [32-bit] Worm Hats | Punk.Bl
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPUNKGR = dword(0xded2cc)
@@ -3107,10 +3266,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Punk.Gr
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Punk.Gr
+    +++0x20 = [32-bit] Worm Hats | Punk.Gr
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LEVELDETAILSNAME = dword(0xded2e0)
@@ -3135,6 +3294,44 @@ class Memory:
     ... "Story.RobInTheHood" = Rob In The Hood
     ... "Story.JoustAboutIt" = Joust About It
     ... "Story.NiceToSiege" = Nice To Siege You
+    ... // Wild West
+    ... "Story.MineAllMine" = Mine All Mine
+    ... "Story.GhostHill" = Ghost Hill Graveyard
+    ... "Story.TinCanWally" = Tin Can Wally
+    ... "Story.DoomCanyon" = Doom Canyon
+    ... "Story.HighNoon" = High Noon Hijinx
+    ... // Arabian
+    ... "Story.TurkishDelights" = Turkish Delights
+    ... "Story.NoRoomForError" = No Room For Error
+    ... "Story.CarpetCapers" = Carpet Capers
+    ... "Story.TraitorousWaters" = Traitorous Waters
+    ... "Story.GibbonTake" = Gibbon Take
+    ... // Prehistoric
+    ... "Story.FastFoodDino" = Fast Food Dino
+    ... "Story.Escape" = Escape From Tree-Rex
+    ... "Story.ChuteToVictory" = Chute To Victory
+    ... "Story.LandWormsForgot" = The Land That Worms Forgot
+    ... "Story.ValleyOfDinoWorms" = Valley Of The Dinoworms
+    ... // Challenges
+    ... "Challenge.SniperRifle" = Sniper Rifle Challenge
+    ... "Challenge.JetPack" = Jet Pack Challenge
+    ... "Challenge.SSheep" = Super Sheep Challenge
+    ... "Challenge.Icarus" = Icarus Potion Challenge
+    ... "Challenge.Shotgun" = Shotgun Challenge
+    ... "Challenge.Accuracy" = Accuracy Challenge
+    ... "Challenge.Navigation" = Navigation Challenge
+    ... "Challenge.CrateCollect" = Crate Collect Challenge
+    ... // Deathmatches
+    ... "Deathmatch.1" = Deathmatch 1
+    ... "Deathmatch.2" = Deathmatch 2
+    ... "Deathmatch.3" = Deathmatch 3
+    ... "Deathmatch.4" = Deathmatch 4
+    ... "Deathmatch.5" = Deathmatch 5
+    ... "Deathmatch.6" = Deathmatch 6
+    ... "Deathmatch.7" = Deathmatch 7
+    ... "Deathmatch.8" = Deathmatch 8
+    ... "Deathmatch.9" = Deathmatch 9
+    ... "Deathmatch.10" = Deathmatch 10
     """
 
     HASHMAP_LOCKCHALLENGECRATECOLLECT = dword(0xded450)
@@ -3142,8 +3339,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.CrateCollect
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | CrateCollect
+    +++0x20 = [32-bit] Challenge | CrateCollect
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3152,8 +3350,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.DinerMight
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | DinerMight
+    +++0x20 = [32-bit] Story | DinerMight
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3162,10 +3361,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Shopping
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Shopping
+    +++0x20 = [32-bit] Game Styles | Shopping
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPSTORMTHECASTLE = dword(0xded5d4)
@@ -3173,10 +3372,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.StormTheCastle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | StormTheCastle
+    +++0x20 = [32-bit] Map | StormTheCastle
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBISHOP = dword(0xded640)
@@ -3184,10 +3383,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Bishop
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Bishop
+    +++0x20 = [32-bit] Worm Hats | Bishop (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATCOWBOY2 = dword(0xded688)
@@ -3195,10 +3394,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Cowboy2
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Cowboy2
+    +++0x20 = [32-bit] Worm Hats | Cowboy2
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSCOTTISH = dword(0xded760)
@@ -3206,10 +3405,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Scottish
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Scottish
+    +++0x20 = [32-bit] Worm Hats | Scottish (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSKNIGHT = dword(0xded790)
@@ -3217,10 +3416,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Knight
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Knight
+    +++0x20 = [32-bit] Worm Hands | Knight (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATPREHISTORIC = dword(0xded80c)
@@ -3228,10 +3427,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Prehistoric
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Prehistoric
+    +++0x20 = [32-bit] Worm Hats | Prehistoric
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATAMERICANFOOTBALL = dword(0xded870)
@@ -3239,10 +3438,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.AmericanFootball
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | AmericanFootball
+    +++0x20 = [32-bit] Worm Hats | AmericanFootball (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGESNIPERRIFLE = dword(0xded8d8)
@@ -3250,8 +3449,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.SniperRifle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | SniperRifle
+    +++0x20 = [32-bit] Challenge | SniperRifle
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3260,10 +3460,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Viking.Bk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Viking.Bk
+    +++0x20 = [32-bit] Worm Mustache | Viking.Bk (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDSCOUSER = dword(0xded9c8)
@@ -3271,10 +3471,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Scouser
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Scouser
+    +++0x20 = [32-bit] Sound Banks | Scouser (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_CURRENTTEAMINDEX = dword(0xdedaa0)
@@ -3296,10 +3496,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Viking.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Viking.R
+    +++0x20 = [32-bit] Worm Mustache | Viking.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDBOBBY = dword(0xdedbe8)
@@ -3307,10 +3507,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.Bobby
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | Bobby
+    +++0x20 = [32-bit] Sound Banks | Bobby (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHVIKINGG = dword(0xdedc1c)
@@ -3318,10 +3518,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Viking.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Viking.G
+    +++0x20 = [32-bit] Worm Mustache | Viking.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATCHINESE = dword(0xdedc54)
@@ -3329,10 +3529,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Chinese
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Chinese
+    +++0x20 = [32-bit] Worm Hats | Chinese (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_AUDIOVOLSFX = dword(0xdedc60)
@@ -3349,8 +3549,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.JoustAboutIt
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | JoustAboutIt
+    +++0x20 = [32-bit] Story | JoustAboutIt
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3359,8 +3560,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.CarpetCapers
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | CarpetCapers
+    +++0x20 = [32-bit] Story | CarpetCapers
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3369,10 +3571,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Punk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Punk
+    +++0x20 = [32-bit] Worm Hats | Punk
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSKNIGHTW = dword(0xdededc)
@@ -3380,10 +3582,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Knight.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Knight.W
+    +++0x20 = [32-bit] Worm Hands | Knight.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATARABIAN = dword(0xdedef8)
@@ -3391,10 +3593,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Arabian
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Arabian
+    +++0x20 = [32-bit] Worm Hats | Arabian
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSKNIGHTG = dword(0xdedf1c)
@@ -3402,10 +3604,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Knight.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Knight.G
+    +++0x20 = [32-bit] Worm Hands | Knight.G (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKCHALLENGEACCURACY = dword(0xdedf24)
@@ -3413,8 +3615,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Challenge.Accuracy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Challenge | Accuracy
+    +++0x20 = [32-bit] Challenge | Accuracy
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3423,10 +3626,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Pigtails.Bl
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Pigtails.Bl
+    +++0x20 = [32-bit] Worm Hats | Pigtails.Bl (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPFASTFOODDINO = dword(0xdedf3c)
@@ -3434,10 +3637,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.FastFoodDino
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | FastFoodDino
+    +++0x20 = [32-bit] Map | FastFoodDino
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKEASTEREGG0 = dword(0xdedf40)
@@ -3495,10 +3698,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Weapon.BubbleTrouble
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Weapons | BubbleTrouble
+    +++0x20 = [32-bit] Weapons | BubbleTrouble
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHSAFETYPIN = dword(0xdee2c4)
@@ -3506,10 +3709,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.SafetyPin
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | SafetyPin
+    +++0x20 = [32-bit] Worm Mustache | SafetyPin
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATCOWBOYR = dword(0xdee388)
@@ -3517,10 +3720,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Cowboy.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Cowboy.R
+    +++0x20 = [32-bit] Worm Hats | Cowboy.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYVALLEYOFDINOWORMS = dword(0xdee390)
@@ -3528,8 +3731,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.ValleyOfDinoWorms
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.ValleyOfDinoWorms
+    +++0x20 = [32-bit] Time Bonus | Story.ValleyOfDinoWorms
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3538,10 +3742,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Cowboy.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Cowboy.W
+    +++0x20 = [32-bit] Worm Hats | Cowboy.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYROBINTHEHOOD = dword(0xdee450)
@@ -3549,8 +3753,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.RobInTheHood
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.RobInTheHood
+    +++0x20 = [32-bit] Time Bonus | Story.RobInTheHood
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3559,10 +3764,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Curly
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Curly
+    +++0x20 = [32-bit] Worm Mustache | Curly (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTDEATHMATCH10 = dword(0xdee544)
@@ -3570,8 +3775,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Deathmatch.10
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Deathmatch.10
+    +++0x20 = [32-bit] Time Bonus | Deathmatch.10
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3580,8 +3786,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.LandWormsForgot
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | LandWormsForgot
+    +++0x20 = [32-bit] Story | LandWormsForgot
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3590,8 +3797,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.RobInTheHood
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | RobInTheHood
+    +++0x20 = [32-bit] Story | RobInTheHood
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3631,8 +3839,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.NoRoomForError
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | NoRoomForError
+    +++0x20 = [32-bit] Story | NoRoomForError
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3641,10 +3850,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Set.Dinoworm
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Character Sets | Dinoworm
+    +++0x20 = [32-bit] Character Sets | Dinoworm
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTASHCHINESE = dword(0xdee714)
@@ -3652,10 +3861,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Chinese
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Chinese
+    +++0x20 = [32-bit] Worm Mustache | Chinese (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSKULL = dword(0xdee730)
@@ -3663,10 +3872,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Skull
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Skull
+    +++0x20 = [32-bit] Worm Hats | Skull
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYDINERMIGHT = dword(0xdee790)
@@ -3674,8 +3883,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.DinerMight
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.DinerMight
+    +++0x20 = [32-bit] Time Bonus | Story.DinerMight
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3684,8 +3894,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Challenge.Accuracy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Challenge.Accuracy
+    +++0x20 = [32-bit] Time Bonus | Challenge.Accuracy
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3694,10 +3905,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Pirate.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Pirate.R
+    +++0x20 = [32-bit] Worm Spectacles | Pirate.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEPIRATEW = dword(0xdee85c)
@@ -3705,10 +3916,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Pirate.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Pirate.W
+    +++0x20 = [32-bit] Worm Spectacles | Pirate.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSOUNDSECRETAGENT = dword(0xdee8d0)
@@ -3716,10 +3927,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Sound.SecretAgent
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Sound Banks | SecretAgent
+    +++0x20 = [32-bit] Sound Banks | SecretAgent (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACEPIRATEBE = dword(0xdee918)
@@ -3727,10 +3938,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.Pirate.Be
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | Pirate.Be
+    +++0x20 = [32-bit] Worm Spectacles | Pirate.Be (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_ELAPSEDROUNDTIME = dword(0xdee920)
@@ -3745,10 +3956,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Tash.Small.Bln
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Mustaches | Small.Bln
+    +++0x20 = [32-bit] Worm Mustache | Small.Bln (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYFASTFOODDINO = dword(0xdee9bc)
@@ -3756,8 +3967,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.FastFoodDino
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | FastFoodDino
+    +++0x20 = [32-bit] Story | FastFoodDino
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3766,10 +3978,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Cowboy.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Cowboy.R
+    +++0x20 = [32-bit] Worm Hands | Cowboy.R (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSCOWBOYW = dword(0xdee9dc)
@@ -3777,10 +3989,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Cowboy.W
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Cowboy.W
+    +++0x20 = [32-bit] Worm Hands | Cowboy.W (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSETALIEN = dword(0xdee9f8)
@@ -3788,10 +4000,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Set.Alien
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Character Sets | Alien
+    +++0x20 = [32-bit] Character Sets | Alien
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYFASTFOODDINO = dword(0xdeeb3c)
@@ -3799,8 +4011,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.FastFoodDino
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.FastFoodDino
+    +++0x20 = [32-bit] Time Bonus | Story.FastFoodDino
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3809,8 +4022,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.NiceToSiege
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.NiceToSiege
+    +++0x20 = [32-bit] Time Bonus | Story.NiceToSiege
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3819,10 +4033,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Scheme.Beginner
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Game Styles | Beginner
+    +++0x20 = [32-bit] Game Styles | Beginner (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSTORYNICETOSIEGE = dword(0xdeec98)
@@ -3830,8 +4044,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.NiceToSiege
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | NiceToSiege
+    +++0x20 = [32-bit] Story | NiceToSiege
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3840,10 +4055,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Hockey
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Hockey
+    +++0x20 = [32-bit] Worm Hats | Hockey
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKFACENVISION = dword(0xdeed00)
@@ -3851,10 +4066,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Face.NVision
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Spectacles | NVision
+    +++0x20 = [32-bit] Worm Spectacles | NVision
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYSTORMTHECASTLE = dword(0xdeed14)
@@ -3862,8 +4077,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.StormTheCastle
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.StormTheCastle
+    +++0x20 = [32-bit] Time Bonus | Story.StormTheCastle
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3872,8 +4088,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Story.HighNoon
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Story Chapter | HighNoon
+    +++0x20 = [32-bit] Story | HighNoon
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3882,10 +4099,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.UniversityChallenged
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | UniversityChallenged
+    +++0x20 = [32-bit] Map | UniversityChallenged
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATBASEBALLT17 = dword(0xdeeedc)
@@ -3893,10 +4110,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.T17
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Baseball.T17
+    +++0x20 = [32-bit] Worm Hats | Baseball.T17
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKSETCYBERWORM = dword(0xdeeef4)
@@ -3904,10 +4121,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Set.Cyberworm
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Character Sets | Cyberworm
+    +++0x20 = [32-bit] Character Sets | Cyberworm
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKAWARD10 = dword(0xdeef00)
@@ -3915,7 +4132,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.10
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Bronze Damage
+    +++0x20 = [32-bit] Trophy | Bronze Damage
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -3925,7 +4142,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.11
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Body Count
+    +++0x20 = [32-bit] Trophy | Body Count
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -3935,7 +4152,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.12
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Barrel Buster
+    +++0x20 = [32-bit] Trophy | Barrel Buster
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -3945,7 +4162,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.13
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Rocketeer
+    +++0x20 = [32-bit] Trophy | Rocketeer
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -3955,7 +4172,7 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Award.14
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Trophy | Greedy Worm
+    +++0x20 = [32-bit] Trophy | Greedy Worm
     ... 0x0 = Locked
     ... 0x2 = Unlocked
     """
@@ -3965,8 +4182,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.ChuteToVictory
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.ChuteToVictory
+    +++0x20 = [32-bit] Time Bonus | Story.ChuteToVictory
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -3975,10 +4193,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.Helmet
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | Helmet
+    +++0x20 = [32-bit] Worm Hats | Helmet (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATFLATCAP = dword(0xdef080)
@@ -3986,10 +4204,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.FlatCap
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | FlatCap
+    +++0x20 = [32-bit] Worm Hats | FlatCap (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHATSOVIETARMY = dword(0xdef0a4)
@@ -3997,10 +4215,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hat.SovietArmy
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hats | SovietArmy
+    +++0x20 = [32-bit] Worm Hats | SovietArmy (Pre-Unlocked)
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKTSTORYCARPETCAPERS = dword(0xdef10c)
@@ -4008,8 +4226,9 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.T.Story.CarpetCapers
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Time Bonus | Story.CarpetCapers
+    +++0x20 = [32-bit] Time Bonus | Story.CarpetCapers
     ... 0x0 = Locked
+    ... 0x1 = Available
     ... 0x2 = Unlocked
     """
 
@@ -4018,10 +4237,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Punk
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Punk
+    +++0x20 = [32-bit] Worm Hands | Punk
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPUNKG = dword(0xdef15c)
@@ -4029,10 +4248,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Punk.G
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Punk.G
+    +++0x20 = [32-bit] Worm Hands | Punk.G
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKHANDSPUNKR = dword(0xdef188)
@@ -4040,10 +4259,10 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Hands.Punk.R
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Worm Hands | Punk.R
+    +++0x20 = [32-bit] Worm Hands | Punk.R
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
     """
 
     HASHMAP_LOCKMAPVALLEYOFDINOWORMS = dword(0xdef190)
@@ -4051,10 +4270,15 @@ class Memory:
     [32-bit Pointer] Hashmap | Lock.Map.ValleyOfDinoWorms
     +0x4
     ++0x1c = [32-bit Pointer] LockedContainer
-    +++0x20 = [32-bit Boolean] Maps | ValleyOfDinoWorms
+    +++0x20 = [32-bit] Map | ValleyOfDinoWorms
     ... 0x0 = Locked
     ... 0x1 = Available
-    ... 0x2 = Bought
+    ... 0x2 = Unlocked
+    """
+
+    STATE_GAME_PAUSED = byte(0xdef268)
+    """
+    [8-bit] [Boolean] State | Game Paused
     """
 
     CURRENT_STORY_CHAPTER_POINTER = dword(0xdf74b8)

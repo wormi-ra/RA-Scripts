@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 from pycheevos.core.condition import Condition
@@ -213,6 +213,13 @@ class Mission:
         TUTORIAL = 0
         STORY = 1
         CHALLENGE = 2
+        MULTIPLAYER = 3
+
+    ALL: list['Mission'] = []
+    TUTORIAL: list['Mission'] = []
+    STORY: list['Mission'] = []
+    CHALLENGE: list['Mission'] = []
+    MULTIPLAYER: list['Mission'] = []
 
     index: int
     mtype: int
@@ -228,6 +235,33 @@ class Mission:
         self.script = script
         self.time_bonus = time_bonus
         self.teams = teams
+
+    @staticmethod
+    def init():
+        with open('data/levels.csv', newline='') as csvfile:
+            for row in csv.DictReader(csvfile):
+                mtypes = {
+                    "Tutorial": Mission.Type.TUTORIAL,
+                    "Story": Mission.Type.STORY,
+                    "Challenge": Mission.Type.CHALLENGE,
+                    "Deathmatch": Mission.Type.CHALLENGE,
+                    "Multiplayer": Mission.Type.MULTIPLAYER,
+                }
+                mission = Mission(
+                    index=int(row["Index"]),
+                    mtype=mtypes[row["Type"]],
+                    name=row["Name"],
+                    script=row["Script"],
+                    time_bonus=int(row["Time Bonus"] or 0),
+                    teams=[]
+                )
+                Mission.ALL.append(mission)
+                {
+                    Mission.Type.STORY: Mission.STORY,
+                    Mission.Type.TUTORIAL: Mission.TUTORIAL,
+                    Mission.Type.CHALLENGE: Mission.CHALLENGE,
+                    Mission.Type.MULTIPLAYER: Mission.MULTIPLAYER,
+                }[mission.mtype].append(mission)
 
     def is_deathmatch(self):
         return self.script.startswith("Deathmatch")
@@ -530,6 +564,16 @@ class StringMap:
     def __init__(self, strings: list[str]) -> None:
         self.strings = strings
 
+    def generate(self, addr: MemoryExpression | MemoryValue, offset: int = 0, endianness: Literal['little', 'big'] = "big", encoding: str = "ascii"):
+        return "$".join([
+            group(
+                measured_if(self.equals(addr, self.strings[i], offset, endianness, encoding)),
+                measured(value(i+1))
+            ).render()
+            for i in range(len(self.strings))
+        ])
+        
+
     def equals(self, addr: MemoryExpression | MemoryValue, cmp: int | str, offset: int = 0, endianness: Literal['little', 'big'] = "big", encoding: str = "ascii"):
         if isinstance(cmp, int):
             string = self.strings[cmp]
@@ -563,7 +607,7 @@ class StringMap:
             conds.append((lvalue, rvalue))
             i += 4
         if len(conds) == 1:
-            base = mem
+            base = addr
         else:
             base = recall()
         logic = group(*[and_next(base >> lvalue == rvalue) for lvalue, rvalue in conds]).with_flag(Flag.NONE)
@@ -626,6 +670,7 @@ class Worms4Mayhem:
     def init():
         XData.init()
         Unlock.init()
+        Mission.init()
 
     # @staticmethod
     # def current_gamemode():
@@ -653,16 +698,15 @@ class Worms4Mayhem:
 
     @staticmethod
     def is_ingame():
-        return Lua.base_pointer() != dword(0x0)
+        return Lua.base_pointer() != value(0x0)
 
     @staticmethod
     def is_in_attract():
-        return Memory.ATTRACT_MODE != dword(0x0)
+        return Memory.ATTRACT_MODE != value(0x0)
 
     @staticmethod
     def is_paused():
-        # TODO
-        pass
+        return Memory.STATE_GAME_PAUSED
 
     @staticmethod
     def is_watching_cutscene():

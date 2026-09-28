@@ -1,0 +1,52 @@
+Index,Type,Name,Time Bonus,Script
+0,Multiplayer,Deathmatch Multiplayer,,stdvs
+1,Multiplayer,Deathmatch Multiplayer,,"stdvs,wormpot"
+2,Multiplayer,Survivor Multiplayer,,Survivor
+3,Multiplayer,Destruction Multiplayer,,MultiplayerDestruction
+4,Multiplayer,Statue Defend Multiplayer,,StatueDefend
+0,Tutorial,Worminkle University,,Tutorial1
+1,Tutorial,Unsporting Behaviour,,Tutorial2
+2,Tutorial,Mike's Secret Laboratory,,Tutorial3
+0,Story,Diner Might,120,DinerMight
+1,Story,Sneaky Bridge Thieves,240,SneakyBridgeThieves
+2,Story,Building Site Saboteurs,180,BuildingSiteSaboteurs
+3,Story,The Crate Escape,45,TheCrateEscape
+4,Story,Destruct And Serve,480,DestructAndServe
+5,Story,Storm The Castle,510,StormTheCastle
+6,Story,The Windy Wizard,300,TheWindyWizard
+7,Story,Rob in the Hood,240,RobInTheHood
+8,Story,Joust About It,570,JoustAboutIt
+9,Story,Nice To Siege You,900,NiceToSiegeYou
+10,Story,Mine All Mine,180,MineAllMine
+11,Story,Ghost Hill Graveyard,540,GhostHillGraveyard
+12,Story,Tin Can Wally,240,TinCanWally
+13,Story,Doom Canyon,240,DoomCanyon
+14,Story,High Noon Hijinx,690,HighNoonHiJinx
+15,Story,Turkish Delights,300,TurkishDelights
+16,Story,No Room For Error,210,NoRoomForError
+17,Story,Carpet Capers,480,CarpetCapers
+18,Story,Traitorous Waters,210,TraitorousWaters
+19,Story,Gibbon Take,180,GibbonTake
+20,Story,Fast Food Dino,180,FastFoodDino
+21,Story,Escape From Tree-Rex,240,EscapeFromTreeRex
+22,Story,Chute To Victory,240,ChuteToVictory
+23,Story,The Land That Worms Forgot,360,TheLandThatWormsForgot
+24,Story,Valley Of The Dinoworms,720,ValleyOfTheDino
+0,Challenge,Sniper Rifle Challenge,120,ChallengeSniper
+1,Challenge,Jet Pack Challenge,120,ChallengeJetpack
+2,Challenge,Super Sheep Challenge,90,ChallengeSheep
+3,Challenge,Icarus Potion Challenge,180,ChallengeRedBull
+4,Challenge,Shotgun Challenge,90,ChallengeShotgun
+5,Challenge,Accuracy Challenge,165,ChallengeAccuracy
+6,Challenge,Navigation Challenge,90,ChallengeNavigation
+7,Challenge,Crate Collect Challenge,150,ChallengeCrate
+0,Deathmatch,Deathmatch 1,240,DeathMatch1
+1,Deathmatch,Deathmatch 2,300,DeathMatch2
+2,Deathmatch,Deathmatch 3,480,DeathMatch3
+3,Deathmatch,Deathmatch 4,300,DeathMatch4
+4,Deathmatch,Deathmatch 5,600,DeathMatch5
+5,Deathmatch,Deathmatch 6,720,DeathMatch6
+6,Deathmatch,Deathmatch 7,660,DeathMatch7
+7,Deathmatch,Deathmatch 8,300,DeathMatch8
+8,Deathmatch,Deathmatch 9,600,DeathMatch9
+9,Deathmatch,Deathmatch 10,600,DeathMatch10

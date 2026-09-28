@@ -44,7 +44,7 @@ class Worms4RichPresence(RichPresence):
         return f"@Paused({measured(Worms4Mayhem.is_paused())})"
 
     def coins(self):
-        return f"🟡@Number({measured(XData.get_value("WXFE.Shop.Balance"))}) Coins"
+        return f"💰@Number({measured(XData.get_value("WXFE.Shop.Balance"))}) Coins"
 
     def status(self):
         status = 0
@@ -58,15 +58,25 @@ class Worms4RichPresence(RichPresence):
         landscape = 0
         return f"🗺️@Landscape({landscape})"
 
+    def levels(self, strmap: StringMap):
+        return f"@Level({strmap.generate(XData.get_value("GameLogic.CurrentScript"))})"
+
     def generate(self):
-        # self.add_lookup(
-        #     "Level", 
-        #     values={
-        #         mission.filehash: mission.name
-        #         for mission in (Missions.TUTORIAL + Missions.CAMPAIGN + Missions.CHALLENGE)
-        #     },
-        #     default=""
-        # )
+        levelmap = StringMap([f"{mission.script}\0" for mission in Mission.ALL])
+        mission_icon = {
+            Mission.Type.STORY: "📖",
+            Mission.Type.TUTORIAL: "🎓",
+            Mission.Type.CHALLENGE: "🏆",
+            Mission.Type.MULTIPLAYER: "👥",
+        }
+        self.add_lookup(
+            "Level", 
+            values={
+                i+1: f"{mission_icon[Mission.ALL[i].mtype]}{Mission.ALL[i].name}"
+                for i in range(len(Mission.ALL))
+            },
+            default=""
+        )
         # self.add_lookup(
         #     "Landscape",
         #     values={
@@ -75,20 +85,20 @@ class Worms4RichPresence(RichPresence):
         #     },
         #     default="Custom Map"
         # )
-        # self.add_lookup(
-        #     "Language",
-        #     values={
-        #         0x0: "🇬🇧",
-        #         0x3: "🇫🇷",
-        #         0x4: "🇩🇪",
-        #         0x5: "🇮🇹",
-        #         0x9: "🇪🇸",
-        #     }
-        # )
+        self.add_lookup(
+            "Language",
+            values={
+                0x0: "🇬🇧",
+                0x3: "🇫🇷",
+                0x4: "🇩🇪",
+                0x5: "🇮🇹",
+                0x9: "🇪🇸",
+            }
+        )
         self.add_lookup(
             "Paused",
             values={
-                0x1: "▌▌ ",
+                0x1: "⏸️ ",
             },
             default=""
         )
@@ -100,9 +110,17 @@ class Worms4RichPresence(RichPresence):
         )
         self.add_display(
             (
+                Worms4Mayhem.game_booted() &
+                Worms4Mayhem.is_ingame() &
+                ~Worms4Mayhem.is_in_attract()
+            ),
+            f"{self.paused()}{self.levels(levelmap)} • {self.round_time()} • {self.coins()} • {self.unlocks()} • {self.trophies()} • {self.language()}"
+        )
+        self.add_display(
+            (
                 Worms4Mayhem.game_booted()
             ),
-            f"{self.status()} • {self.coins()} • {self.unlocks()} • {self.trophies()}"
+            f"{self.status()} • {self.coins()} • {self.unlocks()} • {self.trophies()} • {self.language()}"
         )
         self.add_display(None, "Playing Worms 4: Mayhem")
 
