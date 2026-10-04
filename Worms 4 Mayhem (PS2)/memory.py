@@ -22,6 +22,18 @@ class Memory:
     0x09 = Spanish
     """
 
+    UI_RELATED_BASE_POINTER = dword(0x5c9b6c)
+    """
+    [32-bit Pointer] UI Related Base Pointer
+    +0xc4 = [32-bit] Selected Story Chapter Index
+    +0x9c = [32-bit Pointer]
+    ++0x134 = [32-bit Pointer] Attract Mode Text
+    .. Pointer to the "Press START button" text
+    .. 0x0 = Disabled
+    +++0xb = [8-bit] [Bitfield] Text State
+    ... Bit7 = Text Displayed
+    """
+
     GLOBAL_FRAME_COUNTER = dword(0x6f7100)
     """
     [32-bit] Global Frame Counter
@@ -36,19 +48,20 @@ class Memory:
     XDATARESOURCEMANAGER = dword(0x6f7910)
     """
     [32-bit Pointer] XDataResourceManager
-    +0x18 = [32-bit Pointer] Pointer to Hashmap | XDataResourceDescriptor
-    . Array of 8000 32-bit pointers in a deterministic order based on their key name
-    . Always point to $0xde74c0
-    . Some pointers can be null because there is more reserved slots than actual keys
-    . Dump of all keys with their associated base pointers:
-    . https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
-    .
-    . Each entry follow the same structure:
-    ++0x4 = [32-bit Pointer] XDataResourceDetails
-    +++0x18 = [32-bit Pointer] Key
-    ++++0x0 = [ASCII] Key String
-    +++0x1c = [32-bit] Data
-    ... Can be a pointer or a value depending on resource type
+    +0x18 = [32-bit Pointer] Pointer to Hashmap
+    ++0x0 = [8000x4 bytes] [Array] XDataResource Hashmap
+    ..| Array of 8000 32-bit pointers in a deterministic order based on their key name
+    ..| Should always point to $0xde74c0
+    ..| Some pointers can be null because there is more reserved slots than actual keys
+    ..| Dump of all keys with their associated base pointers:
+    ..| https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
+    ++|0x0 = [32-bit Pointer] XDataResourceDescriptor
+    ++|+0x4 = [32-bit Pointer] XDataResourceDetails
+    ++|++0x18 = [32-bit Pointer] Key
+    ++|+++0x0 = [ASCII] Key String
+    ++|++0x1c = [32-bit] Data
+    ..|.. Can be a pointer or a value depending on resource type
+    ..|.. See individual code notes at $0xde74c0 - $0xdef1c0
     """
 
     STATE_GAME_INITIALIZED = dword(0x6fadac)
@@ -293,6 +306,8 @@ class Memory:
     """
     [32-bit Pointer] Worm Inventory Instances Array [15]
     """
+
+    INGAME_POINTER = dword(0x98caec)
 
     HASHMAP_SIZE = dword(0xde74b0)
     """
@@ -854,46 +869,78 @@ class Memory:
     """
     [32-bit Pointer] Hashmap | PersistStats
     +0x4
-    ++0x1c
-    +++0x18 = [32-bit Pointer] Stat Array Container
-    ... Not sure what these stats are, they seem to increment every match played depending on which team is used.
-    ... Initialized to 1 on game start
-    ++++0x40 = [32-bit Pointer] Stat [0]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x44 = [32-bit Pointer] Stat [1]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x48 = [32-bit Pointer] Stat [2]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x4c = [32-bit Pointer] Stat [3]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x50 = [32-bit Pointer] Stat [4]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x54 = [32-bit Pointer] Stat [5]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x58 = [32-bit Pointer] Stat [6]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x5c = [32-bit Pointer] Stat [7]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x60 = [32-bit Pointer] Stat [8]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x64 = [32-bit Pointer] Stat [9]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x68 = [32-bit Pointer] Stat [10]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
-    ++++0x6c = [32-bit Pointer] Stat [11]
-    +++++0x14
-    ++++++0x1c = [32-bit] Value
+    ++0x1c = [32-bit Pointer] Persist Stats Container
+    +++0x14 = [32-bit Pointer] Team Names Container
+    ++++0x18 = [32-bit] Array Size
+    ++++0x40 = [Dynamic Size] Array of Pointers to Team Names
+    ++++|0x0 = [32-bit Pointer] Pointer to Team Name
+    ++++|+0x0 = [ASCII] Team Name
+    +++0x18 = [32-bit Pointer] Persist Stats
+    ++++0x18 = [32-bit] Array Size
+    ++++0x40 = [Dynamic Size] Array of Pointers to Team Stats
+    ++++|0x0 = [32-bit Pointer] Team Stats Container
+    ++++|+0x14 = [32-bit Pointer] Team Stats
+    ...... Stats updates at the end of each round
+    ++++|++0x40 = [32-bit] Damage Dealt
+    ++++|++0x44 = [32-bit] Enemies Killed
+    ++++|++0x48 = [32-bit] Allies Killed
+    ++++|++0x4c = [32-bit] Barrels Destroyed
+    ++++|++0x50 = [32-bit] Mines Triggered
+    ++++|++0x54 = [32-bit] ?
+    ++++|++0x58 = [32-bit] Times Attacked
+    ++++|++0x5c = [32-bit] Times Attacked Without Missing
+    ++++|++0x60 = [32-bit] ?
+    ++++|++0x64 = [32-bit] ?
+    ++++|++0x68 = [32-bit] Weapon Crates Collected
+    ++++|++0x6c = [32-bit] Health Crates Collected
+    ++++|++0x70 = [32-bit] Utility Crates Collected
+    ++++|++0x74 = [32-bit] Special Crates Collected
+    ++++|++0x78 = [32-bit] ?
+    ++++|++0x7c = [32-bit] ?
+    ++++|++0x80 = [32-bit] ?
+    ++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+    ++++|++0x88 = [32-bit] Times Used Skip Go
+    ++++|++0x8c = [32-bit] Time Survived (Seconds)
+    ++++|++0x90 = [32-bit] Worms Killed by Animals
+    ++++|++0x94 = [32-bit] Damage Dealt With Explosives
+    ++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+    ++++|++0x9c = [32-bit] Damage Dealt With Grenades
+    """
+
+    HASHMAP_ROUNDSTATS = dword(0xde8598)
+    """
+    [32-bit Pointer] Hashmap | RoundStats
+    +0x4
+    ++0x1c = [32-bit Pointer] Round Stats Container
+    +++0x1c = [32-bit Pointer] Round Stats
+    ++++0x18 = [32-bit] Array Size (16)
+    ++++0x40 = [16x4 bytes] Array of Pointers to Worm Stats
+    ++++|0x0 = [32-bit Pointer] Worm Stats Container
+    ++++|+0x14 = [32-bit Pointer] Worm Stats
+    ++++|++0x40 = [32-bit] Damage Dealt
+    ++++|++0x44 = [32-bit] Enemies Killed
+    ++++|++0x48 = [32-bit] Allies Killed
+    ++++|++0x4c = [32-bit] Barrels Destroyed
+    ++++|++0x50 = [32-bit] Mines Triggered
+    ++++|++0x54 = [32-bit] ?
+    ++++|++0x58 = [32-bit] Times Attacked
+    ++++|++0x5c = [32-bit] Times Attacked Without Missing
+    ++++|++0x60 = [32-bit] ?
+    ++++|++0x64 = [32-bit] ?
+    ++++|++0x68 = [32-bit] Weapon Crates Collected
+    ++++|++0x6c = [32-bit] Health Crates Collected
+    ++++|++0x70 = [32-bit] Utility Crates Collected
+    ++++|++0x74 = [32-bit] Special Crates Collected
+    ++++|++0x78 = [32-bit] ?
+    ++++|++0x7c = [32-bit] ?
+    ++++|++0x80 = [32-bit] ?
+    ++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+    ++++|++0x88 = [32-bit] Times Used Skip Go
+    ++++|++0x8c = [32-bit] Time Survived (Seconds)
+    ++++|++0x90 = [32-bit] Worms Killed by Animals
+    ++++|++0x94 = [32-bit] Damage Dealt With Explosives
+    ++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+    ++++|++0x9c = [32-bit] Damage Dealt With Grenades
     """
 
     HASHMAP_LOCKHATWIZARD = dword(0xde85d0)
@@ -2672,6 +2719,16 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_SHOTPOWER = dword(0xdebc88)
+    """
+    [32-bit Pointer] Hashmap | ShotPower
+    +0x4
+    ++0x1c = [32-bit] [Float] Shot Power
+    .. 0.0 = Min
+    .. 1.0 = Max
+    .. Resets to 0.0 when selecting a weapon that can be charged
+    """
+
     HASHMAP_LOCKSTORYBRIDGETHIEVES = dword(0xdebc8c)
     """
     [32-bit Pointer] Hashmap | Lock.Story.BridgeThieves
@@ -3433,6 +3490,44 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_MATCHSTATS = dword(0xded81c)
+    """
+    [32-bit Pointer] Hashmap | MatchStats
+    +0x4
+    ++0x1c = [32-bit Pointer] Match Stats Container
+    +++0x1c = [32-bit Pointer] Match Stats
+    ++++0x18 = [32-bit] Array Size (16)
+    ++++0x40 = [16x4 bytes] Array of Pointers to Worm Stats
+    ++++|0x0 = [32-bit Pointer] Worm Stats Container
+    ++++|+0x14 = [32-bit Pointer] Worm Stats
+    ...... Stats updates at the end of each round
+    ...... Resets on new match
+    ++++|++0x40 = [32-bit] Damage Dealt
+    ++++|++0x44 = [32-bit] Enemies Killed
+    ++++|++0x48 = [32-bit] Allies Killed
+    ++++|++0x4c = [32-bit] Barrels Destroyed
+    ++++|++0x50 = [32-bit] Mines Triggered
+    ++++|++0x54 = [32-bit] ?
+    ++++|++0x58 = [32-bit] Times Attacked
+    ++++|++0x5c = [32-bit] Times Attacked Without Missing
+    ++++|++0x60 = [32-bit] ?
+    ++++|++0x64 = [32-bit] ?
+    ++++|++0x68 = [32-bit] Weapon Crates Collected
+    ++++|++0x6c = [32-bit] Health Crates Collected
+    ++++|++0x70 = [32-bit] Utility Crates Collected
+    ++++|++0x74 = [32-bit] Special Crates Collected
+    ++++|++0x78 = [32-bit] ?
+    ++++|++0x7c = [32-bit] ?
+    ++++|++0x80 = [32-bit] ?
+    ++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+    ++++|++0x88 = [32-bit] Times Used Skip Go
+    ++++|++0x8c = [32-bit] Time Survived (Seconds)
+    ++++|++0x90 = [32-bit] Worms Killed by Animals
+    ++++|++0x94 = [32-bit] Damage Dealt With Explosives
+    ++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+    ++++|++0x9c = [32-bit] Damage Dealt With Grenades
+    """
+
     HASHMAP_LOCKHATAMERICANFOOTBALL = dword(0xded870)
     """
     [32-bit Pointer] Hashmap | Lock.Hat.AmericanFootball
@@ -3832,6 +3927,38 @@ class Memory:
     ++++0x84 = [32-bit Pointer] Best Score [17] | Deathmatch 10
     ++++0x88 = [32-bit Pointer] Best Score [18] | Unused 1?
     ++++0x8c = [32-bit Pointer] Best Score [19] | Unused 2?
+    +++0x18 = [32-bit Pointer] XomContainerArray | Teams Array
+    ... Teams array is populated as teams are created, that means we need to check the array size before accessing certain teams otherwise the pointer will point to garbage data.
+    ++++0x18 = [32-bit] Array Size
+    .... 0x14 = Max Size
+    ++++0x40 = [20x4 bytes] Array of Pointers to Teams
+    ++++|0x0 = [32-bit] Team Data
+    ++++|+0x1c = [32-bit Pointer] Costume | Face ID
+    ++++|++0x0 = [ASCII] Face ID String
+    ++++|+0x20 = [32-bit Pointer] Costume | Eyes ID
+    ++++|++0x0 = [ASCII] Eyes ID String
+    ++++|+0x24 = [32-bit Pointer] Costume | Hands ID
+    ++++|++0x0 = [ASCII] Hands ID String
+    ++++|+0x28 = [32-bit Pointer] Costume | Head ID
+    ++++|++0x0 = [ASCII] Head ID String
+    ++++|+0x2c = [32-bit Pointer] Custom Weapon ID
+    ++++|++0x0 = [ASCII] Custom Weapon ID String
+    ++++|+0x3c = [32-bit Pointer] Voice ID
+    ++++|++0x0 = [ASCII] Voice ID String
+    ++++|+0x40 = [32-bit Pointer] Flag ID
+    ++++|++0x0 = [ASCII] Flag ID String
+    ++++|+0x48 = [32-bit] Grave ID
+    ++++|+0x4c = [32-bit] CPU Level
+    ...... 0x5 = Max Level
+    ++++|+0x50 = [32-bit] [Boolean] Is CPU Controlled
+    ...... 0x0 = Human
+    ...... 0x1 = CPU
+    ++++|+0x58 = [32-bit Pointer] Worm Names
+    ++++|++0x40 = [6x4 bytes] Array of Pointers to Worm Names
+    ++++|++|0x0 = [32-bit Pointer] Worm Name
+    ++++|++|+0x0 = [ASCII] Worm Name String
+    ++++|+0x5c = [32-bit Pointer] Team Name
+    ++++|++0x0 = [ASCII] Team Name String
     """
 
     HASHMAP_LOCKSTORYNOROOMFORERROR = dword(0xdee688)
@@ -4279,12 +4406,6 @@ class Memory:
     STATE_GAME_PAUSED = byte(0xdef268)
     """
     [8-bit] [Boolean] State | Game Paused
-    """
-
-    CURRENT_STORY_CHAPTER_POINTER = dword(0xdf74b8)
-    """
-    [32-bit] Current Story Chapter Pointer
-    +0xc4 | Current Chapter [32-bit]
     """
 
     BASE_LUA_POINTER = dword(0xdf7884)

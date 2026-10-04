@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Literal
 from pycheevos.core.helpers import *
 from pycheevos.core.constants import *
 from pycheevos.core.condition import Condition
@@ -20,20 +20,25 @@ class XData:
             }
 
     @staticmethod
+    def base(key: str):
+        return dword(XData.DATA[key])
+        # return Memory.XDATARESOURCEMANAGER >> dword(0x18) >> dword(XData.DATA[key] - 0xde74c0)
+
+    @staticmethod
     def get_value(key: str, type_override = dword) -> MemoryExpression:
-        return dword(XData.DATA[key]) >> dword(0x4) >> type_override(0x1c)
+        return XData.base(key) >> dword(0x4) >> type_override(0x1c)
 
     @staticmethod
     def on_value_changed(key: str, type_override = dword) -> MemoryExpression:
-        return dword(XData.DATA[key]) >> dword(0x4) >> delta(type_override(0x1c)) != type_override(0x1c)
+        return XData.base(key) >> dword(0x4) >> delta(type_override(0x1c)) != type_override(0x1c)
 
     @staticmethod
     def on_value_decreased(key: str, type_override = dword)  -> MemoryExpression:
-        return dword(XData.DATA[key]) >> dword(0x4) >> delta(type_override(0x1c)) > type_override(0x1c)
+        return XData.base(key) >> dword(0x4) >> delta(type_override(0x1c)) > type_override(0x1c)
 
     @staticmethod
     def on_value_increased(key: str, type_override = dword)  -> MemoryExpression:
-        return dword(XData.DATA[key]) >> dword(0x4) >> delta(type_override(0x1c)) < type_override(0x1c)
+        return XData.base(key) >> dword(0x4) >> delta(type_override(0x1c)) < type_override(0x1c)
 
 
 class Controller:
@@ -228,11 +233,12 @@ class Mission:
     time_bonus: int
     teams: list
 
-    def __init__(self, index: int, mtype: int, name: str, script: str, time_bonus: int, teams: list) -> None:
+    def __init__(self, index: int, mtype: int, name: str, script: str, key: str, time_bonus: int, teams: list) -> None:
         self.index = index
         self.mtype = mtype
         self.name = name
         self.script = script
+        self.key = key
         self.time_bonus = time_bonus
         self.teams = teams
 
@@ -252,6 +258,7 @@ class Mission:
                     mtype=mtypes[row["Type"]],
                     name=row["Name"],
                     script=row["Script"],
+                    key=row["Key"],
                     time_bonus=int(row["Time Bonus"] or 0),
                     teams=[]
                 )
@@ -279,7 +286,7 @@ class Mission:
     def is_loaded(self):
         return (
             self.is_selected() &
-            (Lua.base_pointer() != 0x0)
+            Worms4Mayhem.is_ingame()
         )
 
     def on_start(self):
@@ -292,29 +299,31 @@ class Mission:
     def on_loaded(self):
         return (
             self.is_selected() &
-            (delta(Lua.base_pointer()) == 0x0) &
-            (Lua.base_pointer() != 0x0)
+            (delta(Worms4Mayhem.ingame_ptr()) == 0x0) &
+            (Worms4Mayhem.ingame_ptr() != 0x0)
         )
     
     @staticmethod
     def on_leave():
         return (
-            (delta(Lua.base_pointer()) != 0x0) &
-            (Lua.base_pointer() == 0x0)
+            (delta(Worms4Mayhem.ingame_ptr()) != 0x0) &
+            (Worms4Mayhem.ingame_ptr() == 0x0)
         )
 
     def time_bonus_on_pace(self):
         return (
-            (XData.get_value("ElapsedRoundTime") < self.time_bonus)
+            (XData.get_value("ElapsedRoundTime") < value(self.time_bonus * 1000))
         )
 
     def on_complete(self):
-        # TODO
-        pass
+        return (
+            XData.on_value_increased(f"C.{self.key}")
+        )
 
     def on_time_bonus_unlock(self):
-        # TODO
-        pass
+        return (
+            XData.on_value_increased(f"Lock.T.{self.key}")
+        )
 
     def generate_leaderboard(self, lb: Leaderboard):
         pass
@@ -697,12 +706,26 @@ class Worms4Mayhem:
         return Worms4Mayhem.current_menu() >> byte(0x0) != value(0x0)
 
     @staticmethod
+    def menu_selected(menu_id: str):
+        return group(
+            remember(Worms4Mayhem.current_menu()),
+            string_equals(0x0, f"{menu_id}\0", transform=lambda addr: recall() >> addr)
+        )
+
+    @staticmethod
+    def ingame_ptr():
+        return Memory.INGAME_POINTER
+
+    @staticmethod
     def is_ingame():
-        return Lua.base_pointer() != value(0x0)
+        return Worms4Mayhem.ingame_ptr() != value(0x0)
 
     @staticmethod
     def is_in_attract():
-        return Memory.ATTRACT_MODE != value(0x0)
+        return (
+            Memory.UI_RELATED_BASE_POINTER >> dword(0x9c) >> dword(0x134)
+        ) != value(0x0)
+        # return Memory.ATTRACT_MODE != value(0x0)
 
     @staticmethod
     def is_paused():
@@ -734,31 +757,3 @@ class Worms4Mayhem:
             (delta(counter) != counter),
         )
 
-
-if __name__=="__main__":
-    from pycheevos.utils.markdown import format_logic_group
-    XData.init()
-    levels = [
-        "Tutorial1",
-        "Tutorial2",
-        "Tutorial3",
-        "DinerMight",
-        "SneakyBridgeThieves",
-        "BuildingSiteSaboteurs",
-        "TheCrateEscape",
-        "DestructAndServe",
-        "StormTheCastle",
-        "TheWindyWizard",
-        "RobInTheHood",
-        "JoustAboutIt",
-        "NiceToSiegeYou",
-        "MineAllMine",
-        "GhostHillGraveyard",
-        "TinCanWally",
-        "DoomCanyon",
-    ]
-    levels = [f"{lvl}\0" for lvl in levels]
-    strmap = StringMap(levels)
-    mem = XData.get_value("GameLogic.CurrentScript")
-    # print(format_logic_group("Test", strmap.equals(mem, "Tutorial2").render()))
-    print(strmap.equals(mem, "Tutorial1\0").render())

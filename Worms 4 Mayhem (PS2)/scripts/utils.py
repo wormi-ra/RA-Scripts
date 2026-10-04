@@ -63,18 +63,29 @@ def wormpot():
     )
     return (random.choice(slots[0]), random.choice(slots[1]), random.choice(slots[2]),)
 
+def missions_notes():
+    from logic import XData
+    XData.init()
+    notes = {}
+    with open("data/levels.csv") as file:
+        for row in csv.DictReader(file):
+            name = row["Name"]
+            key = row["Key"]
+            if len(key) > 0:
+                addr = XData.DATA[f"C.{key}"]
+                note = f"""
+[32-bit Pointer] Hashmap | C.{key}
++0x4
+++0x1c = [32-bit] Completion Counter | {name}
+""".strip().replace("\n", "\\r\\n")
+                notes[addr] = note
+    return notes
+
+
+
 
 if __name__=="__main__":
-    # notes = unlock_notes("Lock.")
-    # with open("output/notes.txt", "w") as file:
-    #     for addr, note in dict(sorted(notes.items())).items():
-    #         file.write(f'N0:{hex(addr)}:"{note}"\n')
-    wins = 0
-    rolls = 10000000
-    times = []
-    for i in range(rolls):
-        a,b,c = wormpot()
-        if a == b == c:
-            wins += 1
-    print(wins)
-    print(wins / rolls)
+    notes = missions_notes()
+    with open("output/notes.txt", "w") as file:
+        for addr, note in dict(sorted(notes.items())).items():
+            file.write(f'N0:{hex(addr)}:"{note}"\n')
