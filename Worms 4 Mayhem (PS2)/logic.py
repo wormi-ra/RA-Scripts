@@ -136,12 +136,12 @@ class Unlock:
                 add_source(delta(unlock.locked()) / 2)
                 for unlock in unlocks
             ],
-            value(len(unlocks)) < value(len(unlocks)),
+            value(0) < value(len(unlocks)),
             [
                 add_source(unlock.locked() / 2)
                 for unlock in unlocks
             ],
-            value(len(unlocks)) == value(len(unlocks))
+            value(0) == value(len(unlocks))
         )
 
 
