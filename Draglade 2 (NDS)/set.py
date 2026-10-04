@@ -877,7 +877,7 @@ class Draglade2Set(AchievementSet):
     def leaderboard_arman_soldier(self, lb: Leaderboard):
         Quest(
             start=0x18d,
-            steps=[0x18f, 0x198],
+            steps=[0x18f, 0x193],
             end=0x1bc,
         ).generate_visible_leaderboard(lb)
 
