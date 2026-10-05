@@ -144,13 +144,160 @@ class Worms4MayhemSet(AchievementSet):
             measured_if(Worms4Mayhem.game_booted()),
             measured(Unlock.on_unlock_type(Unlock.Type.SCHEME))
         ))
-
     @achievement(642033)
     def unlocks_sets(self, ach: Achievement):
         ach.add_core(group(
             Worms4Mayhem.menu_selected("WXFE.ItemShop"),
             measured_if(Worms4Mayhem.game_booted()),
             measured(Unlock.on_unlock_type(Unlock.Type.SET))
+        ))
+
+    ####################
+    # Trophies         #
+    ####################
+
+    @achievement(642135)
+    def trophy_bronze_damage(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.10")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642136)
+    def trophy_silver_damage(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.5")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642137)
+    def trophy_gold_damage(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.0")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642138)
+    def trophy_body_count(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.11")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642139)
+    def trophy_3_bagger(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.6")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+
+    @achievement(642140)
+    def trophy_4_bagger(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.1")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642141)
+    def trophy_barrel_buster(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.12")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642142)
+    def trophy_hot_foot(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.7")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642143)
+    def trophy_big_blast(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.2")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642144)
+    def trophy_rocketeer(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.13")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642145)
+    def trophy_animal_lover(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.8")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642146)
+    def trophy_magic_bullet(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.3")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642147)
+    def trophy_greedy_worm(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.14")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642148)
+    def trophy_weapon_specialist(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.9")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642149)
+    def trophy_the_beast_within(self, ach: Achievement):
+        unlock = Unlock.get_unlock("Lock.Award.4")
+        ach.add_core(group(
+            Worms4Mayhem.game_booted(),
+            Worms4Mayhem.is_ingame(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642150)
+    def trophy_all(self, ach: Achievement):
+        ach.add_core(group(
+            measured_if(Worms4Mayhem.game_booted()),
+            Worms4Mayhem.is_ingame(),
+            measured(Unlock.on_unlock_type(Unlock.Type.TROPHY))
         ))
 
     ####################

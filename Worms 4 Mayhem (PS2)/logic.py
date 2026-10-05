@@ -124,9 +124,13 @@ class Unlock:
 
     def on_unlock(self):
         return group(
-            delta(self.locked()) < 2,
-            self.locked() == 2
+            (XData.get_value(self.key) >> delta(dword(0x20))) < value(0x2),
+            (XData.get_value(self.key) >> dword(0x20)) == value(0x2)
         )
+
+    @staticmethod
+    def get_unlock(key: str):
+        return next(filter(lambda e: e.key == key, Unlock.UNLOCKS))
 
     @staticmethod
     def on_unlock_type(type: int):

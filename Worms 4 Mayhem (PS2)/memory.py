@@ -50,23 +50,25 @@ class Memory:
     [32-bit Pointer] XDataResourceManager
     +0x18 = [32-bit Pointer] Pointer to Hashmap
     ++0x0 = [8000x4 bytes] [Array] XDataResource Hashmap
-    ..| Array of 8000 32-bit pointers in a deterministic order based on their key name
-    ..| Should always point to $0xde74c0
-    ..| Some pointers can be null because there is more reserved slots than actual keys
-    ..| Dump of all keys with their associated base pointers:
-    ..| https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
+    .. Array of 8000 32-bit pointers in a deterministic order based on their key name
+    .. Should always point to $0xde74c0
+    .. Some pointers can be null because there is more reserved slots than actual keys
+    .. Dump of all keys with their associated base pointers:
+    .. https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
     ++|0x0 = [32-bit Pointer] XDataResourceDescriptor
     ++|+0x4 = [32-bit Pointer] XDataResourceDetails
     ++|++0x18 = [32-bit Pointer] Key
     ++|+++0x0 = [ASCII] Key String
     ++|++0x1c = [32-bit] Data
-    ..|.. Can be a pointer or a value depending on resource type
-    ..|.. See individual code notes at $0xde74c0 - $0xdef1c0
+    ..... Can be a pointer or a value depending on resource type
+    ..... See individual code notes at $0xde74c0 - $0xdef1c0
     """
 
     STATE_GAME_INITIALIZED = dword(0x6fadac)
     """
     [32-bit] [Boolean] State | Game Initialized
+    0x0 = Uninitialized
+    0x1 = Initialized
     """
 
     EMPTY_STRING = byte(0x6fb77e)
@@ -74,6 +76,12 @@ class Memory:
     [8-bit] [ASCII] Empty String
     Empty strings always points here
     0x0 = Null character
+    """
+
+    INGAME_POINTER = dword(0x9876e8)
+    """
+    [32-bit Pointer] Ingame Pointer
+    0x0 = Not Ingame
     """
 
     WORM_DATA_INSTANCES_ARRAY = dword(0x989d28)
@@ -229,7 +237,49 @@ class Memory:
     Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
     +0x4
     ++0x1c = [32-bit Pointer] WeaponInventory
-    +++0x14 = [40 bytes] Weapon Ammo Data
+    +++0x14 = [41 bytes] [Array] Weapon Ammo Data
+    ... A value of 0xff means infinite ammo
+    +++|0x0 = [8-bit] Ammo | Girder
+    +++|0x1 = [8-bit] Ammo | Super Sheep
+    +++|0x2 = [8-bit] Ammo | Concrete Donkey
+    +++|0x3 = [8-bit] Ammo | Old Woman
+    +++|0x4 = [8-bit] Ammo | Gas Canister
+    +++|0x5 = [8-bit] Ammo | Sheep
+    +++|0x6 = [8-bit] Ammo | Flood
+    +++|0x7 = [8-bit] Ammo | Homing Missile
+    +++|0x8 = [8-bit] Ammo | Fire Punch
+    +++|0x9 = [8-bit] Ammo | Prod
+    +++|0xa = [8-bit] Ammo | Baseball Bat
+    +++|0xb = [8-bit] Ammo | Shotgun
+    +++|0xc = [8-bit] Ammo | Land Mine
+    +++|0xd = [8-bit] Ammo | Banana Bomb
+    +++|0xe = [8-bit] Ammo | Holy Hand Grenade
+    +++|0xf = [8-bit] Ammo | Dynamite
+    +++|0x10 = [8-bit] Ammo | Air Strike
+    +++|0x11 = [8-bit] Ammo | Cluster Bomb
+    +++|0x12 = [8-bit] Ammo | Grenade
+    +++|0x13 = [8-bit] Ammo | Bubble Trouble
+    +++|0x14 = [8-bit] Ammo | Unused
+    +++|0x15 = [8-bit] Ammo | Bazooka
+    +++|0x16 = [8-bit] Ammo | Bovine Blitz
+    +++|0x17 = [8-bit] Ammo | Sniper Rifle
+    +++|0x18 = [8-bit] Ammo | Sentry Gun
+    +++|0x19 = [8-bit] Ammo | Poison Arrow
+    +++|0x1a = [8-bit] Ammo | Unused
+    +++|0x1b = [8-bit] Ammo | Tail Nail
+    +++|0x1c = [8-bit] Ammo | Inflatable Scouser
+    +++|0x1d = [8-bit] Ammo | Fatkins Strike
+    +++|0x1e = [8-bit] Ammo | Alien Abduction
+    +++|0x1f = [8-bit] Ammo | Starburst
+    +++|0x20 = [8-bit] Ammo | Custom Weapon
+    +++|0x21 = [8-bit] Ammo | Icarus Potion
+    +++|0x22 = [8-bit] Ammo | Worm Select
+    +++|0x23 = [8-bit] Ammo | Surrender
+    +++|0x24 = [8-bit] Ammo | Skip Go
+    +++|0x25 = [8-bit] Ammo | Jet Pack
+    +++|0x26 = [8-bit] Ammo | Unused
+    +++|0x27 = [8-bit] Ammo | Parachute
+    +++|0x28 = [8-bit] Ammo | Ninja Rope
     """
 
     WORM_INVENTORY_INSTANCES_ARRAY_1 = dword(0x989d6c)
@@ -307,7 +357,254 @@ class Memory:
     [32-bit Pointer] Worm Inventory Instances Array [15]
     """
 
-    INGAME_POINTER = dword(0x98caec)
+    WORM_AI_PARAMS_INSTANCES_ARRAY = dword(0x989da8)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [0]
+    Setting this pointer to null will make CPU worms skip their turn (and crash the game on the next round)
+    +0x4
+    ++0x1c = [32-bit Pointer] AIParams
+    .. Contains data related to CPU-controlled worms AI
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_1 = dword(0x989dac)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [1]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_2 = dword(0x989db0)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [2]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_3 = dword(0x989db4)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [3]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_4 = dword(0x989db8)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [4]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_5 = dword(0x989dbc)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [5]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_6 = dword(0x989dc0)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [6]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_7 = dword(0x989dc4)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [7]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_8 = dword(0x989dc8)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [8]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_9 = dword(0x989dcc)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [9]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_10 = dword(0x989dd0)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [10]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_11 = dword(0x989dd4)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [11]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_12 = dword(0x989dd8)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [12]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_13 = dword(0x989ddc)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [13]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_14 = dword(0x989de0)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [14]
+    """
+
+    WORM_AI_PARAMS_INSTANCES_ARRAY_15 = dword(0x989de4)
+    """
+    [32-bit Pointer] Worm AI Params Instances Array [15]
+    """
+
+    TEAM_DATA_INSTANCES_ARRAY = dword(0x989de8)
+    """
+    [32-bit Pointer] Team Data Instances Array [0]
+    (DRM::g_pTeamInstances)
+    +0x4
+    ++0x1c = [32-bit Pointer] TeamDataContainer
+    +++0x20 = [32-bit Pointer] Costume | Face ID
+    ++++0x0 = [ASCII] Face ID String
+    +++0x24 = [32-bit Pointer] Costume | Hand ID
+    ++++0x0 = [ASCII] Hand ID String
+    +++0x28 = [32-bit Pointer] Costume | Eyes ID
+    ++++0x0 = [ASCII] Eyes ID String
+    +++0x2c = [32-bit Pointer] Costume | Head ID
+    ++++0x0 = [ASCII] Head ID String
+    +++0x30 = [32-bit Pointer] Flag ID
+    ++++0x0 = [ASCII] Flag ID String
+    +++0x38 = [32-bit Pointer] Team Name
+    ++++0x0 = [ASCII] Team Name String
+    +++0x3c = [8-bit] [Boolean] Is Local?
+    +++0x3d = [8-bit] CPU Difficulty
+    ... 0x0 = Human
+    ... 0x1 = Bad
+    ... 0x2 = OK
+    ... 0x3 = Good
+    ... 0x4 = Very Good
+    ... 0x5 = Perfect
+    +++0x3f = [8-bit] [Boolean] Team Surrendered
+    +++0x41 = [8-bit] Grave Index?
+    +++0x43 = [8-bit] [Boolean] Is CPU Controlled
+    ... 0x0 = Human
+    ... 0x1 = CPU
+    +++0x45 = [8-bit] Allied Group
+    ... 0x1-0x4 = Alliance
+    """
+
+    TEAM_DATA_INSTANCES_ARRAY_1 = dword(0x989dec)
+    """
+    [32-bit Pointer] Team Data Instances Array [1]
+    """
+
+    TEAM_DATA_INSTANCES_ARRAY_2 = dword(0x989df0)
+    """
+    [32-bit Pointer] Team Data Instances Array [2]
+    """
+
+    TEAM_DATA_INSTANCES_ARRAY_3 = dword(0x989df4)
+    """
+    [32-bit Pointer] Team Data Instances Array [3]
+    """
+
+    TEAM_INSTANCES_INVENTORY_ARRAY = dword(0x989df8)
+    """
+    [32-bit Pointer] Team Instances Inventory Array [0]
+    (DRM::g_pTeamInventoryInstances)
+    This is the default starting inventory in missions.
+    Note that the final ammo count for a given worm can be different, all inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
+    +0x4
+    ++0x1c = [32-bit Pointer] WeaponInventory
+    +++0x14 = [41 bytes] [Array] Weapon Ammo Data
+    ... Refer to $0x989d68
+    """
+
+    TEAM_INSTANCES_INVENTORY_ARRAY_1 = dword(0x989dfc)
+    """
+    [32-bit Pointer] Team Instances Inventory Array [1]
+    """
+
+    TEAM_INSTANCES_INVENTORY_ARRAY_2 = dword(0x989e00)
+    """
+    [32-bit Pointer] Team Instances Inventory Array [2]
+    """
+
+    TEAM_INSTANCES_INVENTORY_ARRAY_3 = dword(0x989e04)
+    """
+    [32-bit Pointer] Team Instances Inventory Array [3]
+    """
+
+    TEAM_PERSIST_INSTANCES_ARRAY = dword(0x989e08)
+    """
+    [32-bit Pointer] Team Persist Instances Array [0]
+    (DRM::g_pTeamPersistInstances)
+    Most likely used for storing scores between rounds in multiplayer games
+    +0x4
+    ++0x1c = [32-bit Pointer] TeamPersistDataContainer
+    +++0x14 = [32-bit] Rounds Won
+    """
+
+    TEAM_PERSIST_INSTANCES_ARRAY_1 = dword(0x989e0c)
+    """
+    [32-bit Pointer] Team Persist Instances Array [1]
+    """
+
+    TEAM_PERSIST_INSTANCES_ARRAY_2 = dword(0x989e10)
+    """
+    [32-bit Pointer] Team Persist Instances Array [2]
+    """
+
+    TEAM_PERSIST_INSTANCES_ARRAY_3 = dword(0x989e14)
+    """
+    [32-bit Pointer] Team Persist Instances Array [3]
+    """
+
+    ALLIANCE_INSTANCES_INVENTORY_ARRAY = dword(0x989e18)
+    """
+    [32-bit Pointer] Alliance Instances Inventory Array [0]
+    (DRM::g_pAllianceInventoryInstances)
+    Shared inventory between teams of the same color.
+    This is the default inventory when receiving ammo from crates in missions.
+    All inventory types are summed up as such:
+    Final Inventory = Alliance Inventory + Team Inventory + Worm Inventory
+    +0x4
+    ++0x1c = [32-bit Pointer] WeaponInventory
+    +++0x14 = [41 bytes] [Array] Weapon Ammo Data
+    ... Refer to $0x989d68
+    """
+
+    ALLIANCE_INSTANCES_INVENTORY_ARRAY_1 = dword(0x989e1c)
+    """
+    [32-bit Pointer] Alliance Instances Inventory Array [1]
+    """
+
+    ALLIANCE_INSTANCES_INVENTORY_ARRAY_2 = dword(0x989e20)
+    """
+    [32-bit Pointer] Alliance Instances Inventory Array [2]
+    """
+
+    ALLIANCE_INSTANCES_INVENTORY_ARRAY_3 = dword(0x989e24)
+    """
+    [32-bit Pointer] Alliance Instances Inventory Array [3]
+    """
+
+    CONTROLLER_STATE = byte(0x98a330)
+    """
+    [8-bit] Controller State
+    0x0 = Unplugged
+    0x6 = Plugged
+    """
+
+    CONTROLLER_BUTTON_PRESSED_PRIMARY = byte(0x98a340)
+    """
+    [8-bit] [Bitfield] Controller | Button Pressed Primary
+    Bit0 = L2
+    Bit1 = R2
+    Bit2 = L1
+    Bit3 = R1
+    Bit4 = Triangle
+    Bit5 = O
+    Bit6 = X
+    Bit7 = Square
+    """
+
+    CONTROLLER_BUTTON_PRESSED_SECONDARY = byte(0x98a341)
+    """
+    [8-bit] [Bitfield] Controller | Button Pressed Secondary
+    Bit0 = Select
+    Bit1 = L3
+    Bit2 = R3
+    Bit3 = Start
+    Bit4 = D-Pad Up
+    Bit5 = D-Pad Right
+    Bit6 = D-Pad Down
+    Bit7 = D-Pad Left
+    """
 
     HASHMAP_SIZE = dword(0xde74b0)
     """
@@ -366,6 +663,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYTINCANWALLY = dword(0xde75a8)
+    """
+    [32-bit Pointer] Hashmap | C.Story.TinCanWally
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Tin Can Wally
     """
 
     HASHMAP_LOCKFACENHS = dword(0xde76d0)
@@ -445,6 +749,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYMINEALLMINE = dword(0xde78d8)
+    """
+    [32-bit Pointer] Hashmap | C.Story.MineAllMine
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Mine All Mine
+    """
+
     HASHMAP_JETPACKFUEL = dword(0xde78f0)
     """
     [32-bit Pointer] Hashmap | Jetpack.Fuel
@@ -473,6 +784,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYCRATEESCAPE = dword(0xde7a18)
+    """
+    [32-bit Pointer] Hashmap | C.Story.CrateEscape
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | The Crate Escape
     """
 
     HASHMAP_LOCKTASHCOWBOYBK = dword(0xde7a2c)
@@ -573,6 +891,13 @@ class Memory:
     ++++0x70 = [32-bit] [Boolean] Trophy | Barrel Buster
     ++++0x74 = [32-bit] [Boolean] Trophy | Rocketeer
     ++++0x78 = [32-bit] [Boolean] Trophy | Greedy Worm
+    """
+
+    HASHMAP_CSTORYCARPETCAPERS = dword(0xde7b90)
+    """
+    [32-bit Pointer] Hashmap | C.Story.CarpetCapers
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Carpet Capers
     """
 
     HASHMAP_LOCKSTORYDESTRUCTANDSERVE = dword(0xde7b98)
@@ -715,6 +1040,20 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CCHALLENGEJETPACK = dword(0xde7fac)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.JetPack
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Jet Pack Challenge
+    """
+
+    HASHMAP_CCHALLENGESSHEEP = dword(0xde7fc0)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.SSheep
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Super Sheep Challenge
+    """
+
     HASHMAP_FCSGAMEOVER = dword(0xde8008)
     """
     [32-bit Pointer] Hashmap | FCS.GameOver
@@ -733,6 +1072,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CCHALLENGESHOTGUN = dword(0xde80b8)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.Shotgun
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Shotgun Challenge
+    """
+
     HASHMAP_LOCKWEAPONINFLATABLESCOUSER = dword(0xde80cc)
     """
     [32-bit Pointer] Hashmap | Lock.Weapon.InflatableScouser
@@ -742,6 +1088,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYCHUTETOVICTORY = dword(0xde8164)
+    """
+    [32-bit Pointer] Hashmap | C.Story.ChuteToVictory
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Chute To Victory
     """
 
     HASHMAP_ROUNDTIMEREMAINING = dword(0xde81ac)
@@ -823,6 +1176,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CCHALLENGEICARUS = dword(0xde84cc)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.Icarus
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Icarus Potion Challenge
     """
 
     HASHMAP_DAMAGEDWORMID = dword(0xde84d4)
@@ -954,6 +1314,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYSTORMTHECASTLE = dword(0xde85d4)
+    """
+    [32-bit Pointer] Hashmap | C.Story.StormTheCastle
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Storm The Castle
+    """
+
     HASHMAP_LOCKFACEXRAY = dword(0xde85e4)
     """
     [32-bit Pointer] Hashmap | Lock.Face.XRay
@@ -991,7 +1358,14 @@ class Memory:
     """
     [32-bit Pointer] Hashmap | C.Story.DinerMight
     +0x4
-    ++0x1c = [32-bit] Mission Completed Counter | Diner Might
+    ++0x1c = [32-bit] Completion Counter | Diner Might
+    """
+
+    HASHMAP_CSTORYDESTRUCTANDSERVE = dword(0xde87d8)
+    """
+    [32-bit Pointer] Hashmap | C.Story.DestructAndServe
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Destruct And Serve
     """
 
     HASHMAP_LOCKSOUNDWISEWORM = dword(0xde8834)
@@ -1003,6 +1377,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYTURKISHDELIGHTS = dword(0xde884c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.TurkishDelights
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Turkish Delights
     """
 
     HASHMAP_LOCKSCHEMESTANDARD = dword(0xde88d0)
@@ -1168,6 +1549,69 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CDEATHMATCH1 = dword(0xde8ac4)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.1
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 1
+    """
+
+    HASHMAP_CDEATHMATCH2 = dword(0xde8ac8)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.2
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 2
+    """
+
+    HASHMAP_CDEATHMATCH3 = dword(0xde8acc)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.3
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 3
+    """
+
+    HASHMAP_CDEATHMATCH4 = dword(0xde8ad0)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.4
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 4
+    """
+
+    HASHMAP_CDEATHMATCH5 = dword(0xde8ad4)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.5
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 5
+    """
+
+    HASHMAP_CDEATHMATCH6 = dword(0xde8ad8)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.6
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 6
+    """
+
+    HASHMAP_CDEATHMATCH7 = dword(0xde8adc)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.7
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 7
+    """
+
+    HASHMAP_CDEATHMATCH8 = dword(0xde8ae0)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.8
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 8
+    """
+
+    HASHMAP_CDEATHMATCH9 = dword(0xde8ae4)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.9
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 9
     """
 
     HASHMAP_LOCKMAPNOROOMFORERROR = dword(0xde8b48)
@@ -1465,6 +1909,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CCHALLENGESNIPERRIFLE = dword(0xde94d8)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.SniperRifle
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Sniper Rifle Challenge
     """
 
     HASHMAP_LOCKSOUNDARABIANTHIEF = dword(0xde9518)
@@ -1793,6 +2244,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYNICETOSIEGE = dword(0xde9c54)
+    """
+    [32-bit Pointer] Hashmap | C.Story.NiceToSiege
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Nice To Siege You
+    """
+
     HASHMAP_WXFESHOPBALANCE = dword(0xde9c94)
     """
     [32-bit Pointer] Hashmap | WXFE.Shop.Balance
@@ -1820,6 +2278,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYTRAITOROUSWATERS = dword(0xde9d94)
+    """
+    [32-bit Pointer] Hashmap | C.Story.TraitorousWaters
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Traitorous Waters
     """
 
     HASHMAP_LOCKTSTORYDOOMCANYON = dword(0xde9db8)
@@ -2009,6 +2474,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYLANDWORMSFORGOT = dword(0xdea4ac)
+    """
+    [32-bit Pointer] Hashmap | C.Story.LandWormsForgot
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | The Land That Worms Forgot
+    """
+
     HASHMAP_LOCKMAPDESTRUCTANDSERVE = dword(0xdea4e8)
     """
     [32-bit Pointer] Hashmap | Lock.Map.DestructAndServe
@@ -2036,6 +2508,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CDEATHMATCH10 = dword(0xdea600)
+    """
+    [32-bit Pointer] Hashmap | C.Deathmatch.10
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Deathmatch 10
     """
 
     HASHMAP_LOCKHATWIZARDD = dword(0xdea650)
@@ -2304,6 +2783,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYVALLEYOFDINOWORMS = dword(0xdeac0c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.ValleyOfDinoWorms
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Valley Of The Dinoworms
+    """
+
     HASHMAP_LOCKSOUNDKNIGHT = dword(0xdeac50)
     """
     [32-bit Pointer] Hashmap | Lock.Sound.Knight
@@ -2346,6 +2832,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYWINDYWIZARD = dword(0xdead58)
+    """
+    [32-bit Pointer] Hashmap | C.Story.WindyWizard
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | The Windy Wizard
     """
 
     HASHMAP_LOCKHANDSWHITEY = dword(0xdead64)
@@ -2401,6 +2894,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYSABOTEURS = dword(0xdeb00c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.Saboteurs
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Building Site Saboteurs
     """
 
     HASHMAP_LOCKTASHSCOTT = dword(0xdeb090)
@@ -2544,6 +3044,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYFASTFOODDINO = dword(0xdeb6bc)
+    """
+    [32-bit Pointer] Hashmap | C.Story.FastFoodDino
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Fast Food Dino
     """
 
     HASHMAP_LOCKHANDSPUNKGN = dword(0xdeb6f8)
@@ -2751,6 +3258,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYHIGHNOON = dword(0xdebd3c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.HighNoon
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | High Noon Hijinx
+    """
+
     HASHMAP_LOCKTASHSMALLR = dword(0xdebd48)
     """
     [32-bit Pointer] Hashmap | Lock.Tash.Small.R
@@ -2782,6 +3296,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYBRIDGETHIEVES = dword(0xdebd8c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.BridgeThieves
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Sneaky Bridge Thieves
     """
 
     HASHMAP_AUDIOVOLSPEECH = dword(0xdebda0)
@@ -2969,6 +3490,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYGHOSTHILL = dword(0xdec3f0)
+    """
+    [32-bit Pointer] Hashmap | C.Story.GhostHill
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Ghost Hill Graveyard
+    """
+
     HASHMAP_WXDCURRENTTUTORIAL = dword(0xdec434)
     """
     [32-bit Pointer] Hashmap | WXD.CurrentTutorial
@@ -3120,6 +3648,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CCHALLENGEACCURACY = dword(0xdec924)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.Accuracy
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Accuracy Challenge
+    """
+
     HASHMAP_LOCKCHALLENGENAVIGATION = dword(0xdec938)
     """
     [32-bit Pointer] Hashmap | Lock.Challenge.Navigation
@@ -3206,6 +3741,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYROBINTHEHOOD = dword(0xdeced0)
+    """
+    [32-bit Pointer] Hashmap | C.Story.RobInTheHood
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Rob in the Hood
     """
 
     HASHMAP_LOCKHATQUEENOFSHEBA = dword(0xded084)
@@ -3391,6 +3933,20 @@ class Memory:
     ... "Deathmatch.10" = Deathmatch 10
     """
 
+    HASHMAP_CSTORYDOOMCANYON = dword(0xded338)
+    """
+    [32-bit Pointer] Hashmap | C.Story.DoomCanyon
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Doom Canyon
+    """
+
+    HASHMAP_CSTORYJOUSTABOUTIT = dword(0xded350)
+    """
+    [32-bit Pointer] Hashmap | C.Story.JoustAboutIt
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Joust About It
+    """
+
     HASHMAP_LOCKCHALLENGECRATECOLLECT = dword(0xded450)
     """
     [32-bit Pointer] Hashmap | Lock.Challenge.CrateCollect
@@ -3455,6 +4011,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CCHALLENGECRATECOLLECT = dword(0xded690)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.CrateCollect
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Crate Collect Challenge
     """
 
     HASHMAP_LOCKHATSCOTTISH = dword(0xded760)
@@ -3595,6 +4158,13 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CSTORYESCAPE = dword(0xdedbd4)
+    """
+    [32-bit Pointer] Hashmap | C.Story.Escape
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Escape From Tree-Rex
     """
 
     HASHMAP_LOCKSOUNDBOBBY = dword(0xdedbe8)
@@ -3797,6 +4367,34 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CCHALLENGENAVIGATION = dword(0xdee1f8)
+    """
+    [32-bit Pointer] Hashmap | C.Challenge.Navigation
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Navigation Challenge
+    """
+
+    HASHMAP_CTUTORIAL1 = dword(0xdee248)
+    """
+    [32-bit Pointer] Hashmap | C.Tutorial.1
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Worminkle University
+    """
+
+    HASHMAP_CTUTORIAL2 = dword(0xdee258)
+    """
+    [32-bit Pointer] Hashmap | C.Tutorial.2
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Unsporting Behaviour
+    """
+
+    HASHMAP_CTUTORIAL3 = dword(0xdee25c)
+    """
+    [32-bit Pointer] Hashmap | C.Tutorial.3
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Mike's Secret Laboratory
     """
 
     HASHMAP_LOCKTASHSAFETYPIN = dword(0xdee2c4)
@@ -4038,6 +4636,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYNOROOMFORERROR = dword(0xdee84c)
+    """
+    [32-bit Pointer] Hashmap | C.Story.NoRoomForError
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | No Room For Error
+    """
+
     HASHMAP_LOCKFACEPIRATEW = dword(0xdee85c)
     """
     [32-bit Pointer] Hashmap | Lock.Face.Pirate.W
@@ -4232,6 +4837,13 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_CSTORYGIBBONTAKE = dword(0xdeee94)
+    """
+    [32-bit Pointer] Hashmap | C.Story.GibbonTake
+    +0x4
+    ++0x1c = [32-bit] Completion Counter | Gibbon Take
+    """
+
     HASHMAP_LOCKHATBASEBALLT17 = dword(0xdeeedc)
     """
     [32-bit Pointer] Hashmap | Lock.Hat.Baseball.T17
@@ -4406,12 +5018,16 @@ class Memory:
     STATE_GAME_PAUSED = byte(0xdef268)
     """
     [8-bit] [Boolean] State | Game Paused
+    0x0 = Unpaused
+    0x1 = Paused
     """
 
     BASE_LUA_POINTER = dword(0xdf7884)
     """
     [32-bit Pointer] Base Lua Pointer
     0x0 = Lua script unloaded
+    Note: unloads on the same frame a mission is completed while still being ingame
+
     Read https://github.com/wormi-ra/RA-Scripts/blob/main/docs/Lua.md for more details
     Lua version 5.0.1
 
@@ -4436,40 +5052,31 @@ class Memory:
     ... 0xc = 4096
     ... 0xd = 8192 (Theoretical max)
     +++0x10 = [32-bit Pointer] Global Node Vector
-    ... Dynamic Array of 20 bytes Node Structure
+    ... Dynamic Array of NSize x 20 bytes Node Structure
+    ... NSize = (1 << LSize)
     ... The offset of a given node is calculated using the following formula:
-    ... (StringHash % (1 << LSize)) * 20
+    ... (StringHash % NSize) * 20
     ... StringHash being the precomputed Lua string hash of said variable and
     ... LSize being the Log2 size of the vector
     ...
-    ... [20 bytes] Node Structure
-    ... |+0x0 = [32-bit] Key Type
-    ... |. Always 0x4 (String)
-    ... |+0x4 = [32-bit Pointer] Key
-    ... |++0x8 = [32-bit] String Hash
-    ... |++0xc = [32-bit] String Length
-    ... |++0x10 = [ASCII] Key String
-    ... |+0x8 = [32-bit] Value Type
-    ... |. 0x0 = Null (Always 0x0)
-    ... |. 0x1 = Boolean (0x0 or 0x1)
-    ... |. 0x2 = LightUserData (Pointer)
-    ... |. 0x3 = Number (Float)
-    ... |. 0x4 = String (Pointer)
-    ... |. 0x5 = Table (Pointer)
-    ... |. 0x6 = Function (Pointer)
-    ... |. 0x7 = UserData (Pointer)
-    ... |. 0x8 = Thread (Pointer)
-    ... |+0xc = [32-bit] Value or Pointer
-    ... |+0x10 = [32-bit Pointer] Next Node
-    """
-
-    ATTRACT_MODE = dword(0x11e9ac4)
-    """
-    [32-bit Pointer] Attract Mode
-    Pointer to the "Press START button" text
-    0x0 = Disabled
-
-    +0xb = [8-bit] [Bitfield] Text State
-    . Bit7 = Text Displayed
+    ++++0x0 = [20 bytes] Node Structure
+    ++++|0x0 = [32-bit] Key Type
+    ..... Always 0x4 (String)
+    ++++|0x4 = [32-bit Pointer] Key
+    ++++|+0x8 = [32-bit] String Hash
+    ++++|+0xc = [32-bit] String Length
+    ++++|+0x10 = [ASCII] Key String
+    ++++|0x8 = [32-bit] Value Type
+    ..... 0x0 = Null (Always 0x0)
+    ..... 0x1 = Boolean (0x0 or 0x1)
+    ..... 0x2 = LightUserData (Pointer)
+    ..... 0x3 = Number (Float)
+    ..... 0x4 = String (Pointer)
+    ..... 0x5 = Table (Pointer)
+    ..... 0x6 = Function (Pointer)
+    ..... 0x7 = UserData (Pointer)
+    ..... 0x8 = Thread (Pointer)
+    ++++|0xc = [32-bit] Value or Pointer
+    ++++|0x10 = [32-bit Pointer] Next Node
     """
 
