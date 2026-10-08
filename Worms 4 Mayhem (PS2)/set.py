@@ -39,42 +39,176 @@ class Worms4MayhemSet(AchievementSet):
 
     @achievement(642020)
     def prog_construction(self, ach: Achievement):
-        mission = Mission.STORY[4] # Destruct And Serve
-        ach.add_core(group(
-            mission.is_loaded() &
-            mission.on_complete()
+        missions = Mission.STORY[0:5]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
         ))
 
     @achievement(642021)
     def prog_camelot(self, ach: Achievement):
-        mission = Mission.STORY[9] # Nice To Siege You
-        ach.add_core(group(
-            mission.is_loaded() &
-            mission.on_complete()
+        missions = Mission.STORY[5:10]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
         ))
 
     @achievement(642022)
     def prog_wild_west(self, ach: Achievement):
-        mission = Mission.STORY[14] # High Noon Hijinx
-        ach.add_core(group(
-            mission.is_loaded() &
-            mission.on_complete()
+        missions = Mission.STORY[10:15]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
         ))
 
     @achievement(642023)
     def prog_arabian(self, ach: Achievement):
-        mission = Mission.STORY[19] # Gibbon Take
-        ach.add_core(group(
-            mission.is_loaded() &
-            mission.on_complete()
+        missions = Mission.STORY[15:20]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
         ))
 
     @achievement(642024)
     def prog_prehistoric(self, ach: Achievement):
-        mission = Mission.STORY[24] # Valley Of The Dinoworms
-        ach.add_core(group(
-            mission.is_loaded() &
-            mission.on_complete()
+        missions = Mission.STORY[20:25]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
+        ))
+
+    ####################
+    # Time Bonus       #
+    ####################
+
+    @achievement(642889)
+    def time_bonus_construction(self, ach: Achievement):
+        missions = Mission.STORY[0:5]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
+        ))
+
+    @achievement(642890)
+    def time_bonus_camelot(self, ach: Achievement):
+        missions = Mission.STORY[5:10]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
+        ))
+
+    @achievement(642891)
+    def time_bonus_wild_west(self, ach: Achievement):
+        missions = Mission.STORY[10:15]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
+        ))
+
+    @achievement(642892)
+    def time_bonus_arabian(self, ach: Achievement):
+        missions = Mission.STORY[15:20]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
+        ))
+
+    @achievement(642893)
+    def time_bonus_prehistoric(self, ach: Achievement):
+        missions = Mission.STORY[20:25]
+        ach.add_core(conditions=group(
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions)),
         ))
 
     ####################
@@ -298,6 +432,131 @@ class Worms4MayhemSet(AchievementSet):
             measured_if(Worms4Mayhem.game_booted()),
             Worms4Mayhem.is_ingame(),
             measured(Unlock.on_unlock_type(Unlock.Type.TROPHY))
+        ))
+
+    ####################
+    # Easter Eggs      #
+    ####################
+
+    @achievement(642894)
+    def easter_egg_1(self, ach: Achievement):
+        mission = Mission.STORY[4] # Destruct And Serve
+        unlock = Unlock.get_unlock("Lock.EasterEgg.0")
+        ach.add_core(group(
+            mission.is_loaded(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642895)
+    def easter_egg_2(self, ach: Achievement):
+        mission = Mission.STORY[9] # Nice To Siege You
+        unlock = Unlock.get_unlock("Lock.EasterEgg.1")
+        ach.add_core(group(
+            mission.is_loaded(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642896)
+    def easter_egg_3(self, ach: Achievement):
+        mission = Mission.STORY[12] # Tin Can Wally
+        unlock = Unlock.get_unlock("Lock.EasterEgg.2")
+        ach.add_core(group(
+            mission.is_loaded(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642897)
+    def easter_egg_4(self, ach: Achievement):
+        mission = Mission.STORY[17] # Carpet Capers
+        unlock = Unlock.get_unlock("Lock.EasterEgg.3")
+        ach.add_core(group(
+            mission.is_loaded(),
+            unlock.on_unlock()
+        ))
+
+    @achievement(642898)
+    def easter_egg_5(self, ach: Achievement):
+        mission = Mission.STORY[21] # Escape From Tree-Rex
+        unlock = Unlock.get_unlock("Lock.EasterEgg.4")
+        ach.add_core(group(
+            mission.is_loaded(),
+            unlock.on_unlock()
+        ))
+
+    ####################
+    # Challenges       #
+    ####################
+
+    @achievement(642899)
+    def challenge_completion(self, ach: Achievement):
+        missions = Mission.CHALLENGE[0:8]
+        ach.add_core(conditions=group(
+            measured_if(Worms4Mayhem.game_booted()),
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            measured(value(0) == value(len(missions))),
+        ))
+
+    @achievement(642900)
+    def challenge_time_bonus(self, ach: Achievement):
+        missions = Mission.CHALLENGE[0:8]
+        ach.add_core(conditions=group(
+            measured_if(Worms4Mayhem.game_booted()),
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            measured(value(0) == value(len(missions))),
+        ))
+
+    @achievement(642901)
+    def deathmatch_completion(self, ach: Achievement):
+        missions = Mission.CHALLENGE[8:18]
+        ach.add_core(conditions=group(
+            measured_if(Worms4Mayhem.game_booted()),
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.completion_unlock()) / 2)
+                for mission in missions
+            ],
+            measured(value(0) == value(len(missions))),
+        ))
+
+    @achievement(642902)
+    def deathmatch_time_bonus(self, ach: Achievement):
+        missions = Mission.CHALLENGE[8:18]
+        ach.add_core(conditions=group(
+            measured_if(Worms4Mayhem.game_booted()),
+            Worms4Mayhem.is_ingame(),
+            *[
+                add_source(delta(mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            value(0) == value(len(missions) - 1),
+            *[
+                add_source((mission.time_bonus_unlock()) / 2)
+                for mission in missions
+            ],
+            measured(value(0) == value(len(missions))),
         ))
 
     ####################

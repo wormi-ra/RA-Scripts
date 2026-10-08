@@ -324,9 +324,26 @@ class Mission:
             XData.on_value_increased(f"C.{self.key}")
         )
 
+    def completion_unlock(self):
+        return (
+            (XData.get_value(f"Lock.{self.key}")) >> dword(0x20)
+        )
+
+    def time_bonus_unlock(self):
+        return (
+            (XData.get_value(f"Lock.T.{self.key}")) >> dword(0x20)
+        )
+
+    def on_completion_unlock(self):
+        return (
+            (delta(self.completion_unlock()) == 0) &
+            (self.completion_unlock() == 2)
+        )
+
     def on_time_bonus_unlock(self):
         return (
-            XData.on_value_increased(f"Lock.T.{self.key}")
+            (delta(self.time_bonus_unlock()) == 0) &
+            (self.time_bonus_unlock() == 2)
         )
 
     def generate_leaderboard(self, lb: Leaderboard):
