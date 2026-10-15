@@ -339,6 +339,7 @@ class Worms3DSet(AchievementSet):
         ach.add_alt(group(
             Worms3D.check_serial(ctx),
             mission.is_loaded(ctx),
+            XData.get_value(ctx, "ElapsedRoundTime") > 0,
             delta(XData.get_value(ctx, "Crate.Index")) != 4,
             XData.get_value(ctx, "Crate.Index") == 4,
         ))
