@@ -189,7 +189,11 @@ class MnLBIS:
         ))
         lb.set_cancel(always_false())
         lb.set_submit(always_true())
-        lb.set_value(measured(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_))
+        lb.set_value(group(
+            remember(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_),
+            remember(recall() * 10),
+            measured(recall() / 3),
+        ))
 
     @staticmethod
     def generate_gauntlet_lb(lb: Leaderboard, gauntlet: int):
@@ -209,7 +213,11 @@ class MnLBIS:
         ))
         lb.set_cancel(always_false())
         lb.set_submit(always_true())
-        lb.set_value(measured(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_))
+        lb.set_value(group(
+            remember(Memory.MARIO_LV_RANK_ + Memory.LUIGI_LV_RANK_ + Memory.BOWSER_LV_RANK_),
+            remember(recall() * 10),
+            measured(recall() / 3),
+        ))
 
     @staticmethod
     def on_retry():
