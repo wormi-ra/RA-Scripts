@@ -209,12 +209,57 @@ class Inventory:
     @staticmethod
     def get_ammo_address(weapon: int):
         return byte({
-            # TODO
-        }[weapon])
+            Weapons.BAZOOKA: 0x15,
+            Weapons.GRENADE: 0x12,
+            Weapons.CLUSTER_BOMB: 0x11,
+            Weapons.AIR_STRIKE: 0x10,
+            Weapons.DYNAMITE: 0xf,
+            Weapons.HOLY_HAND_GRENADE: 0xe,
+            Weapons.BANANA_BOMB: 0xd,
+            Weapons.LAND_MINE: 0xc,
+            Weapons.SHOTGUN: 0xb,
+            Weapons.BASEBALL_BAT: 0xa,
+            Weapons.PROD: 0x9,
+            Weapons.FIRE_PUNCH: 0x8,
+            Weapons.HOMING_MISSILE: 0x7,
+            Weapons.FLOOD: 0x6,
+            Weapons.SHEEP: 0x5,
+            Weapons.GAS_CANISTER: 0x4,
+            Weapons.OLD_WOMAN: 0x3,
+            Weapons.CONCRETE_DONKEY: 0x2,
+            Weapons.SUPER_SHEEP: 0x1,
+            Weapons.STARBURST: 0x1f,
+            Weapons.CUSTOM_WEAPON: 0x20,
+            Weapons.ALIEN_ABDUCTION: 0x1e,
+            Weapons.FATKINS_STRIKE: 0x1d,
+            Weapons.INFLATABLE_SCOUSER: 0x1c,
+            Weapons.TAIL_NAIL: 0x1b,
+            Weapons.POISON_ARROW: 0x19,
+            Weapons.SENTRY_GUN: 0x18,
+            Weapons.SNIPER: 0x17,
+            Weapons.BOVINE_BLITZ: 0x16,
+            Weapons.GIRDER: 0x0,
+            Weapons.NINJA_ROPE: 0x28,
+            Weapons.PARACHUTE: 0x27,
+            Weapons.JETPACK: 0x25,
+            Weapons.SKIP_GO: 0x24,
+            Weapons.SURRENDER: 0x23,
+            Weapons.WORM_SELECT: 0x22,
+            Weapons.BUBBLE_TROUBLE: 0x13,
+            Weapons.ICARUS_POTION: 0x21,
+        }[weapon] + 0x14)
 
     @staticmethod
     def get_ammo(weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
         return Inventory.get_inventory(index, itype) >> Inventory.get_ammo_address(weapon)
+
+    @staticmethod
+    def on_ammo_increase(weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
+        return Inventory.get_inventory(index, itype) >> delta(Inventory.get_ammo_address(weapon)) < (Inventory.get_ammo_address(weapon))
+
+    @staticmethod
+    def on_ammo_decrease(weapon: int, index: int, itype: InventoryType = InventoryType.TEAM):
+        return Inventory.get_inventory(index, itype) >> delta(Inventory.get_ammo_address(weapon)) > (Inventory.get_ammo_address(weapon))
 
 
 class Mission:
@@ -417,7 +462,6 @@ class Worm:
     id: int
     team: int
 
-    # TODO
     class Instance(MemoryExpression):
         def __init__(self, expression: MemoryExpression):
             super().__init__(expression.terms[0][0], Flag.NONE)
@@ -425,31 +469,23 @@ class Worm:
 
         @property
         def team(self):
-            return self >> byte(0xd5)
+            return self >> byte(0x12b)
 
         @property
         def health(self):
-            return self >> word(0xaa)
+            return self >> word(0x11e)
 
         @property
         def equipped_weapon(self):
-            return self >> dword(0x84)
-
-        @property
-        def pending_damage(self):
-            return self >> dword(0xa4)
+            return self >> dword(0xd8)
 
         @property
         def animation_state(self):
-            return self >> dword(0x80)
-
-        @property
-        def team_id(self):
-            return self >> byte(0xd5)
+            return self >> dword(0x108)
 
         @property
         def is_active(self):
-            return self >> dword(0xdc)
+            return self >> byte(0x12f)
 
         def on_death(self):
             return (
@@ -459,12 +495,15 @@ class Worm:
 
         def on_jump(self):
             return (
-                (self.animation_state == 0x3) | # Regular jump
-                (self.animation_state == 0x4) | # Straight jump
-                (self.animation_state == 0x6) | # Backflip
-                (self.animation_state == 0x24) & # Frontflip
-                (delta(self.animation_state) == 0x2) # About to jump
+                (delta(self.animation_state) == 0x1) & # About to jump
+                (self.animation_state == 0x2) # Jumping
             )
+        
+        def is_alive(self):
+            return self.health > 0
+
+        def using_parachute(self):
+            return self >> bit1(0x110)
 
 
     def __init__(self, id: int = -1, team: int = -1) -> None:

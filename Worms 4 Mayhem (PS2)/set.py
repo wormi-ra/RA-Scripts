@@ -12,7 +12,7 @@ from data import *
 import assets
 import csv
 
-FRAMERATE = 60
+FRAMERATE = 50
 
 @achievement_set(
     assets=assets,
@@ -571,6 +571,102 @@ class Worms4MayhemSet(AchievementSet):
         ))
 
     ####################
+    # Story Challenges #
+    ####################
+
+    @achievement()
+    def diner_might(self, ach: Achievement):
+        mission = Mission.STORY[0] # Diner Might
+        enemies = [4, 5, 6, 7]
+        ach.add_core(group(
+            mission.is_loaded(),
+            XData.get_value("ElapsedRoundTime") > value(0),
+            *[
+                Worm(enemy).get_instance().is_alive()
+                for enemy in enemies
+            ],
+            trigger(mission.on_complete()),
+        ))
+
+    @achievement()
+    def sneaky_bridge_thieves(self, ach: Achievement):
+        mission = Mission.STORY[1] # Sneaky Bridge Thieves
+        ach.add_core(group(
+            mission.on_start().with_hits(1),
+            trigger(mission.on_complete()),
+            reset_if(~Worms4Mayhem.is_ingame()),
+            reset_if(
+                (delta(Worms4Mayhem.current_team()) == 0) &
+                (Worms4Mayhem.current_team() == 1)
+            ).with_hits(2)
+        ))
+
+    @achievement()
+    def building_site_saboteurs(self, ach: Achievement):
+        mission = Mission.STORY[2] # Building Site Saboteurs
+        ach.add_core(group(
+            mission.on_start().with_hits(1),
+            trigger(mission.on_complete()),
+            reset_if(~Worms4Mayhem.is_ingame()),
+            reset_if(
+                (Worms4Mayhem.current_team() == 0) &
+                (Worm(0).get_instance().equipped_weapon != Weapons.DYNAMITE) &
+                Worm.on_attack()
+            ),
+            reset_if(Inventory.on_ammo_decrease(Weapons.AIR_STRIKE, 0, Inventory.InventoryType.ALLIANCE))
+        ))
+
+    @achievement()
+    def the_crate_escape(self, ach: Achievement):
+        mission = Mission.STORY[3] # The Crate Escape
+        enemies = [2, 3, 4, 5]
+        # Main logic
+        ach.add_core(group(
+            reset_if(~Worms4Mayhem.is_ingame()),
+            reset_if(
+                (Worms4Mayhem.current_team() == 0) &
+                (Worm.get_active_worm().using_parachute() == 1)
+            ),
+        ))
+        # Kill counter
+        ach.add_alt(group(
+            measured_if(mission.on_start().with_hits(1)),
+            *(
+                add_hits(
+                    Worm(enemy).get_instance().on_death()
+                ).with_hits(1)
+                for enemy in enemies
+            ),
+            measured(always_false()).with_hits(len(enemies)),
+            mission.on_complete()
+        ))
+        # Challenge indicator (never trigger)
+        ach.add_alt(group(
+            mission.on_start().with_hits(1),
+            trigger(always_false()),
+        ))
+
+    @achievement()
+    def destruct_and_serve(self, ach: Achievement):
+        mission = Mission.STORY[4] # Destruct And Serve
+        enemies = [4, 5, 6, 7, 8, 9]
+        ach.add_core(group(
+            mission.on_start().with_hits(1),
+            mission.time_bonus_on_pace(),
+            trigger(mission.on_complete()),
+            reset_if(~Worms4Mayhem.is_ingame()),
+            reset_if(group(
+                *[
+                    add_source(Worm(enemy).get_instance().health)
+                    for enemy in enemies
+                ],
+                (value(0) != value(0)) &
+                XData.on_value_changed("Trigger.Index") &
+                (XData.get_value("Trigger.Index") < value(8))
+            ))
+        ))
+
+    ####################
     # Leaderboards     #
     ####################
 
@@ -587,6 +683,39 @@ class Worms4MayhemSet(AchievementSet):
             measured(Memory.XDATARESOURCEMANAGER >> dword(0x18))
         )
 
+    @leaderboard(174727)
+    def lb_time_tracker(self, lb: Leaderboard):
+        lb.set_start(group(
+            Worms4Mayhem.is_in_menu(),
+            reset_next_if(
+                (Controller.button_pressed(Controller.Button.L1) == 0) |
+                (Controller.button_pressed(Controller.Button.R1) == 0)
+            ),
+            (
+                (Controller.button_pressed(Controller.Button.L1) == 1) &
+                (Controller.button_pressed(Controller.Button.R1) == 1)
+            ).with_hits(FRAMERATE * 2),
+        ))
+        lb.set_cancel(group(
+            Worms4Mayhem.is_in_menu(),
+            reset_next_if(
+                (Controller.button_pressed(Controller.Button.L1) == 0) |
+                (Controller.button_pressed(Controller.Button.R1) == 0)
+            ),
+            (
+                (Controller.button_pressed(Controller.Button.L1) == 1) &
+                (Controller.button_pressed(Controller.Button.R1) == 1)
+            ).with_hits(FRAMERATE * 4),
+        ))
+        lb.set_submit(always_false())
+        for mission in (Mission.STORY + Mission.CHALLENGE):
+            lb.add_value(group(
+                measured_if(mission.is_loaded()),
+                sub_source(XData.get_value("ElapsedRoundTime")),
+                remember(value(mission.time_bonus * 1000)),
+                measured_if(recall() < 0x80000000),
+                measured(recall() / value(10)),
+            ))
 
 if __name__=="__main__":
     Worms4Mayhem.init()

@@ -341,4 +341,11 @@ leaderboards = OrderedDict({
         format=LeaderboardFormat.VALUE,
         lower_is_better=False,
     ),
+    174727: Leaderboard(
+        id=174727,
+        title="""Time Bonus Tracker""",
+        description="""Hold L1 and R1 for 3 seconds in the main menu to activate or deactivate the time tracker for bonus times""",
+        format=LeaderboardFormat.MILLISECS,
+        lower_is_better=False,
+    ),
 })
