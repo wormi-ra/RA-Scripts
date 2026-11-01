@@ -171,14 +171,14 @@ class MnLBIS:
                     MnLBIS.STATS_CAP[k].append(v)
 
     @staticmethod
-    def generate_leaderboard(lb: Leaderboard, battle_id: int, top_screen_id: int = -1, bottom_screen_id: int = -1):
+    def generate_leaderboard(lb: Leaderboard, battle_id: int, top_screen_id: int = -1, bottom_screen_id: int = -1, enemies: list[int] = [1]):
         lb.set_start(group(
             MnLBIS.is_in_battle(
                 battle_id=battle_id,
                 top_screen_id=top_screen_id,
                 bottom_screen_id=bottom_screen_id,
             ),
-            MnLBIS.on_enemy_dead(),
+            MnLBIS.on_enemy_dead(enemies),
             MnLBIS.is_challenge_medal_equipped(),
             MnLBIS.check_cheated_equipments(),
             reset_next_if(

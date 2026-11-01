@@ -583,6 +583,7 @@ class MnLBISSubset(AchievementSet):
             lb,
             battle_id=0x106b,
             bottom_screen_id=0x14b,
+            enemies=[1, 2],
         )
 
     @achievement(635263)
@@ -617,6 +618,7 @@ class MnLBISSubset(AchievementSet):
             lb,
             battle_id=0x1069,
             top_screen_id=0x28f,
+            enemies=[1, 2, 3],
         )
 
     @achievement(635264)
@@ -773,6 +775,7 @@ class MnLBISSubset(AchievementSet):
             lb,
             battle_id=0x1079,
             top_screen_id=0x22c,
+            enemies=[1, 2, 3],
         )
 
     @achievement(635269)
