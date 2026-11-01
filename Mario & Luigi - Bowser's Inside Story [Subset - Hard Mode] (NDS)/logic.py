@@ -315,6 +315,11 @@ class MnLBIS:
             5: Memory.ENEMY_5_HP,
             6: Memory.ENEMY_6_HP,
         }
+        if len(ids) == 1:
+            return (
+                (delta(enemies[ids[0]]) > 0) &
+                (enemies[ids[0]] == 0)
+            )
         return group(
             group(*[
                 or_next(delta(enemies[i]) > 0)

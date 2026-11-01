@@ -1,6 +1,3 @@
-from argparse import Action
-
-from pycheevos.core.condition import ConditionList
 from pycheevos.models.set import AchievementSet, Leaderboard
 from pycheevos.models.achievement import Achievement
 from pycheevos.core.helpers import *
@@ -445,6 +442,9 @@ class MnLBISSubset(AchievementSet):
             lb,
             battle_id=0x1040,
             bottom_screen_id=0x4f,
+        )
+        lb.start[0].append(
+            Memory.BOSS_STATE__7 == 1
         )
 
     @achievement(635260)
