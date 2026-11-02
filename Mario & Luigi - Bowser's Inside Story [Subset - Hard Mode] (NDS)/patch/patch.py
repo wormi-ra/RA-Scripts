@@ -69,6 +69,16 @@ class EnemyData:
 
 
 def challenge_medal_mode(overlay_data, monster_table_offset):
+    ignore_list = [
+        0, 1, 2, 3,     # Unused enemies
+        106, 107, 108,  # Bowser's Castle (giant battle)
+        109,            # Tower of Yikk (giant battle)
+        110, 111, 112,  # Fawful Express (giant battle)
+        113,            # Super Peach's Castle of Fury (giant battle)
+        114, 115,       # Menu practice enemies
+        139,            # Cholesteron
+        140,            # Broque Madame
+    ]
     overlay_data = BytesIO(overlay_data)
     overlay_data.seek(monster_table_offset)
     length_test = overlay_data.read()
@@ -78,10 +88,11 @@ def challenge_medal_mode(overlay_data, monster_table_offset):
         mon_list.append(EnemyData(overlay_data.read(0x24)))
     overlay_data.seek(monster_table_offset)
     for i in range(len(length_test) // 0x24):
-        mon_list[i].HP = round(mon_list[i].HP * 1.5)
-        mon_list[i].POW = round(min(mon_list[i].POW * 2.5, 999))
-        mon_list[i].DEF = round(min(mon_list[i].DEF * 1.5, 999))
-        # mon_list[i].coins = round(min(mon_list[i].coins * 1.5, 9999))
+        if i not in ignore_list:
+            mon_list[i].HP = round(mon_list[i].HP * 1.5)
+            mon_list[i].POW = round(min(mon_list[i].POW * 2.5, 999))
+            mon_list[i].DEF = round(min(mon_list[i].DEF * 1.5, 999))
+            # mon_list[i].coins = round(min(mon_list[i].coins * 1.5, 9999))
         overlay_data.write(mon_list[i].pack())
     overlay_data.seek(0)
     return overlay_data.read()
