@@ -82,10 +82,38 @@ def missions_notes():
     return notes
 
 
+def leaderboards():
+    from logic import XData
+    XData.init()
+    notes = {}
+    with open("data/levels.csv") as file:
+        for row in csv.DictReader(file):
+            name = row["Name"]
+            type = row["Type"]
+            i = int(row["Index"])
+            if type not in ["Story", "Tutorial", "Challenge", "Deathmatch"]:
+                continue
+            if type == "Deathmatch":
+                i += 8
+            type = {
+                "Story": "STORY",
+                "Tutorial": "TUTORIAL",
+                "Challenge": "CHALLENGE",
+                "Deathmatch": "CHALLENGE",
+            }[type]
+            name = f"lb_{name.lower().replace(' ', '_').replace('\'', '').replace('-', '_')}"
+            note = f"""
+    @leaderboard()
+    def {name}(self, lb: Leaderboard):
+        Mission.{type}[{i}].generate_leaderboard(lb)"""
+            print(note)
+
+
 
 
 if __name__=="__main__":
-    notes = missions_notes()
-    with open("output/notes.txt", "w") as file:
-        for addr, note in dict(sorted(notes.items())).items():
-            file.write(f'N0:{hex(addr)}:"{note}"\n')
+    leaderboards()
+    # notes = missions_notes()
+    # with open("output/notes.txt", "w") as file:
+    #     for addr, note in dict(sorted(notes.items())).items():
+    #         file.write(f'N0:{hex(addr)}:"{note}"\n')

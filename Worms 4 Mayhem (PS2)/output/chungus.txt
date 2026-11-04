@@ -1,0 +1,2879 @@
+[32-bit Pointer] XDataResourceManager
++0x18 = [32-bit Pointer] Pointer to Hashmap
+++0x0 = [8000x4 bytes] [Array] XDataResource Hashmap
+.. Array of 8000 32-bit pointers in a deterministic order based on their key name
+.. Should always point to $0xde74c0 with a regular PCSX2 config
+.. but some users seems to have the address shifted in some cases so we have to use this base pointer
+.. Some pointers can be null because there is more reserved slots than actual keys
+.. Dump of all keys with their associated base pointers:
+.. https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
+++|0x0 = [32-bit Pointer] XDataResourceDescriptor
+++|+0x4 = [32-bit Pointer] XDataResourceDetails
+++|++0x18 = [32-bit Pointer] Key
+++|+++0x0 = [ASCII] Key String
+++|++0x1c = [32-bit] Data
+..... Can be a pointer or a value depending on resource type
+..... Individual code notes are duplicated at $0xde74c0 - $0xdef1c0 for convenience
+++0x14 = [32-bit Pointer] Story.DestructAndServe
++++0x4
+++++0x1c = [32-bit Pointer] Story Mission Definition | Destruct And Serve
+.... Refer to $0xde9818
+++0x88 = [32-bit Pointer] Lock.Tash.Afro.B
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Afro.B (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x9c = [32-bit Pointer] Lock.Tash.Afro.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Afro.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xd0 = [32-bit Pointer] Lock.Tash.Afro.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Afro.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xe4 = [32-bit Pointer] Lock.Hat.Punk.Y
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Punk.Y
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xe8 = [32-bit Pointer] C.Story.TinCanWally
++++0x4
+++++0x1c = [32-bit] Completion Counter | Tin Can Wally
+++0x210 = [32-bit Pointer] Lock.Face.NHS
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | NHS (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2a0 = [32-bit Pointer] Crate.Index
++++0x4
+++++0x1c = [32-bit] Crate Index used to spawn crates in missions
+.... 0xffffffff = Default Value
+++0x2d0 = [32-bit Pointer] Lock.Scheme.RootNShoot
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | RootNShoot
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x310 = [32-bit Pointer] Lock.Hat.Spacesuit
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Spacesuit (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x34c = [32-bit Pointer] Lock.T.Story.TurkishDelights
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.TurkishDelights
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x350 = [32-bit Pointer] Lock.T.Challenge.CrateCollect
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.CrateCollect
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x394 = [32-bit Pointer] Lock.T.Story.Saboteurs
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.Saboteurs
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x414 = [32-bit Pointer] Lock.Story.Saboteurs
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | Saboteurs
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x418 = [32-bit Pointer] C.Story.MineAllMine
++++0x4
+++++0x1c = [32-bit] Completion Counter | Mine All Mine
+++0x430 = [32-bit Pointer] Jetpack.Fuel
++++0x4
+++++0x1c = [32-bit] Jetpack Fuel
+.... 1 Ingame Unit = 500
+++0x450 = [32-bit Pointer] Airstrike.TargetPoint
++++0x4
+++++0x1c = [32-bit] [Float] Airstrike Target Point X
+.... Updates when aiming with any airstrike weapon
+++++0x20 = [32-bit] [Float] Airstrike Target Point Y
+++++0x24 = [32-bit] [Float] Airstrike Target Point Z
+++0x49c = [32-bit Pointer] Lock.Sound.Gameshow
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Gameshow (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4c8 = [32-bit Pointer] Lock.T.Story.NoRoomForError
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.NoRoomForError
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x558 = [32-bit Pointer] C.Story.CrateEscape
++++0x4
+++++0x1c = [32-bit] Completion Counter | The Crate Escape
+++0x56c = [32-bit Pointer] Lock.Tash.Cowboy.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Cowboy.Bk (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x578 = [32-bit Pointer] Lock.Weapon.IcarusPotion
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Weapons | IcarusPotion
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x610 = [32-bit Pointer] Lock.Hat.Arabian.D
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Arabian.D
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x624 = [32-bit Pointer] Lock.Hat.Party
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Party (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x648 = [32-bit Pointer] Lock.Hat.Arabian.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Arabian.R
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x64c = [32-bit Pointer] Lock.Map.Saboteurs
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | Saboteurs
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x65c = [32-bit Pointer] Lock.Hat.Arabian.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Arabian.W
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6cc = [32-bit Pointer] Awards
++++0x4
+++++0x1c
++++++0x14
+++++++0x40 = [32-bit] [Boolean] Trophy | Gold Damage
+++++++0x44 = [32-bit] [Boolean] Trophy | 4 Bagger
+++++++0x48 = [32-bit] [Boolean] Trophy | Big Blast
+++++++0x4c = [32-bit] [Boolean] Trophy | Magic Bullet
+++++++0x50 = [32-bit] [Boolean] Trophy | The Beast Within
+++++++0x54 = [32-bit] [Boolean] Trophy | Silver Damage
+++++++0x58 = [32-bit] [Boolean] Trophy | 3 Bagger
+++++++0x5c = [32-bit] [Boolean] Trophy | Hot Foot
+++++++0x60 = [32-bit] [Boolean] Trophy | Animal Lover
+++++++0x64 = [32-bit] [Boolean] Trophy | Weapon Specialist
+++++++0x68 = [32-bit] [Boolean] Trophy | Bronze Damage
+++++++0x6c = [32-bit] [Boolean] Trophy | Body Count
+++++++0x70 = [32-bit] [Boolean] Trophy | Barrel Buster
+++++++0x74 = [32-bit] [Boolean] Trophy | Rocketeer
+++++++0x78 = [32-bit] [Boolean] Trophy | Greedy Worm
+++0x6d0 = [32-bit Pointer] C.Story.CarpetCapers
++++0x4
+++++0x1c = [32-bit] Completion Counter | Carpet Capers
+++0x6d8 = [32-bit Pointer] Lock.Story.DestructAndServe
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | DestructAndServe
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x710 = [32-bit Pointer] WXD.Level.Current
++++0x4
+++++0x1c
++++++0x0 = [ASCII] Current Map
+++0x72c = [32-bit Pointer] Lock.T.Challenge.JetPack
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.JetPack
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x730 = [32-bit Pointer] Lock.Map.HoldUntil
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | HoldUntil
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x748 = [32-bit Pointer] Lock.Tash.Cowboy.B
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Cowboy.B (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x75c = [32-bit Pointer] Lock.Tash.Cowboy.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Cowboy.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x794 = [32-bit Pointer] Lock.Hands.Pirate
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Pirate (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x80c = [32-bit Pointer] Lock.Face.Rayban2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Rayban2 (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x848 = [32-bit Pointer] Lock.Hat.Wizard.Gr
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Wizard.Gr
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x854 = [32-bit Pointer] Lock.Sound.Wizard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Wizard
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x860 = [32-bit Pointer] HUD.Counter.Value
++++0x4
+++++0x1c = [32-bit] HUD Counter Value
+.... Counter displayed next to the timer in some missions or challenges
+.... eg. targets left in Sniper Rifle Challenge
+++0x8c8 = [32-bit Pointer] Lock.Scheme.Darksider
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Darksider
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x910 = [32-bit Pointer] Lock.T.Story.WindyWizard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.WindyWizard
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x930 = [32-bit Pointer] Lock.Map.GhostHill
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | GhostHill
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xaec = [32-bit Pointer] C.Challenge.JetPack
++++0x4
+++++0x1c = [32-bit] Completion Counter | Jet Pack Challenge
+++0xb00 = [32-bit Pointer] C.Challenge.SSheep
++++0x4
+++++0x1c = [32-bit] Completion Counter | Super Sheep Challenge
+++0xb48 = [32-bit Pointer] FCS.GameOver
++++0x4
+++++0x1c = [32-bit] [Boolean] Is Game Over
+++0xb90 = [32-bit Pointer] Lock.Sound.Scott
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Scott (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xbf8 = [32-bit Pointer] C.Challenge.Shotgun
++++0x4
+++++0x1c = [32-bit] Completion Counter | Shotgun Challenge
+++0xc0c = [32-bit Pointer] Lock.Weapon.InflatableScouser
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Weapons | InflatableScouser
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xca4 = [32-bit Pointer] C.Story.ChuteToVictory
++++0x4
+++++0x1c = [32-bit] Completion Counter | Chute To Victory
+++0xcec = [32-bit Pointer] RoundTimeRemaining
++++0x4
+++++0x1c = [32-bit] Round Time Remaining in milliseconds
+++0xd40 = [32-bit Pointer] Lock.Deathmatch.10
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 10
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xde4 = [32-bit Pointer] Lock.Face.Matrix
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Matrix (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xea4 = [32-bit Pointer] Lock.Hat.Baseball.Gy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.Gy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xeb8 = [32-bit Pointer] Lock.Story.DoomCanyon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | DoomCanyon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xf4c = [32-bit Pointer] Story.Saboteurs
++++0x4
+++++0x1c = [32-bit Pointer] Story Mission Definition | Building Site Saboteurs
+.... Refer to $0xde9818
+++0xf8c = [32-bit Pointer] Lock.Hat.AmericanFootball.S
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | AmericanFootball.S (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0xfa4 = [32-bit Pointer] Lock.Hat.AmericanFootball.Y
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | AmericanFootball.Y (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x100c = [32-bit Pointer] C.Challenge.Icarus
++++0x4
+++++0x1c = [32-bit] Completion Counter | Icarus Potion Challenge
+++0x1014 = [32-bit Pointer] DamagedWorm.Id
++++0x4
+++++0x1c = [32-bit] ID of the last damaged worm
+++0x1050 = [32-bit Pointer] Lock.Face.3D
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | 3D (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x108c = [32-bit Pointer] Lock.T.Challenge.Icarus
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.Icarus
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1098 = [32-bit Pointer] Lock.Hat.Baseball.Pe
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.Pe (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x10cc = [32-bit Pointer] PersistStats
++++0x4
+++++0x1c = [32-bit Pointer] Persist Stats Container
++++++0x14 = [32-bit Pointer] Team Names Container
+++++++0x18 = [32-bit] Array Size
+++++++0x40 = [Dynamic Size] Array of Pointers to Team Names
+++++++|0x0 = [32-bit Pointer] Pointer to Team Name
+++++++|+0x0 = [ASCII] Team Name
++++++0x18 = [32-bit Pointer] Persist Stats
+++++++0x18 = [32-bit] Array Size
+++++++0x40 = [Dynamic Size] Array of Pointers to Team Stats
+++++++|0x0 = [32-bit Pointer] Team Stats Container
+++++++|+0x14 = [32-bit Pointer] Team Stats
+........ Stats updates at the end of each round
+++++++|++0x40 = [32-bit] Damage Dealt
+++++++|++0x44 = [32-bit] Enemies Killed
+++++++|++0x48 = [32-bit] Allies Killed
+++++++|++0x4c = [32-bit] Barrels Destroyed
+++++++|++0x50 = [32-bit] Mines Triggered
+++++++|++0x54 = [32-bit] ?
+++++++|++0x58 = [32-bit] Times Attacked
+++++++|++0x5c = [32-bit] Times Attacked Without Missing
+++++++|++0x60 = [32-bit] ?
+++++++|++0x64 = [32-bit] ?
+++++++|++0x68 = [32-bit] Weapon Crates Collected
+++++++|++0x6c = [32-bit] Health Crates Collected
+++++++|++0x70 = [32-bit] Utility Crates Collected
+++++++|++0x74 = [32-bit] Special Crates Collected
+++++++|++0x78 = [32-bit] ?
+++++++|++0x7c = [32-bit] ?
+++++++|++0x80 = [32-bit] ?
+++++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+++++++|++0x88 = [32-bit] Times Used Skip Go
+++++++|++0x8c = [32-bit] Time Survived (Seconds)
+++++++|++0x90 = [32-bit] Worms Killed by Animals
+++++++|++0x94 = [32-bit] Damage Dealt With Explosives
+++++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+++++++|++0x9c = [32-bit] Damage Dealt With Grenades
+++0x10d8 = [32-bit Pointer] RoundStats
++++0x4
+++++0x1c = [32-bit Pointer] Round Stats Container
++++++0x1c = [32-bit Pointer] Round Stats
+++++++0x18 = [32-bit] Array Size (16)
+++++++0x40 = [16x4 bytes] Array of Pointers to Worm Stats
+++++++|0x0 = [32-bit Pointer] Worm Stats Container
+++++++|+0x14 = [32-bit Pointer] Worm Stats
+++++++|++0x40 = [32-bit] Damage Dealt
+++++++|++0x44 = [32-bit] Enemies Killed
+++++++|++0x48 = [32-bit] Allies Killed
+++++++|++0x4c = [32-bit] Barrels Destroyed
+++++++|++0x50 = [32-bit] Mines Triggered
+++++++|++0x54 = [32-bit] ?
+++++++|++0x58 = [32-bit] Times Attacked
+++++++|++0x5c = [32-bit] Times Attacked Without Missing
+++++++|++0x60 = [32-bit] ?
+++++++|++0x64 = [32-bit] ?
+++++++|++0x68 = [32-bit] Weapon Crates Collected
+++++++|++0x6c = [32-bit] Health Crates Collected
+++++++|++0x70 = [32-bit] Utility Crates Collected
+++++++|++0x74 = [32-bit] Special Crates Collected
+++++++|++0x78 = [32-bit] ?
+++++++|++0x7c = [32-bit] ?
+++++++|++0x80 = [32-bit] ?
+++++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+++++++|++0x88 = [32-bit] Times Used Skip Go
+++++++|++0x8c = [32-bit] Time Survived (Seconds)
+++++++|++0x90 = [32-bit] Worms Killed by Animals
+++++++|++0x94 = [32-bit] Damage Dealt With Explosives
+++++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+++++++|++0x9c = [32-bit] Damage Dealt With Grenades
+++0x1110 = [32-bit Pointer] Lock.Hat.Wizard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Wizard
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1114 = [32-bit Pointer] C.Story.StormTheCastle
++++0x4
+++++0x1c = [32-bit] Completion Counter | Storm The Castle
+++0x1124 = [32-bit Pointer] Lock.Face.XRay
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | XRay
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1178 = [32-bit Pointer] Lock.Sound.BluesMan
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | BluesMan (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x118c = [32-bit Pointer] Lock.Map.TurkishDelights
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | TurkishDelights
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1250 = [32-bit Pointer] C.Story.DinerMight
++++0x4
+++++0x1c = [32-bit] Completion Counter | Diner Might
+++0x1318 = [32-bit Pointer] C.Story.DestructAndServe
++++0x4
+++++0x1c = [32-bit] Completion Counter | Destruct And Serve
+++0x1374 = [32-bit Pointer] Lock.Sound.Wiseworm
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Wiseworm (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x138c = [32-bit Pointer] C.Story.TurkishDelights
++++0x4
+++++0x1c = [32-bit] Completion Counter | Turkish Delights
+++0x1410 = [32-bit Pointer] Lock.Scheme.Standard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Standard (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x142c = [32-bit Pointer] Lock.Scheme.KitchenSink
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | KitchenSink
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x14d0 = [32-bit Pointer] Lock.Map.LandWormsForgot
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | LandWormsForgot
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x14fc = [32-bit Pointer] Lock.Hat.Afro
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Afro (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1584 = [32-bit Pointer] Lock.T.Deathmatch.1
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.1
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1588 = [32-bit Pointer] Lock.Set.Professor
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Character Sets | Professor
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x158c = [32-bit Pointer] Lock.T.Deathmatch.2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.2
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1590 = [32-bit Pointer] Lock.T.Deathmatch.3
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.3
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1598 = [32-bit Pointer] Lock.T.Deathmatch.4
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.4
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x159c = [32-bit Pointer] Lock.T.Deathmatch.5
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.5
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x15a0 = [32-bit Pointer] Lock.T.Deathmatch.6
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.6
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x15a4 = [32-bit Pointer] Lock.T.Deathmatch.7
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.7
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x15a8 = [32-bit Pointer] Lock.T.Deathmatch.8
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.8
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x15ac = [32-bit Pointer] Lock.T.Deathmatch.9
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.9
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x15d4 = [32-bit Pointer] Lock.Map.GibbonTake
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | GibbonTake
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1604 = [32-bit Pointer] C.Deathmatch.1
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 1
+++0x1608 = [32-bit Pointer] C.Deathmatch.2
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 2
+++0x160c = [32-bit Pointer] C.Deathmatch.3
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 3
+++0x1610 = [32-bit Pointer] C.Deathmatch.4
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 4
+++0x1614 = [32-bit Pointer] C.Deathmatch.5
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 5
+++0x1618 = [32-bit Pointer] C.Deathmatch.6
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 6
+++0x161c = [32-bit Pointer] C.Deathmatch.7
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 7
+++0x1620 = [32-bit Pointer] C.Deathmatch.8
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 8
+++0x1624 = [32-bit Pointer] C.Deathmatch.9
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 9
+++0x1688 = [32-bit Pointer] Lock.Map.NoRoomForError
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | NoRoomForError
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1764 = [32-bit Pointer] Lock.T.Story.TinCanWally
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.TinCanWally
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x183c = [32-bit Pointer] Lock.Hands.Knight.Gn
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Knight.Gn (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x18f8 = [32-bit Pointer] Lock.Scheme.AllAction
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | AllAction
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x190c = [32-bit Pointer] Lock.T.Story.BridgeThieves
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.BridgeThieves
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x194c = [32-bit Pointer] Lock.T.Story.TraitorousWaters
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.TraitorousWaters
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1a94 = [32-bit Pointer] Lock.Hat.Pirate
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Pirate (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1ad4 = [32-bit Pointer] Lock.Sound.Whoopsie
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Whoopsie (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1b14 = [32-bit Pointer] Lock.Map.JoustAboutIt
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | JoustAboutIt
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1b78 = [32-bit Pointer] Lock.T.Challenge.Navigation
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.Navigation
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1b8c = [32-bit Pointer] Lock.Sound.Classic
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Classic (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1ba4 = [32-bit Pointer] Lock.Hat.Cowboy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Cowboy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1c38 = [32-bit Pointer] Lock.Hands.Pirate.Gn
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Pirate.Gn (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1c4c = [32-bit Pointer] Lock.Challenge.Icarus
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | Icarus
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1ca4 = [32-bit Pointer] Lock.Map.ChuteToVictory
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | ChuteToVictory
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1ca8 = [32-bit Pointer] Lock.Story.TinCanWally
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | TinCanWally
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1cb8 = [32-bit Pointer] Lock.Hat.Crown
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Crown
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1ccc = [32-bit Pointer] Lock.Story.TurkishDelights
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | TurkishDelights
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1cf0 = [32-bit Pointer] Lock.Face.NHS.Bl
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | NHS.Bl (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1d24 = [32-bit Pointer] Lock.Map.TinCanWally
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | TinCanWally
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1d30 = [32-bit Pointer] Lock.Hat.Baseball
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1d6c = [32-bit Pointer] Lock.Hands.Pirate.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Pirate.Bk (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1dc8 = [32-bit Pointer] Lock.Hat.BluesBrother
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | BluesBrother (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1e18 = [32-bit Pointer] Lock.Hands.White
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | White (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1f10 = [32-bit Pointer] Lock.Map.WindyWizard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | WindyWizard
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1f34 = [32-bit Pointer] Lock.Scheme.HolyGrail
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | HolyGrail
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x1f94 = [32-bit Pointer] Lock.Story.GibbonTake
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | GibbonTake
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2018 = [32-bit Pointer] C.Challenge.SniperRifle
++++0x4
+++++0x1c = [32-bit] Completion Counter | Sniper Rifle Challenge
+++0x2058 = [32-bit Pointer] Lock.Sound.ArabianThief
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | ArabianThief
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2098 = [32-bit Pointer] Lock.T.Challenge.SniperRifle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.SniperRifle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x20fc = [32-bit Pointer] DamageTypeTaken
++++0x4
+++++0x1c = [32-bit] Last type of damage taken
+.... 0x0 = Regular
+.... 0x1 = Fall Damage
+.... 0x2 = Cluster
+.... 0x3 = ?
+.... 0x4 = Custom Weapon
+.... 0x5 = ?
+.... 0x6 = Poison
+++0x2198 = [32-bit Pointer] Lock.Map.RobInTheHood
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | RobInTheHood
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2214 = [32-bit Pointer] Lock.Story.CrateEscape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | CrateEscape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x22cc = [32-bit Pointer] Lock.Hat.Pigtails
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Pigtails (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2358 = [32-bit Pointer] Story.DinerMight
++++0x4
+++++0x1c = [32-bit Pointer] Story Mission Definition | DinerMight
++++++0x14 = [32-bit] Time Bonus target in seconds
++++++0x1c = [32-bit] ?
++++++0x20 = [32-bit Pointer] Unlock ID
++++++0x24 = [32-bit] ?
++++++0x28 = [32-bit] ? (Seems to affect whether the mission is displayed or not in the chapter select)
++++++0x2c = [32-bit Pointer] Obj ID?
++++++0x30 = [32-bit Pointer] Map ID
++++++0x34 = [32-bit Pointer] Script ID
++++++0x38 = [32-bit Pointer] Mission Image Filename
++++++0x3c = [32-bit Pointer] Mission Description Text ID
++++++0x40 = [32-bit Pointer] Mission Name Text ID
+++0x2398 = [32-bit Pointer] Lock.Weapon.HolyHandGrenade
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Weapons | HolyHandGrenade
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x23c0 = [32-bit Pointer] Lock.Award.0
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Gold Damage
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+..... Value changes when unlocking the trophy but is not the actual flag used to
+..... display the trophy in the trophy cabinet, see $0xde7b8c
+++0x23c4 = [32-bit Pointer] Lock.Award.1
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | 4 Bagger
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23c8 = [32-bit Pointer] Lock.Award.2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Big Blast
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23cc = [32-bit Pointer] Lock.Award.3
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Magic Bullet
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23d0 = [32-bit Pointer] Lock.Award.4
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | The Beast Within
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23d4 = [32-bit Pointer] Lock.Award.5
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Silver Damage
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23d8 = [32-bit Pointer] Lock.Award.6
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | 3 Bagger
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23dc = [32-bit Pointer] Lock.Award.7
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Hot Foot
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23e0 = [32-bit Pointer] Lock.Award.8
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Animal Lover
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x23e4 = [32-bit Pointer] Lock.Award.9
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Weapon Specialist
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x243c = [32-bit Pointer] Lock.Challenge.Shotgun
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | Shotgun
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x248c = [32-bit Pointer] Lock.Hands.Bones
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Bones
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x249c = [32-bit Pointer] Lock.Hat.HelmetKing
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | HelmetKing
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x24d8 = [32-bit Pointer] Lock.Face.Monocle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Monocle (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x24e4 = [32-bit Pointer] Lock.Story.ChuteToVictory
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | ChuteToVictory
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2514 = [32-bit Pointer] Lock.Map.NiceToSiege
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | NiceToSiege
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x254c = [32-bit Pointer] Audio.Vol.Music
++++0x4
+++++0x1c = [32-bit] [Float] Music Volume
+.... 0.0 = Muted
+.... 1.0 = Max
+++0x255c = [32-bit Pointer] TurnTimeRemaining
++++0x4
+++++0x1c = [32-bit] Turn Time Remaining (milliseconds)
+++0x2578 = [32-bit Pointer] Lock.Map.HighNoon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | HighNoon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2610 = [32-bit Pointer] Lock.T.Story.JoustAboutIt
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.JoustAboutIt
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x26a4 = [32-bit Pointer] Lock.Hands.Cowboy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Cowboy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x26f0 = [32-bit Pointer] Lock.Story.GhostHill
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | GhostHill
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2794 = [32-bit Pointer] C.Story.NiceToSiege
++++0x4
+++++0x1c = [32-bit] Completion Counter | Nice To Siege You
+++0x27d4 = [32-bit Pointer] WXFE.Shop.Balance
++++0x4
+++++0x1c = [32-bit] Coins
+++0x2814 = [32-bit Pointer] Lock.Story.Escape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | Escape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x28d0 = [32-bit Pointer] Lock.Map.TraitorousWaters
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | TraitorousWaters
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x28d4 = [32-bit Pointer] C.Story.TraitorousWaters
++++0x4
+++++0x1c = [32-bit] Completion Counter | Traitorous Waters
+++0x28f8 = [32-bit Pointer] Lock.T.Story.DoomCanyon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.DoomCanyon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x29e4 = [32-bit Pointer] Lock.Sound.Cowboy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Cowboy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2a50 = [32-bit Pointer] Lock.Map.DinerMight
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | DinerMight
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2a90 = [32-bit Pointer] Lock.Hat.RedBeret
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | RedBeret (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2a98 = [32-bit Pointer] Lock.T.Story.LandWormsForgot
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.LandWormsForgot
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2b34 = [32-bit Pointer] Lock.Sound.CaveWorm
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | CaveWorm
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2b38 = [32-bit Pointer] Weapon.GraphicalLaunchLocation
++++0x4
+++++0x1c = [32-bit] [Float] Weapon.GraphicalLaunchLocation X
+.... Updates when the current active worm attacks with most weapons, including melee attacks, placing mines, dynamites or using ninja rope
+++++0x20 = [32-bit] [Float] Weapon.GraphicalLaunchLocation Y
+++++0x24 = [32-bit] [Float] Weapon.GraphicalLaunchLocation Z
+++0x2b54 = [32-bit Pointer] Lock.Face.Pirate
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Pirate (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2b70 = [32-bit Pointer] Lock.T.Story.GhostHill
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.GhostHill
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2bd8 = [32-bit Pointer] Lock.Hat.Pigtails.Bnd
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Pigtails.Bnd (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2cc8 = [32-bit Pointer] Lock.Face.NHS.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | NHS.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2cd0 = [32-bit Pointer] Lock.Story.WindyWizard
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | WindyWizard
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2cdc = [32-bit Pointer] Lock.Face.NHS.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | NHS.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2f38 = [32-bit Pointer] Lock.Hat.RocketMan
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | RocketMan (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2f78 = [32-bit Pointer] Lock.Map.DoomCanyon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | DoomCanyon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2f8c = [32-bit Pointer] Lock.Story.ValleyOfDinoWorms
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | ValleyOfDinoWorms
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2fb8 = [32-bit Pointer] Lock.Hat.Fashion
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Fashion
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2fe8 = [32-bit Pointer] Lock.Map.CrateEscape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | CrateEscape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x2fec = [32-bit Pointer] C.Story.LandWormsForgot
++++0x4
+++++0x1c = [32-bit] Completion Counter | The Land That Worms Forgot
+++0x3028 = [32-bit Pointer] Lock.Map.DestructAndServe
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | DestructAndServe
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3094 = [32-bit Pointer] DeadWorm.Id
++++0x4
+++++0x1c = [32-bit] ID of the last dead worm
+++0x3138 = [32-bit Pointer] Lock.T.Story.HighNoon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.HighNoon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3140 = [32-bit Pointer] C.Deathmatch.10
++++0x4
+++++0x1c = [32-bit] Completion Counter | Deathmatch 10
+++0x3190 = [32-bit Pointer] Lock.Hat.Wizard.D
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Wizard.D
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3198 = [32-bit Pointer] GameLogic.CurrentScript
++++0x4
+++++0x1c
++++++0x0 = [ASCII] Current Script Filename
+..... // Multiplayer
+..... "stdvs" = Standard/Homelands Multiplayer Game
+..... "stdvs,wormpot" = Standard/Homelands Multiplayer Game
+..... "Survivor" = Survivor Multiplayer Game
+..... "MultiplayerDestruction" = Destruction Multiplayer Game
+..... "StatueDefend" = Statue Defend Multiplayer Game
+..... // Tutorial
+..... "Tutorial1" = Worminkle University
+..... "Tutorial2" = Unsporting Behaviour
+..... "Tutorial3" = Mike's Secret Laboratory
+..... // Construction
+..... "DinerMight" = Diner Might
+..... "SneakyBridgeThieves" = Sneaky Bridge Thieves Inc.
+..... "BuildingSiteSaboteurs" = Building Site Saboteurs
+..... "TheCrateEscape" = The Crate Escape
+..... "DestructAndServe" = Destruct And Serve
+..... // Camelot
+..... "StormTheCastle" = Storm The Castle
+..... "TheWindyWizard" = The Windy Wizard
+..... "RobInTheHood" = Rob In The Hood
+..... "JoustAboutIt" = Joust About It
+..... "NiceToSiegeYou" = Nice To Siege You
+..... // Wild West
+..... "MineAllMine" = Mine All Mine
+..... "GhostHillGraveyard" = Ghost Hill Graveyard
+..... "TinCanWally" = Tin Can Wally
+..... "DoomCanyon" = Doom Canyon
+..... "HighNoonHiJinx" = High Noon Hijinx
+..... // Arabian
+..... "TurkishDelights" = Turkish Delights
+..... "NoRoomForError" = No Room For Error
+..... "CarpetCapers" = Carpet Capers
+..... "TraitorousWaters" = Traitorous Waters
+..... "GibbonTake" = Gibbon Take
+..... // Prehistoric
+..... "FastFoodDino" = Fast Food Dino
+..... "EscapeFromTreeRex" = Escape From Tree-Rex
+..... "ChuteToVictory" = Chute To Victory
+..... "TheLandThatWormsForgot" = The Land That Worms Forgot
+..... "ValleyOfTheDino" = Valley Of The Dino
+..... // Challenges
+..... "ChallengeSniper" = Sniper Rifle Challenge
+..... "ChallengeJetpack" = Jet Pack Challenge
+..... "ChallengeSheep" = Super Sheep Challenge
+..... "ChallengeRedBull" = Icarus Potion Challenge
+..... "ChallengeShotgun" = Shotgun Challenge
+..... "ChallengeAccuracy" = Accuracy Challenge
+..... "ChallengeNavigation" = Navigation Challenge
+..... "ChallengeCrate" = Crate Collect Challenge
+..... // Deathmatches
+..... "DeathMatch1" = Deathmatch 1
+..... "DeathMatch2" = Deathmatch 2
+..... "DeathMatch3" = Deathmatch 3
+..... "DeathMatch4" = Deathmatch 4
+..... "DeathMatch5" = Deathmatch 5
+..... "DeathMatch6" = Deathmatch 6
+..... "DeathMatch7" = Deathmatch 7
+..... "DeathMatch8" = Deathmatch 8
+..... "DeathMatch9" = Deathmatch 9
+..... "DeathMatch10" = Deathmatch 10
+++0x31c8 = [32-bit Pointer] Lock.Hat.Wizard.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Wizard.R
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x31d4 = [32-bit Pointer] Lock.Map.MineAllMine
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | MineAllMine
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3218 = [32-bit Pointer] Lock.Hat.USMarine
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | USMarine (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x32a4 = [32-bit Pointer] Lock.Hat.Bunny
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Bunny (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3304 = [32-bit Pointer] Lock.Deathmatch.1
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 1
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3308 = [32-bit Pointer] Lock.Deathmatch.2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 2
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x330c = [32-bit Pointer] Lock.Deathmatch.3
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 3
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3314 = [32-bit Pointer] Lock.Deathmatch.4
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 4
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3318 = [32-bit Pointer] Lock.Deathmatch.5
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 5
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x331c = [32-bit Pointer] Lock.Deathmatch.6
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 6
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3320 = [32-bit Pointer] Lock.Deathmatch.7
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 7
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3324 = [32-bit Pointer] Lock.Deathmatch.8
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 8
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3328 = [32-bit Pointer] Lock.Deathmatch.9
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Deathmatch | 9
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x34b8 = [32-bit Pointer] Lock.T.Challenge.Shotgun
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.Shotgun
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3604 = [32-bit Pointer] Lock.Hat.WW1
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | WW1 (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3608 = [32-bit Pointer] Lock.Hat.WW2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | WW2 (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x372c = [32-bit Pointer] Lock.Hat.Cowboy.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Cowboy.Bk (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x374c = [32-bit Pointer] C.Story.ValleyOfDinoWorms
++++0x4
+++++0x1c = [32-bit] Completion Counter | Valley Of The Dinoworms
+++0x3790 = [32-bit Pointer] Lock.Sound.Knight
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Knight
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3808 = [32-bit Pointer] Lock.Scheme.MegaPower
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | MegaPower
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3888 = [32-bit Pointer] Lock.Hat.Pigtails.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Pigtails.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3894 = [32-bit Pointer] Lock.T.Story.DestructAndServe
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.DestructAndServe
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3898 = [32-bit Pointer] C.Story.WindyWizard
++++0x4
+++++0x1c = [32-bit] Completion Counter | The Windy Wizard
+++0x38a4 = [32-bit Pointer] Lock.Hands.White.Y
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | White.Y (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x38d0 = [32-bit Pointer] Lock.Hands.White.D
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | White.D (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x38fc = [32-bit Pointer] Lock.Scheme.Pro
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Pro (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x394c = [32-bit Pointer] Lock.Map.BridgeThieves
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | BridgeThieves
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3a54 = [32-bit Pointer] Lock.Hat.Police
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Police (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3b4c = [32-bit Pointer] C.Story.Saboteurs
++++0x4
+++++0x1c = [32-bit] Completion Counter | Building Site Saboteurs
+++0x3bd0 = [32-bit Pointer] Lock.Tash.Scott
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Scott (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3c14 = [32-bit Pointer] Lock.Weapon.SniperRifle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Weapons | SniperRifle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3d00 = [32-bit Pointer] Lock.Hands.Spacesuit.P
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Spacesuit.P (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3d48 = [32-bit Pointer] Lock.Hands.Spacesuit.B
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Spacesuit.B (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3d54 = [32-bit Pointer] Lock.Story.StormTheCastle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | StormTheCastle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3d5c = [32-bit Pointer] Lock.Hands.Spacesuit.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Spacesuit.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3dcc = [32-bit Pointer] Lock.Face.Elvis.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Elvis.R
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3dd0 = [32-bit Pointer] Lock.Face.Elvis.S
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Elvis.S
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3e0c = [32-bit Pointer] Lock.Face.Elvis
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Elvis
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3e1c = [32-bit Pointer] Lock.Tash.Viking
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Viking (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x3fe4 = [32-bit Pointer] Lock.T.Story.CrateEscape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.CrateEscape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x40d4 = [32-bit Pointer] Lock.Sound.Astronaut
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Astronaut (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x419c = [32-bit Pointer] Lock.Set.Horror
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Character Sets | Horror
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x41fc = [32-bit Pointer] C.Story.FastFoodDino
++++0x4
+++++0x1c = [32-bit] Completion Counter | Fast Food Dino
+++0x4238 = [32-bit Pointer] Lock.Hands.Punk.Gn
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Punk.Gn
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x42d0 = [32-bit Pointer] Lock.Hands.Ringed
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Ringed
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x42fc = [32-bit Pointer] Lock.Tash.Afro
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Afro (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4398 = [32-bit Pointer] Lock.Map.Escape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | Escape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4530 = [32-bit Pointer] Lock.Hat.Spacesuit.Bl
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Spacesuit.Bl (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x454c = [32-bit Pointer] Story.BridgeThieves
++++0x4
+++++0x1c = [32-bit Pointer] Story Mission Definition | Sneaky Bridge Thieves Inc.
+.... Refer to $0xde9818
+++0x45ac = [32-bit Pointer] Lock.Face.Elvis.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Elvis.Bk
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x45cc = [32-bit Pointer] Lock.Map.TrainingGrounds
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | TrainingGrounds
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4634 = [32-bit Pointer] Lock.Hat.AmericanFootball.Bl
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | AmericanFootball.Bl (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4688 = [32-bit Pointer] Lock.Tash.Small.Br
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Small.Br (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x46a8 = [32-bit Pointer] Lock.Hat.Spacesuit.Gy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Spacesuit.Gy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4710 = [32-bit Pointer] Lock.Hat.Baseball.C
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.C (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x474c = [32-bit Pointer] Lock.Hat.Baseball.P
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.P (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4754 = [32-bit Pointer] Lock.Hat.Baseball.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4788 = [32-bit Pointer] Lock.Tash.Curly.B
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Curly.B (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x479c = [32-bit Pointer] Lock.Tash.Curly.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Curly.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x47c8 = [32-bit Pointer] ShotPower
++++0x4
+++++0x1c = [32-bit] [Float] Shot Power
+.... 0.0 = Min
+.... 1.0 = Max
+.... Resets to 0.0 when selecting a weapon that can be charged
+++0x47cc = [32-bit Pointer] Lock.Story.BridgeThieves
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | BridgeThieves
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x47d0 = [32-bit Pointer] Lock.Tash.Curly.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Curly.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x487c = [32-bit Pointer] C.Story.HighNoon
++++0x4
+++++0x1c = [32-bit] Completion Counter | High Noon Hijinx
+++0x4888 = [32-bit Pointer] Lock.Tash.Small.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Small.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x489c = [32-bit Pointer] Lock.Tash.Small.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Small.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x48a4 = [32-bit Pointer] Lock.Tash.Cowboy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Cowboy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x48cc = [32-bit Pointer] C.Story.BridgeThieves
++++0x4
+++++0x1c = [32-bit] Completion Counter | Sneaky Bridge Thieves
+++0x48e0 = [32-bit Pointer] Audio.Vol.Speech
++++0x4
+++++0x1c = [32-bit] [Float] Speech Volume
+.... 0.0 = Muted
+.... 1.0 = Max
+++0x4900 = [32-bit Pointer] Lock.Face.Star.P
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Star.P (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4928 = [32-bit Pointer] Lock.Face.Star.Z
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Star.Z (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4940 = [32-bit Pointer] Lock.Challenge.SSheep
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | SSheep
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4970 = [32-bit Pointer] Lock.Face.Star.L
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Star.L (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x49a4 = [32-bit Pointer] Lock.Scheme.Strategy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Strategy
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x49d4 = [32-bit Pointer] Girder.TotalNumberPlaced
++++0x4
+++++0x1c = [32-bit] Total number of Girders placed this game
+++0x4aac = [32-bit Pointer] Lock.Challenge.JetPack
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | JetPack
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4b20 = [32-bit Pointer] ActiveWormIndex
++++0x4
+++++0x1c = [32-bit] Active Worm Index
+.... 0x0-0xf = Worm Index
+.... 0xffffffff = None
+.... Multiply by 4 to get the correct worm array offset
++++++0x989d28 = [32-bit Pointer] Worm Data Instance
+++++++0x4
++++++++0x1c = [32-bit Pointer] WormDataContainer
+....... Refer to $0x989d28
++++++0x989d68 = [32-bit Pointer] Worm Inventory Instance
+++++++0x4
++++++++0x1c = [32-bit Pointer] InventoryContainer
+....... Refer to $0x989d68
+++0x4b5c = [32-bit Pointer] Story.CrateEscape
++++0x4
+++++0x1c = [32-bit Pointer] Story Mission Definition | The Crate Escape
+.... Refer to $0xde9818
+++0x4bd8 = [32-bit Pointer] FE.CurrentMenu
++++0x4
+++++0x1c = [32-bit Pointer] Current Menu
++++++0x0 = [ASCII] Menu ID String
+..... "" = Not in a menu
+..... "WXFE.Boot" = Memory Card Loading Menu
+..... "WXFE.MainMenu" = Main Menu
+..... "WXFE.Tutorial" = Tutorial Menu
+..... "WXFE.Story" = Story Menu
+..... "WXFE.CreateAGame" = Standard/Homelands Multiplayer Menu
+..... "WXFE.CreateAGameDest" = Destruction Multiplayer Menu
+..... "WXFE.CreateAGameSD" = Statue Defend/Survivor Multiplayer Menu
+..... "WXFE.Wormpot" = Wormpot Menu
+..... "WXFE.Customise" = Customise Menu
+..... "WXFE.TeamOptions" = Team Create/Edit Menu
+..... "WXFE.WeaponFactory1" = Weapon Factory Menu
+..... "WXFE.SchemeBuilderBase" = Game Style Create/Edit Menu
+..... "WXFE.Challenges" = Challenges Menu
+..... "WXFE.TrophyCabinet" = Trophy Cabinet Menu
+..... "WXFE.ItemShop" = Item Shop Menu
+..... "WXFE.Options" = Options Menu
+..... "WXFE.ControlOptions" = Control Options Menu
+..... "WXFE.SoundAndVideo" = Sound And Video Menu
+..... "WXFE.CenterScreen" = Center Screen Menu
+..... "WXFE.ChangingLanguage" = Changing Language Menu
+..... "WXFE.Credits" = Credits Menu
+..... "WXFE.PreStart" = Starting Game Menu (Transition before loading screen)
+..... "WXFE.WinTutorial" = Tutorial Complete Menu
+..... "WXFE.WinMission" = Mission Complete Menu
+..... "WXFE.WinChallenge" = Challenge Complete Menu
+..... "WXFE.WinRound" = Multiplayer Round Results Menu
+..... "WXFE.PreRound" = Multiplayer Next Round Ready Menu
+..... "WXFE.WinMatch" = Multiplayer Match Results Menu
+..... "WXFE.WinAward" = Trophy Awarded Menu
+..... "WXFE.EasterEggFound" = Easter Egg Found Menu
+++0x4c38 = [32-bit Pointer] Lock.Map.ReSubmission
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | ReSubmission
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4c48 = [32-bit Pointer] Lock.Sound.Builder
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Builder
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4c54 = [32-bit Pointer] Lock.Map.TopSecret
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | TopSecret
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4d08 = [32-bit Pointer] Lock.Face.Star
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Star (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4f1c = [32-bit Pointer] Lock.Hat.Viking
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Viking (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x4f30 = [32-bit Pointer] C.Story.GhostHill
++++0x4
+++++0x1c = [32-bit] Completion Counter | Ghost Hill Graveyard
+++0x4f74 = [32-bit Pointer] WXD.CurrentTutorial
++++0x4
+++++0x1c = [32-bit] Current Tutorial or Challenge selected
+.... // Tutorials
+.... 0x0 = Worminkle University
+.... 0x1 = Unsporting Behaviour
+.... 0x2 = Mike's Secret Laboratory
+.... // Challenges
+.... 0x0 = Sniper Rifle Challenge
+.... 0x1 = Jet Pack Challenge
+.... 0x2 = Super Sheep Challenge
+.... 0x3 = Icarus Potion Challenge
+.... 0x4 = Shotgun Challenge
+.... 0x5 = Accuracy Challenge
+.... 0x6 = Navigation Challenge
+.... 0x7 = Crate Collect Challenge
+.... 0x8 = Deathmatch 1
+.... 0x9 = Deathmatch 2
+.... 0xa = Deathmatch 3
+.... 0xb = Deathmatch 4
+.... 0xc = Deathmatch 5
+.... 0xd = Deathmatch 6
+.... 0xe = Deathmatch 7
+.... 0xf = Deathmatch 8
+.... 0x10 = Deathmatch 9
+.... 0x11 = Deathmatch 10
+++0x4f94 = [32-bit Pointer] Lock.T.Story.Escape
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.Escape
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x50dc = [32-bit Pointer] Lock.Scheme.Bng
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Bng (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x515c = [32-bit Pointer] Lock.Hands.Pirate.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Pirate.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5180 = [32-bit Pointer] Lock.T.Challenge.SSheep
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.SSheep
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x52c4 = [32-bit Pointer] Lock.Tutorial1
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Tutorial1 | 
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x52c8 = [32-bit Pointer] Lock.Tutorial2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Tutorial2 | 
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x52cc = [32-bit Pointer] Lock.Tutorial3
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Tutorial3 | 
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5338 = [32-bit Pointer] Lock.Face.Rayban
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Rayban (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5400 = [32-bit Pointer] Lock.Face.XRay.P
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | XRay.P
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x540c = [32-bit Pointer] Lock.Face.XRay.S
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | XRay.S
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5424 = [32-bit Pointer] Lock.Face.XRay.Y
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | XRay.Y
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5464 = [32-bit Pointer] C.Challenge.Accuracy
++++0x4
+++++0x1c = [32-bit] Completion Counter | Accuracy Challenge
+++0x5478 = [32-bit Pointer] Lock.Challenge.Navigation
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | Navigation
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5498 = [32-bit Pointer] Lock.T.Story.MineAllMine
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.MineAllMine
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5518 = [32-bit Pointer] Lock.Sound.Meme
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Meme
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x55a4 = [32-bit Pointer] Lock.Scheme.Mystery
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Mystery
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5640 = [32-bit Pointer] Lock.Hat.Spacesuit.P
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Spacesuit.P (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x56d0 = [32-bit Pointer] Lock.Hands.Spacesuit
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Spacesuit (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x57c8 = [32-bit Pointer] Lock.Hands.White.Br
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | White.Br (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x584c = [32-bit Pointer] Lock.Map.CarpetCapers
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | CarpetCapers
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5a10 = [32-bit Pointer] C.Story.RobInTheHood
++++0x4
+++++0x1c = [32-bit] Completion Counter | Rob in the Hood
+++0x5bc4 = [32-bit Pointer] Lock.Hat.QueenOfSheba
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | QueenOfSheba
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5bec = [32-bit Pointer] Lock.Hands.Cowboy.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Cowboy.Bk (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5c08 = [32-bit Pointer] Lock.Sound.Gangster
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Gangster (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5c3c = [32-bit Pointer] Lock.Sound.Disco
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Disco (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5cc8 = [32-bit Pointer] Lock.Hat.Builder
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Builder
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5d0c = [32-bit Pointer] Lock.Story.TraitorousWaters
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | TraitorousWaters
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5d58 = [32-bit Pointer] Lock.Hands.FuManChu
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | FuManChu
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5d5c = [32-bit Pointer] Lock.Story.MineAllMine
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | MineAllMine
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5d60 = [32-bit Pointer] Lock.T.Story.GibbonTake
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.GibbonTake
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5db0 = [32-bit Pointer] Lock.Hat.Punk.Bl
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Punk.Bl
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5e0c = [32-bit Pointer] Lock.Hat.Punk.Gr
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Punk.Gr
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x5e20 = [32-bit Pointer] LevelDetailsName
++++0x4
+++++0x1c
++++++0x0 = [ASCII] Selected Level Name
+..... // Tutorial
+..... "Tutorial.1" = Worminkle University
+..... "Tutorial.2" = Unsporting Behaviour
+..... "Tutorial.3" = Mike's Secret Laboratory
+..... // Construction
+..... "Story.DinerMight" = Diner Might
+..... "Story.BridgeThieves" = Sneaky Bridge Thieves Inc.
+..... "Story.Saboteurs" = Building Site Saboteurs
+..... "Story.CrateEscape" = The Crate Escape
+..... "Story.DestructAndServe" = Destruct And Serve
+..... // Camelot
+..... "Story.StormTheCastle" = Storm The Castle
+..... "Story.WindyWizard" = The Windy Wizard
+..... "Story.RobInTheHood" = Rob In The Hood
+..... "Story.JoustAboutIt" = Joust About It
+..... "Story.NiceToSiege" = Nice To Siege You
+..... // Wild West
+..... "Story.MineAllMine" = Mine All Mine
+..... "Story.GhostHill" = Ghost Hill Graveyard
+..... "Story.TinCanWally" = Tin Can Wally
+..... "Story.DoomCanyon" = Doom Canyon
+..... "Story.HighNoon" = High Noon Hijinx
+..... // Arabian
+..... "Story.TurkishDelights" = Turkish Delights
+..... "Story.NoRoomForError" = No Room For Error
+..... "Story.CarpetCapers" = Carpet Capers
+..... "Story.TraitorousWaters" = Traitorous Waters
+..... "Story.GibbonTake" = Gibbon Take
+..... // Prehistoric
+..... "Story.FastFoodDino" = Fast Food Dino
+..... "Story.Escape" = Escape From Tree-Rex
+..... "Story.ChuteToVictory" = Chute To Victory
+..... "Story.LandWormsForgot" = The Land That Worms Forgot
+..... "Story.ValleyOfDinoWorms" = Valley Of The Dinoworms
+..... // Challenges
+..... "Challenge.SniperRifle" = Sniper Rifle Challenge
+..... "Challenge.JetPack" = Jet Pack Challenge
+..... "Challenge.SSheep" = Super Sheep Challenge
+..... "Challenge.Icarus" = Icarus Potion Challenge
+..... "Challenge.Shotgun" = Shotgun Challenge
+..... "Challenge.Accuracy" = Accuracy Challenge
+..... "Challenge.Navigation" = Navigation Challenge
+..... "Challenge.CrateCollect" = Crate Collect Challenge
+..... // Deathmatches
+..... "Deathmatch.1" = Deathmatch 1
+..... "Deathmatch.2" = Deathmatch 2
+..... "Deathmatch.3" = Deathmatch 3
+..... "Deathmatch.4" = Deathmatch 4
+..... "Deathmatch.5" = Deathmatch 5
+..... "Deathmatch.6" = Deathmatch 6
+..... "Deathmatch.7" = Deathmatch 7
+..... "Deathmatch.8" = Deathmatch 8
+..... "Deathmatch.9" = Deathmatch 9
+..... "Deathmatch.10" = Deathmatch 10
+++0x5e78 = [32-bit Pointer] C.Story.DoomCanyon
++++0x4
+++++0x1c = [32-bit] Completion Counter | Doom Canyon
+++0x5e90 = [32-bit Pointer] C.Story.JoustAboutIt
++++0x4
+++++0x1c = [32-bit] Completion Counter | Joust About It
+++0x5ea0 = [32-bit Pointer] Trigger.Index
++++0x4
+++++0x1c = [32-bit] Last Triggered Index
+.... 0xffffffff = Default Value
+++0x5f90 = [32-bit Pointer] Lock.Challenge.CrateCollect
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | CrateCollect
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6010 = [32-bit Pointer] Lock.Story.DinerMight
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | DinerMight
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x60dc = [32-bit Pointer] Lock.Scheme.Shopping
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Shopping
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6114 = [32-bit Pointer] Lock.Map.StormTheCastle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | StormTheCastle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6180 = [32-bit Pointer] Lock.Hat.Bishop
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Bishop (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x61c8 = [32-bit Pointer] Lock.Hat.Cowboy2
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Cowboy2
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x61d0 = [32-bit Pointer] C.Challenge.CrateCollect
++++0x4
+++++0x1c = [32-bit] Completion Counter | Crate Collect Challenge
+++0x62a0 = [32-bit Pointer] Lock.Hat.Scottish
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Scottish (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x62d0 = [32-bit Pointer] Lock.Hands.Knight
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Knight (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x634c = [32-bit Pointer] Lock.Hat.Prehistoric
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Prehistoric
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x635c = [32-bit Pointer] MatchStats
++++0x4
+++++0x1c = [32-bit Pointer] Match Stats Container
++++++0x1c = [32-bit Pointer] Match Stats
+++++++0x18 = [32-bit] Array Size (16)
+++++++0x40 = [16x4 bytes] Array of Pointers to Worm Stats
+++++++|0x0 = [32-bit Pointer] Worm Stats Container
+++++++|+0x14 = [32-bit Pointer] Worm Stats
+........ Stats updates at the end of each round
+........ Resets on new match
+++++++|++0x40 = [32-bit] Damage Dealt
+++++++|++0x44 = [32-bit] Enemies Killed
+++++++|++0x48 = [32-bit] Allies Killed
+++++++|++0x4c = [32-bit] Barrels Destroyed
+++++++|++0x50 = [32-bit] Mines Triggered
+++++++|++0x54 = [32-bit] ?
+++++++|++0x58 = [32-bit] Times Attacked
+++++++|++0x5c = [32-bit] Times Attacked Without Missing
+++++++|++0x60 = [32-bit] ?
+++++++|++0x64 = [32-bit] ?
+++++++|++0x68 = [32-bit] Weapon Crates Collected
+++++++|++0x6c = [32-bit] Health Crates Collected
+++++++|++0x70 = [32-bit] Utility Crates Collected
+++++++|++0x74 = [32-bit] Special Crates Collected
+++++++|++0x78 = [32-bit] ?
+++++++|++0x7c = [32-bit] ?
+++++++|++0x80 = [32-bit] ?
+++++++|++0x84 = [32-bit] Jetpack Fuel Units Used
+++++++|++0x88 = [32-bit] Times Used Skip Go
+++++++|++0x8c = [32-bit] Time Survived (Seconds)
+++++++|++0x90 = [32-bit] Worms Killed by Animals
+++++++|++0x94 = [32-bit] Damage Dealt With Explosives
+++++++|++0x98 = [32-bit] Damage Dealt With Bazooka
+++++++|++0x9c = [32-bit] Damage Dealt With Grenades
+++0x63b0 = [32-bit Pointer] Lock.Hat.AmericanFootball
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | AmericanFootball (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6418 = [32-bit Pointer] Lock.Challenge.SniperRifle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | SniperRifle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x646c = [32-bit Pointer] Lock.Tash.Viking.Bk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Viking.Bk (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6508 = [32-bit Pointer] Lock.Sound.Scouser
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Scouser (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x65e0 = [32-bit Pointer] CurrentTeamIndex
++++0x4
+++++0x1c = [32-bit] Current Team Index
+.... 0x0-0x3 = Team Index
+.... 0xffffffff = None
+.... Multiply by 4 to get the correct team array offset
++++++0x989de8 = [32-bit Pointer] Team Data Instance
+++++++0x4
++++++++0x1c = [32-bit Pointer] TeamDataContainer
+....... Refer to $0x989de8
+++0x66d0 = [32-bit Pointer] WXD.CoinsAwarded
++++0x4
+++++0x1c = [32-bit] Coins awarded at the end of a match
+++0x6708 = [32-bit Pointer] Lock.Tash.Viking.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Viking.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6714 = [32-bit Pointer] C.Story.Escape
++++0x4
+++++0x1c = [32-bit] Completion Counter | Escape From Tree-Rex
+++0x6728 = [32-bit Pointer] Lock.Sound.Bobby
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | Bobby (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x675c = [32-bit Pointer] Lock.Tash.Viking.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Viking.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6794 = [32-bit Pointer] Lock.Hat.Chinese
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Chinese (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x67a0 = [32-bit Pointer] Audio.Vol.Sfx
++++0x4
+++++0x1c = [32-bit] [Float] Effects Volume
+.... 0.0 = Muted
+.... 1.0 = Max
+++0x6890 = [32-bit Pointer] Lock.Story.JoustAboutIt
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | JoustAboutIt
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x68d0 = [32-bit Pointer] Lock.Story.CarpetCapers
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | CarpetCapers
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x68ec = [32-bit Pointer] Lock.Hat.Punk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Punk
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a1c = [32-bit Pointer] Lock.Hands.Knight.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Knight.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a38 = [32-bit Pointer] Lock.Hat.Arabian
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Arabian
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a5c = [32-bit Pointer] Lock.Hands.Knight.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Knight.G (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a64 = [32-bit Pointer] Lock.Challenge.Accuracy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Challenge | Accuracy
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a70 = [32-bit Pointer] Lock.Hat.Pigtails.Bl
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Pigtails.Bl (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a7c = [32-bit Pointer] Lock.Map.FastFoodDino
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | FastFoodDino
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6a80 = [32-bit Pointer] Lock.EasterEgg.0
++++0x4
+++++0x1c
++++++0x20 = [32-bit] Easter Egg | 88 MPH
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x6a84 = [32-bit Pointer] Lock.EasterEgg.1
++++0x4
+++++0x1c
++++++0x20 = [32-bit] Easter Egg | Hidden Room
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x6a88 = [32-bit Pointer] Lock.EasterEgg.2
++++0x4
+++++0x1c
++++++0x20 = [32-bit] Easter Egg | Shoot the Crapper
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x6a8c = [32-bit Pointer] Lock.EasterEgg.3
++++0x4
+++++0x1c
++++++0x20 = [32-bit] Easter Egg | Hidden Crate
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x6a94 = [32-bit Pointer] Lock.EasterEgg.4
++++0x4
+++++0x1c
++++++0x20 = [32-bit] Easter Egg | Feed the T. Rex
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x6c98 = [32-bit Pointer] Lock.Weapon.BubbleTrouble
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Weapons | BubbleTrouble
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6d38 = [32-bit Pointer] C.Challenge.Navigation
++++0x4
+++++0x1c = [32-bit] Completion Counter | Navigation Challenge
+++0x6d88 = [32-bit Pointer] C.Tutorial.1
++++0x4
+++++0x1c = [32-bit] Completion Counter | Worminkle University
+++0x6d98 = [32-bit Pointer] C.Tutorial.2
++++0x4
+++++0x1c = [32-bit] Completion Counter | Unsporting Behaviour
+++0x6d9c = [32-bit Pointer] C.Tutorial.3
++++0x4
+++++0x1c = [32-bit] Completion Counter | Mike's Secret Laboratory
+++0x6e04 = [32-bit Pointer] Lock.Tash.SafetyPin
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | SafetyPin
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6ec8 = [32-bit Pointer] Lock.Hat.Cowboy.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Cowboy.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6ed0 = [32-bit Pointer] Lock.T.Story.ValleyOfDinoWorms
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.ValleyOfDinoWorms
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6ee0 = [32-bit Pointer] Lock.Hat.Cowboy.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Cowboy.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6f90 = [32-bit Pointer] Lock.T.Story.RobInTheHood
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.RobInTheHood
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x6fe8 = [32-bit Pointer] Lock.Tash.Curly
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Curly (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7084 = [32-bit Pointer] Lock.T.Deathmatch.10
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Deathmatch.10
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7110 = [32-bit Pointer] Lock.Story.LandWormsForgot
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | LandWormsForgot
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7114 = [32-bit Pointer] Lock.Story.RobInTheHood
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | RobInTheHood
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x718c = [32-bit Pointer] DATA.TeamBarracks
++++0x4
+++++0x1c = [32-bit Pointer] TeamDataColective
++++++0x14 = [32-bit Pointer] XomContainerArray | High Scores
+++++++0x18 = [32-bit] Array Size (Always 20)
+++++++0x40 = [32-bit Pointer] Best Score [0] | Sniper Rifle Challenge
++++++++0x14 = [32-bit] Best Time in Seconds
++++++++0x18 = [32-bit Pointer] Player Name
+++++++0x44 = [32-bit Pointer] Best Score [1] | Jet Pack Challenge
+++++++0x48 = [32-bit Pointer] Best Score [2] | Super Sheep Challenge
+++++++0x4c = [32-bit Pointer] Best Score [3] | Icarus Potion Challenge
+++++++0x50 = [32-bit Pointer] Best Score [4] | Shotgun Challenge
+++++++0x54 = [32-bit Pointer] Best Score [5] | Accuracy Challenge
+++++++0x58 = [32-bit Pointer] Best Score [6] | Navigation Challenge
+++++++0x5c = [32-bit Pointer] Best Score [7] | Crate Collect Challenge
+++++++0x60 = [32-bit Pointer] Best Score [8] | Deathmatch 1
+++++++0x64 = [32-bit Pointer] Best Score [9] | Deathmatch 2
+++++++0x68 = [32-bit Pointer] Best Score [10] | Deathmatch 3
+++++++0x6c = [32-bit Pointer] Best Score [11] | Deathmatch 4
+++++++0x70 = [32-bit Pointer] Best Score [12] | Deathmatch 5
+++++++0x74 = [32-bit Pointer] Best Score [13] | Deathmatch 6
+++++++0x78 = [32-bit Pointer] Best Score [14] | Deathmatch 7
+++++++0x7c = [32-bit Pointer] Best Score [15] | Deathmatch 8
+++++++0x80 = [32-bit Pointer] Best Score [16] | Deathmatch 9
+++++++0x84 = [32-bit Pointer] Best Score [17] | Deathmatch 10
+++++++0x88 = [32-bit Pointer] Best Score [18] | Unused 1?
+++++++0x8c = [32-bit Pointer] Best Score [19] | Unused 2?
++++++0x18 = [32-bit Pointer] XomContainerArray | Teams Array
+..... Teams array is populated as teams are created, that means we need to check the array size before accessing certain teams otherwise the pointer will point to garbage data.
+++++++0x18 = [32-bit] Array Size
+...... 0x14 = Max Size
+++++++0x40 = [20x4 bytes] Array of Pointers to Teams
+++++++|0x0 = [32-bit] Team Data
+++++++|+0x1c = [32-bit Pointer] Costume | Face ID
+++++++|++0x0 = [ASCII] Face ID String
+++++++|+0x20 = [32-bit Pointer] Costume | Eyes ID
+++++++|++0x0 = [ASCII] Eyes ID String
+++++++|+0x24 = [32-bit Pointer] Costume | Hands ID
+++++++|++0x0 = [ASCII] Hands ID String
+++++++|+0x28 = [32-bit Pointer] Costume | Head ID
+++++++|++0x0 = [ASCII] Head ID String
+++++++|+0x2c = [32-bit Pointer] Custom Weapon ID
+++++++|++0x0 = [ASCII] Custom Weapon ID String
+++++++|+0x3c = [32-bit Pointer] Voice ID
+++++++|++0x0 = [ASCII] Voice ID String
+++++++|+0x40 = [32-bit Pointer] Flag ID
+++++++|++0x0 = [ASCII] Flag ID String
+++++++|+0x48 = [32-bit] Grave ID
+++++++|+0x4c = [32-bit] CPU Level
+........ 0x5 = Max Level
+++++++|+0x50 = [32-bit] [Boolean] Is CPU Controlled
+........ 0x0 = Human
+........ 0x1 = CPU
+++++++|+0x58 = [32-bit Pointer] Worm Names
+++++++|++0x40 = [6x4 bytes] Array of Pointers to Worm Names
+++++++|++|0x0 = [32-bit Pointer] Worm Name
+++++++|++|+0x0 = [ASCII] Worm Name String
+++++++|+0x5c = [32-bit Pointer] Team Name
+++++++|++0x0 = [ASCII] Team Name String
+++0x71c8 = [32-bit Pointer] Lock.Story.NoRoomForError
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | NoRoomForError
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7234 = [32-bit Pointer] Lock.Set.Dinoworm
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Character Sets | Dinoworm
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7254 = [32-bit Pointer] Lock.Tash.Chinese
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Chinese (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7270 = [32-bit Pointer] Lock.Hat.Skull
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Skull
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x72d0 = [32-bit Pointer] Lock.T.Story.DinerMight
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.DinerMight
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x72e8 = [32-bit Pointer] Lock.T.Challenge.Accuracy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Challenge.Accuracy
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7388 = [32-bit Pointer] Lock.Face.Pirate.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Pirate.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x738c = [32-bit Pointer] C.Story.NoRoomForError
++++0x4
+++++0x1c = [32-bit] Completion Counter | No Room For Error
+++0x739c = [32-bit Pointer] Lock.Face.Pirate.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Pirate.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7410 = [32-bit Pointer] Lock.Sound.SecretAgent
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Sound Banks | SecretAgent (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7458 = [32-bit Pointer] Lock.Face.Pirate.Be
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | Pirate.Be (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7460 = [32-bit Pointer] ElapsedRoundTime
++++0x4
+++++0x1c = [32-bit] Elapsed Round Time in milliseconds
+++0x74b8 = [32-bit Pointer] Lock.Tash.Small.Bln
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Mustache | Small.Bln (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x74fc = [32-bit Pointer] Lock.Story.FastFoodDino
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | FastFoodDino
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7508 = [32-bit Pointer] Lock.Hands.Cowboy.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Cowboy.R (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x751c = [32-bit Pointer] Lock.Hands.Cowboy.W
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Cowboy.W (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7538 = [32-bit Pointer] Lock.Set.Alien
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Character Sets | Alien
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x767c = [32-bit Pointer] Lock.T.Story.FastFoodDino
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.FastFoodDino
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7714 = [32-bit Pointer] Lock.T.Story.NiceToSiege
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.NiceToSiege
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7788 = [32-bit Pointer] Lock.Scheme.Beginner
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Game Styles | Beginner (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x77d8 = [32-bit Pointer] Lock.Story.NiceToSiege
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | NiceToSiege
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7824 = [32-bit Pointer] Lock.Hat.Hockey
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Hockey
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7840 = [32-bit Pointer] Lock.Face.NVision
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Spectacles | NVision
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7854 = [32-bit Pointer] Lock.T.Story.StormTheCastle
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.StormTheCastle
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7938 = [32-bit Pointer] Lock.Story.HighNoon
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Story | HighNoon
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x79d0 = [32-bit Pointer] Lock.Map.UniversityChallenged
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | UniversityChallenged
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x79d4 = [32-bit Pointer] C.Story.GibbonTake
++++0x4
+++++0x1c = [32-bit] Completion Counter | Gibbon Take
+++0x7a1c = [32-bit Pointer] Lock.Hat.Baseball.T17
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Baseball.T17
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7a34 = [32-bit Pointer] Lock.Set.Cyberworm
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Character Sets | Cyberworm
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7a40 = [32-bit Pointer] Lock.Award.10
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Bronze Damage
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x7a44 = [32-bit Pointer] Lock.Award.11
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Body Count
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x7a48 = [32-bit Pointer] Lock.Award.12
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Barrel Buster
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x7a4c = [32-bit Pointer] Lock.Award.13
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Rocketeer
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x7a50 = [32-bit Pointer] Lock.Award.14
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Trophy | Greedy Worm
+..... 0x0 = Locked
+..... 0x2 = Unlocked
+++0x7ae4 = [32-bit Pointer] Lock.T.Story.ChuteToVictory
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.ChuteToVictory
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7b10 = [32-bit Pointer] Lock.Hat.Helmet
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | Helmet (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7bc0 = [32-bit Pointer] Lock.Hat.FlatCap
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | FlatCap (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7be4 = [32-bit Pointer] Lock.Hat.SovietArmy
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hats | SovietArmy (Pre-Unlocked)
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7c4c = [32-bit Pointer] Lock.T.Story.CarpetCapers
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Time Bonus | Story.CarpetCapers
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7c6c = [32-bit Pointer] Lock.Hands.Punk
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Punk
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7c9c = [32-bit Pointer] Lock.Hands.Punk.G
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Punk.G
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7cc8 = [32-bit Pointer] Lock.Hands.Punk.R
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Worm Hands | Punk.R
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
+++0x7cd0 = [32-bit Pointer] Lock.Map.ValleyOfDinoWorms
++++0x4
+++++0x1c = [32-bit Pointer] LockedContainer
++++++0x20 = [32-bit] Map | ValleyOfDinoWorms
+..... 0x0 = Locked
+..... 0x1 = Available
+..... 0x2 = Unlocked
