@@ -21,8 +21,8 @@ class XData:
 
     @staticmethod
     def base(key: str):
-        return dword(XData.DATA[key])
-        # return Memory.XDATARESOURCEMANAGER >> dword(0x18) >> dword(XData.DATA[key] - 0xde74c0)
+        # return dword(XData.DATA[key])
+        return Memory.XDATARESOURCEMANAGER >> dword(0x18) >> dword(XData.DATA[key] - 0xde74c0)
 
     @staticmethod
     def get_value(key: str, type_override = dword) -> MemoryExpression:
@@ -392,20 +392,19 @@ class Mission:
         )
 
     def generate_leaderboard(self, lb: Leaderboard):
-        pass
-        # lb.add_start(group(
-        #     Worms3D.check_serial(),
-        #     self.is_selected(),
-        #     self.on_complete(),
-        #     reset_next_if(Mission.on_hash_changed()),
-        #     pause_if(~Controller.plugged().with_hits(1)),
-        # ))
-        # lb.set_cancel(always_false())
-        # lb.set_submit(always_true())
-        # lb.add_value(group(
-        #     measured_if(Worms3D.check_serial()),
-        #     measured(XData.get_value("ElapsedRoundTime") / 10),
-        # ))
+        lb.title = f"Time Trial - {self.name}"
+        lb.description = f"Complete \"{self.name}\" as fast as possible"
+        lb.lower_is_better = True
+        lb.format = LeaderboardFormat.MILLISECS # Centisecs
+        lb.set_start(group(
+            self.is_loaded(),
+            self.on_complete(),
+        ))
+        lb.set_cancel(always_false())
+        lb.set_submit(always_true())
+        lb.set_value(group(
+            measured(XData.get_value("ElapsedRoundTime") / 10),
+        ))
 
     def get_challenge_data(self):
         if self.mtype != Mission.Type.CHALLENGE:
@@ -491,6 +490,11 @@ class Worm:
             return (
                 (delta(self.health) != 0) &
                 (self.health == 0)
+            )
+
+        def on_healed(self):
+            return (
+                self.health > delta(word(0x11e))
             )
 
         def on_jump(self):
@@ -701,12 +705,13 @@ class Lua:
         def get_hash(self):
             return self.address >> dword(0x4) >> dword(0x8)
 
-        def get_value(self):
-            return self.address >> float32(0xc)
+        def get_value(self, type = float32):
+            return self.address >> type(0xc)
 
     @staticmethod
     def base_pointer():
-        return Memory.BASE_LUA_POINTER
+        return Memory.GAME_STATE >> dword(0x14) >> dword(0x0) >> dword(0x564)
+        # return Memory.BASE_LUA_POINTER
 
     @staticmethod
     def string_hash(s: str)-> int:
@@ -726,8 +731,8 @@ class Lua:
     @staticmethod
     def get_node(key: str, lsize: int, depth: int):
         offset = Lua.get_index(key, lsize) * Lua.NODESIZE
-        address = Lua.base_pointer() >> dword(0x38) >> dword(0x10) >> dword(0x44)
-        address = address >> MemoryExpression(Condition(0x10, "+", value(offset)), start_flag=Flag.ADD_ADDRESS)
+        address = Lua.base_pointer() >> dword(0x38) >> dword(0x44)
+        address = address >> MemoryExpression(Condition(dword(0x10), "+", value(offset)), start_flag=Flag.ADD_ADDRESS)
         while depth > 0:
             address >>= dword(0x10)
             depth -= 1
@@ -789,7 +794,7 @@ class Worms4Mayhem:
 
     @staticmethod
     def is_paused():
-        return Memory.STATE_GAME_PAUSED
+        return Memory.GAME_STATE >> byte(0x38)
 
     @staticmethod
     def is_watching_cutscene():
@@ -798,8 +803,11 @@ class Worms4Mayhem:
 
     @staticmethod
     def is_loading():
-        # TODO
-        pass
+        return Memory.STATE_LOADING
+
+    @staticmethod
+    def watching_fmv():
+        return Memory.FMV_FRAME_COUNTER > 0
 
     @staticmethod
     def number_of_teams():

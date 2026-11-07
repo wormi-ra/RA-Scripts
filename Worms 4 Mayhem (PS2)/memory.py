@@ -3,6 +3,24 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Memory:
+    SET_CREATED_WITH_THE_HELP_OF_PYCHEEVOS_SCRIPTS = (0x000001)
+    """
+    [Notes] Set created with the help of PyCheevos scripts
+    See github below for source code and further information
+    https://github.com/wormi-ra/RA-Scripts/tree/main/Worms%204%20Mayhem%20(PS2)
+
+    This game's memory share many similarities with Worms 3D as it uses the same engine.
+    This game uses LUA scripts during missions.
+    LUA memory is documented at $0xdf7884
+    Scripts can be extracted from the game ROM and serve as a great resource to develop achievements.
+
+    Most of the time, using LUA memory in achievement logic is unnecessary as the game stores most infos in a global hashmap called XDataResourceManager that is used to communicate between the game engine and  LUA scripts through the use of GetData(), SetData() or *Container() LUA functions.
+    This hashmap is documented at $0x6f7910
+
+    All hashmap entries have been dumped in the following CSV file:
+    https://github.com/wormi-ra/RA-Scripts/blob/main/Worms%204%20Mayhem%20(PS2)/data/xdata.csv
+    """
+
     ASSEMBLY_GAME_SPEED = byte(0x3b2550)
     """
     [8-bit] Assembly | Game Speed
@@ -45,6 +63,8 @@ class Memory:
     Pauses during loading times
     """
 
+    STATE_LOADING = dword(0x6f719c)
+
     XDATARESOURCEMANAGER = dword(0x6f7910)
     """
     [32-bit Pointer] XDataResourceManager
@@ -78,6 +98,20 @@ class Memory:
     0x0 = Null character
     """
 
+    FMV_FRAME_COUNTER = dword(0x6fbcc4)
+
+    GAME_STATE = dword(0x805b1c)
+    """
+    [32-bit Pointer] Game State
+    +0x14 = [32-bit Pointer] Pointer to Lua memory
+    ++0x0
+    +++0x564 = [32-bit Pointer] Pointer to Base Lua Pointer
+    ... Refer to $0xdf7884
+    +0x38 = [8-bit] [Boolean] Game Paused
+    .0x0 = Unpaused
+    .0x1 = Paused
+    """
+
     INGAME_POINTER = dword(0x9876e8)
     """
     [32-bit Pointer] Ingame Pointer
@@ -89,11 +123,11 @@ class Memory:
     [32-bit Pointer] Worm Data Instances Array [0]
     +0x4
     ++0x1c = [32-bit Pointer] WormDataContainer
-    +++0x48 = [32-bit Float] Horizontal Angle
-    +++0x98 = [32-bit Float] X Position
-    +++0x9c = [32-bit Float] Y Position
-    +++0xa0 = [32-bit Float] Z Position
-    +++0xb4 = [32-bit Float] Vertical Angle
+    +++0x48 = [32-bit] [Float] Horizontal Angle
+    +++0x98 = [32-bit] [Float] X Position
+    +++0x9c = [32-bit] [Float] Y Position
+    +++0xa0 = [32-bit] [Float] Z Position
+    +++0xb4 = [32-bit] [Float] Vertical Angle
     +++0xc0 = [32-bit] Internal Timer (milliseconds)
     +++0xd8 = [32-bit] Selected Weapon
     ... 0x0 = None
@@ -606,6 +640,13 @@ class Memory:
     Bit7 = D-Pad Left
     """
 
+    START_OF_DYNAMIC_MEMORY = (0x9935a4)
+    """
+    ___________________
+    Start of dynamic memory
+    ___________________
+    """
+
     HASHMAP_SIZE = dword(0xde74b0)
     """
     [32-bit] Hashmap Size
@@ -681,6 +722,14 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_CRATEINDEX = dword(0xde7760)
+    """
+    [32-bit Pointer] Hashmap | Crate.Index
+    +0x4
+    ++0x1c = [32-bit] Crate Index used to spawn crates in missions
+    ..0xffffffff = Default Value
     """
 
     HASHMAP_LOCKSCHEMEROOTNSHOOT = dword(0xde7790)
@@ -762,6 +811,16 @@ class Memory:
     +0x4
     ++0x1c = [32-bit] Jetpack Fuel
     .. 1 Ingame Unit = 500
+    """
+
+    HASHMAP_AIRSTRIKETARGETPOINT = dword(0xde7910)
+    """
+    [32-bit Pointer] Hashmap | Airstrike.TargetPoint
+    +0x4
+    ++0x1c = [32-bit] [Float] Airstrike Target Point X
+    .. Updates when aiming with any airstrike weapon
+    ++0x20 = [32-bit] [Float] Airstrike Target Point Y
+    ++0x24 = [32-bit] [Float] Airstrike Target Point Z
     """
 
     HASHMAP_LOCKSOUNDGAMESHOW = dword(0xde795c)
@@ -1005,6 +1064,15 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
+    """
+
+    HASHMAP_HUDCOUNTERVALUE = dword(0xde7d20)
+    """
+    [32-bit Pointer] Hashmap | HUD.Counter.Value
+    +0x4
+    ++0x1c = [32-bit] HUD Counter Value
+    .. Counter displayed next to the timer in some missions or challenges
+    .. eg. targets left in Sniper Rifle Challenge
     """
 
     HASHMAP_LOCKSCHEMEDARKSIDER = dword(0xde7d88)
@@ -2353,6 +2421,16 @@ class Memory:
     ... 0x2 = Unlocked
     """
 
+    HASHMAP_WEAPONGRAPHICALLAUNCHLOCATION = dword(0xde9ff8)
+    """
+    [32-bit Pointer] Hashmap | Weapon.GraphicalLaunchLocation
+    +0x4
+    ++0x1c = [32-bit] [Float] Weapon.GraphicalLaunchLocation X
+    .. Updates when the current active worm attacks with most weapons, including melee attacks, placing mines, dynamites or using ninja rope
+    ++0x20 = [32-bit] [Float] Weapon.GraphicalLaunchLocation Y
+    ++0x24 = [32-bit] [Float] Weapon.GraphicalLaunchLocation Z
+    """
+
     HASHMAP_LOCKFACEPIRATE = dword(0xdea014)
     """
     [32-bit Pointer] Hashmap | Lock.Face.Pirate
@@ -3387,6 +3465,15 @@ class Memory:
     ++0x1c = [32-bit] Active Worm Index
     .. 0x0-0xf = Worm Index
     .. 0xffffffff = None
+    .. Multiply by 4 to get the correct worm array offset
+    +++0x989d28 = [32-bit Pointer] Worm Data Instance
+    ++++0x4
+    +++++0x1c = [32-bit Pointer] WormDataContainer
+    ..... Refer to $0x989d28
+    +++0x989d68 = [32-bit Pointer] Worm Inventory Instance
+    ++++0x4
+    +++++0x1c = [32-bit Pointer] InventoryContainer
+    ..... Refer to $0x989d68
     """
 
     HASHMAP_STORYCRATEESCAPE = dword(0xdec01c)
@@ -3404,6 +3491,7 @@ class Memory:
     ++0x1c = [32-bit Pointer] Current Menu
     +++0x0 = [ASCII] Menu ID String
     ... "" = Not in a menu
+    ... "WXFE.Boot" = Memory Card Loading Menu
     ... "WXFE.MainMenu" = Main Menu
     ... "WXFE.Tutorial" = Tutorial Menu
     ... "WXFE.Story" = Story Menu
@@ -3947,6 +4035,14 @@ class Memory:
     ++0x1c = [32-bit] Completion Counter | Joust About It
     """
 
+    HASHMAP_TRIGGERINDEX = dword(0xded360)
+    """
+    [32-bit Pointer] Hashmap | Trigger.Index
+    +0x4
+    ++0x1c = [32-bit] Last Triggered Index
+    .. 0xffffffff = Default Value
+    """
+
     HASHMAP_LOCKCHALLENGECRATECOLLECT = dword(0xded450)
     """
     [32-bit Pointer] Hashmap | Lock.Challenge.CrateCollect
@@ -4140,6 +4236,13 @@ class Memory:
     [32-bit Pointer] Hashmap | CurrentTeamIndex
     +0x4
     ++0x1c = [32-bit] Current Team Index
+    .. 0x0-0x3 = Team Index
+    .. 0xffffffff = None
+    .. Multiply by 4 to get the correct team array offset
+    +++0x989de8 = [32-bit Pointer] Team Data Instance
+    ++++0x4
+    +++++0x1c = [32-bit Pointer] TeamDataContainer
+    ..... Refer to $0x989de8
     """
 
     HASHMAP_WXDCOINSAWARDED = dword(0xdedb90)
@@ -5013,13 +5116,6 @@ class Memory:
     ... 0x0 = Locked
     ... 0x1 = Available
     ... 0x2 = Unlocked
-    """
-
-    STATE_GAME_PAUSED = byte(0xdef268)
-    """
-    [8-bit] [Boolean] State | Game Paused
-    0x0 = Unpaused
-    0x1 = Paused
     """
 
     BASE_LUA_POINTER = dword(0xdf7884)
