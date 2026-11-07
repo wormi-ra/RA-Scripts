@@ -892,7 +892,7 @@ class MnLBISSubset(AchievementSet):
             (
                 MnLBIS.on_gauntlet_enter(4)
             ).with_hits(1),
-            MnLBIS.level_cap(29, Actor.MARIO_LUIGI),
+            MnLBIS.level_cap(30, Actor.MARIO_LUIGI),
             trigger(MnLBIS.on_gauntlet_completed(4)),
             MnLBIS.is_challenge_medal_equipped(),
             MnLBIS.check_cheated_equipments(),
@@ -917,7 +917,7 @@ class MnLBISSubset(AchievementSet):
             (
                 MnLBIS.on_gauntlet_enter(5)
             ).with_hits(1),
-            MnLBIS.level_cap(34, Actor.MARIO_LUIGI),
+            MnLBIS.level_cap(35, Actor.MARIO_LUIGI),
             trigger(MnLBIS.on_gauntlet_completed(5)),
             MnLBIS.is_challenge_medal_equipped(),
             MnLBIS.check_cheated_equipments(),
